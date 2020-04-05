@@ -182,6 +182,9 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 	# we need to find out the local x rotation of the this block
 	# it depends on the relative difference to the x rotation of the other block
 	var x_rotation_diff : float
+	var y_rotation_diff : float
+	var z_rotation_diff : float
+	var y_rotation_extra : float
 	var angle_sign_indicator : float
 	
 	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
@@ -197,18 +200,44 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 		angle_sign_indicator = this_basis_y_comp.z - other_block_basis.y.z
 	
 	
+	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
+		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH):
+		# for a width-to-length snap, we use the angle between the local bases y direction to accomplish this
+		# to make sure we are not affected by other rotation, we take the other block's basis' x component
+		# of this basis
+		rotate_object_local(Vector3(1, 0, 0), - (PI / 2))
+		this_basis = transform.basis.orthonormalized()
+		var this_basis_y_comp = this_basis.y.slide(other_block_basis.z)
+		
+		# we need this to figure out the sign of the angle
+		angle_sign_indicator = this_basis_y_comp.y - other_block_basis.x.y
+#		print("angle_sign_indicator ", this_basis_y_comp - other_block_basis.x)
+		
+		# the angle we're getting here is unsigned
+		x_rotation_diff = this_basis_y_comp.angle_to(other_block_basis.x)
+		print("first  angle ", x_rotation_diff)
+#		if angle_sign_indicator > 0:
+#			x_rotation_diff -= (PI / 2)
+#		else:
+#			x_rotation_diff += (PI / 2)
+#		x_rotation_diff -= (PI / 2)
+		
+		rotate_object_local(Vector3(1, 0, 0), (PI / 2))
+		y_rotation_extra = - (PI / 2)
+	
+	
 	print("angle ", x_rotation_diff)
 	# figure out x rotation snap
-	if x_rotation_diff >= 0 and x_rotation_diff < (PI / 4):
+	if abs(x_rotation_diff) >= 0 and abs(x_rotation_diff) < (PI / 4):
 		print("1")
 		x_rotation_diff = 0
-	elif x_rotation_diff >= (PI / 4) and x_rotation_diff < (PI / 2):
+	elif abs(x_rotation_diff) >= (PI / 4) and abs(x_rotation_diff) < (PI / 2):
 		print("2")
 		x_rotation_diff = PI / 2
-	elif x_rotation_diff >= (PI / 2) and x_rotation_diff < (PI * 3 / 4):
+	elif abs(x_rotation_diff) >= (PI / 2) and abs(x_rotation_diff) < (PI * 3 / 4):
 		print("3")
 		x_rotation_diff = PI / 2
-	elif x_rotation_diff >= (PI * 3 / 4):
+	elif abs(x_rotation_diff) >= (PI * 3 / 4):
 		print("4")
 		x_rotation_diff = PI
 	
@@ -222,34 +251,34 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 #	new_rotation.x = x_rotation_diff
 	
 	
-	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH
-		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH):
-		# add 90°
-		new_rotation.y += (PI / 2)
-	
-	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
-		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH):
-			# add 90°
-			new_rotation.y += (PI / 2)
-	
-	# this is for top and bottom snap areas
-	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.TOP
-		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.TOP):
-			if abs(new_rotation.y) > PI / 4 and abs(new_rotation.y) <= PI / 2:
-				# add 90°
-				new_rotation.y += (PI / 2)
-			elif abs(new_rotation.y) > PI / 2 and abs(new_rotation.y) < PI * 3 / 4:
-				new_rotation.y -= (PI / 2)
-	
-	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
-		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.TOP):
-		new_rotation.z -= (PI / 2)
-		
-		if abs(new_rotation.y) > PI / 4 and abs(new_rotation.y) <= PI / 2:
-			# add 90°
-			new_rotation.y += (PI / 2)
-		elif abs(new_rotation.y) > PI / 2 and abs(new_rotation.y) < PI * 3 / 4:
-			new_rotation.y -= (PI / 2)
+#	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH
+#		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH):
+#		# add 90°
+#		new_rotation.y += (PI / 2)
+#
+#	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
+#		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH):
+#			# add 90°
+#			new_rotation.y += (PI / 2)
+#
+#	# this is for top and bottom snap areas
+#	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.TOP
+#		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.TOP):
+#			if abs(new_rotation.y) > PI / 4 and abs(new_rotation.y) <= PI / 2:
+#				# add 90°
+#				new_rotation.y += (PI / 2)
+#			elif abs(new_rotation.y) > PI / 2 and abs(new_rotation.y) < PI * 3 / 4:
+#				new_rotation.y -= (PI / 2)
+#
+#	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
+#		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.TOP):
+#		new_rotation.z -= (PI / 2)
+#
+#		if abs(new_rotation.y) > PI / 4 and abs(new_rotation.y) <= PI / 2:
+#			# add 90°
+#			new_rotation.y += (PI / 2)
+#		elif abs(new_rotation.y) > PI / 2 and abs(new_rotation.y) < PI * 3 / 4:
+#			new_rotation.y -= (PI / 2)
 	
 	# to make sure that it doesn't do a full 180° when snapping the other side
 #	if abs(new_rotation.y) > PI / 2:
@@ -263,26 +292,11 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 #	if abs(new_rotation.x) > PI / 2:
 #		new_rotation.x -= PI
 	
-	# reset basis
-#	global_transform.basis = Basis.IDENTITY
 	
-#	print("rotation_difference ", rotation_difference)
-	# apply rotations
-#	rotate_y(prev_rotation.y)
-#	rotate_y(rotation_difference.y)
-#	rotate_z(prev_rotation.z)
-#	rotate_z(rotation_difference.z)
-#	rotate_x(prev_rotation.x)
-#	rotate_x(rotation_difference.x)
-#	global_rotate(Vector3.UP, prev_rotation.y)
-#	global_rotate(Vector3.UP, rotation_difference.y)
-##	global_rotate(Vector3.FORWARD, prev_rotation.z)
-#	global_rotate(Vector3.FORWARD, rotation_difference.z)
-##	global_rotate(Vector3.RIGHT, prev_rotation.x)
-#	global_rotate(Vector3.RIGHT, rotation_difference.x)
+	transform.basis = other_block_basis
 	
-	set_rotation(new_rotation)
-#	rotate_x(x_rotation_diff)
+	rotate_object_local(Vector3(0, 1, 0), y_rotation_extra)
+	
 	rotate_object_local(Vector3(1, 0, 0), x_rotation_diff)
 	
 #	print("new rotation ", rotation)
