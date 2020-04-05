@@ -185,7 +185,9 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 	var y_rotation_diff : float
 	var z_rotation_diff : float
 	var y_rotation_extra : float
+	var z_rotation_extra : float
 	var angle_sign_indicator : float
+	var x_rot_vec := Vector3(1, 0, 0)
 	
 	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
 		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH):
@@ -198,30 +200,42 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 		x_rotation_diff = this_basis_y_comp.angle_to(other_block_basis.y)
 		# we need this to figure out the sign of the angle
 		angle_sign_indicator = this_basis_y_comp.z - other_block_basis.y.z
-	
+		
+		# compare z directions to prevent flipping
+		var this_basis_z_comp = this_basis.z.slide(other_block_basis.y)
+		var flip_diff_z = this_basis_z_comp.angle_to(other_block_basis.z)
+		
+		# compare x directions to prevent flipping
+		var this_basis_x_comp = this_basis.x.slide(other_block_basis.y)
+		var flip_diff_x = this_basis_x_comp.angle_to(other_block_basis.x)
+		
+		if flip_diff_z > (PI / 2) and flip_diff_x > (PI / 2):
+			y_rotation_extra = PI
+			x_rot_vec *= -1
+		
+		if flip_diff_x > (PI / 2) and flip_diff_z <= (PI / 2):
+			y_rotation_extra = PI
+			x_rot_vec *= -1
+		
 	
 	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
 		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH):
 		# for a width-to-length snap, we use the angle between the local bases y direction to accomplish this
 		# to make sure we are not affected by other rotation, we take the other block's basis' x component
 		# of this basis
+		
+		# rotate by 180° first so that the two basis direction are ligned up
 		rotate_object_local(Vector3(1, 0, 0), - (PI / 2))
 		this_basis = transform.basis.orthonormalized()
 		var this_basis_y_comp = this_basis.y.slide(other_block_basis.z)
 		
 		# we need this to figure out the sign of the angle
 		angle_sign_indicator = this_basis_y_comp.y - other_block_basis.x.y
-#		print("angle_sign_indicator ", this_basis_y_comp - other_block_basis.x)
 		
 		# the angle we're getting here is unsigned
 		x_rotation_diff = this_basis_y_comp.angle_to(other_block_basis.x)
-		print("first  angle ", x_rotation_diff)
-#		if angle_sign_indicator > 0:
-#			x_rotation_diff -= (PI / 2)
-#		else:
-#			x_rotation_diff += (PI / 2)
-#		x_rotation_diff -= (PI / 2)
 		
+		# rotate back
 		rotate_object_local(Vector3(1, 0, 0), (PI / 2))
 		y_rotation_extra = - (PI / 2)
 	
@@ -296,8 +310,9 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 	transform.basis = other_block_basis
 	
 	rotate_object_local(Vector3(0, 1, 0), y_rotation_extra)
+	rotate_object_local(Vector3(0, 0, 1), z_rotation_extra)
 	
-	rotate_object_local(Vector3(1, 0, 0), x_rotation_diff)
+	rotate_object_local(x_rot_vec, x_rotation_diff)
 	
 #	print("new rotation ", rotation)
 	
