@@ -9,7 +9,7 @@ signal area_unsnapped
 
 var snap_area_other_area : Area
 var other_area_parent_block
-var connection_id : String
+#var connection_id : String
 var snap_speed := 10.0
 var snap_timer := 0.0
 var is_master := false
@@ -18,13 +18,13 @@ var double_check_timer = 0.0
 var snapped := false setget , get_snapped
 
 onready var parent_block := get_parent()
-onready var schematic := get_node(global_vars.SCHEMATIC_PATH) 
+#onready var schematic := get_node(global_vars.SCHEMATIC_PATH) 
 
-enum Polarity {UNDEFINED, POSITIVE, NEGATIVE}
-export (Polarity) var polarity
-enum ConnectionSide {A, B}
-export (ConnectionSide) var connection_side
-enum LocationOnBlock {LENGTH, WIDTH}
+#enum Polarity {UNDEFINED, POSITIVE, NEGATIVE}
+#export (Polarity) var polarity
+#enum ConnectionSide {A, B}
+#export (ConnectionSide) var connection_side
+enum LocationOnBlock {UNDEFINED, LENGTH, WIDTH, TOP}
 export (LocationOnBlock) var location_on_block
 
 
@@ -61,7 +61,7 @@ func check_for_removal():
 		return
 
 
-	if other_area_distance() < 0.04:
+	if other_area_distance() < 0.05:
 		return
 	
 	# if distance is greater, remove
@@ -74,19 +74,19 @@ func check_for_removal():
 
 
 func unsnap():
-	if is_master:
-		parent_block.destroy_measure_point(
-			connection_side,
-			connection_id,
-			other_area_parent_block,
-			snap_area_other_area.connection_side
-		)
-		schematic_remove_connection()
+#	if is_master:
+#		parent_block.destroy_measure_point(
+#			connection_side,
+#			connection_id,
+#			other_area_parent_block,
+#			snap_area_other_area.connection_side
+#		)
+#		schematic_remove_connection()
 	is_master = false
 	snapped = false
 	snap_area_other_area = null
 	other_area_parent_block = null
-	connection_id = ""
+#	connection_id = ""
 	emit_signal("area_unsnapped")
 
 
@@ -97,16 +97,16 @@ func unsnap_both():
 	unsnap()
 
 
-func setup_connection(_other_area):
-	connection_id = schematic_add_blocks(
-		parent_block,
-		polarity,
-		connection_side,
-		_other_area.get_parent(),
-		_other_area.polarity,
-		_other_area.connection_side
-	)
-	snap_area_other_area.connection_id = connection_id
+#func setup_connection(_other_area):
+#	connection_id = schematic_add_blocks(
+#		parent_block,
+#		polarity,
+#		connection_side,
+#		_other_area.get_parent(),
+#		_other_area.polarity,
+#		_other_area.connection_side
+#	)
+#	snap_area_other_area.connection_id = connection_id
 
 # double checks if really not overlapping an area
 # called from parent after every succesful snap
@@ -129,14 +129,14 @@ func double_check_snap() -> void:
 			other_area_parent_block = overlapping_area.get_parent()
 			overlapping_area.other_area_parent_block = get_parent()
 			is_master = true
-			setup_connection(overlapping_area)
-			parent_block.spawn_measure_point(
-				connection_side,
-				connection_id,
-				other_area_parent_block,
-				overlapping_area.connection_side,
-				global_transform.origin
-			)
+#			setup_connection(overlapping_area)
+#			parent_block.spawn_measure_point(
+#				connection_side,
+#				connection_id,
+#				other_area_parent_block,
+#				overlapping_area.connection_side,
+#				global_transform.origin
+#			)
 			emit_signal("area_snapped")
 
 
@@ -145,28 +145,28 @@ func other_area_distance() -> float:
 	
 	
 # update the schematic with this new connection
-func schematic_add_blocks(
-	_building_block1: BuildingBlock,
-	_polarity1: int,
-	_connection_side1: int,
-	_building_block2: BuildingBlock,
-	_polarity2: int,
-	_connection_side2: int
-) -> String:
-	
-	var return_connection_id = schematic.add_blocks(
-		_building_block1,
-		_polarity1,
-		_connection_side1,
-		_building_block2,
-		_polarity2,
-		_connection_side2
-	)
-	schematic.loop_current_method()
-	
-	return return_connection_id
-
-
-func schematic_remove_connection():
-	schematic.remove_connection(connection_id)
-	schematic.loop_current_method()
+#func schematic_add_blocks(
+#	_building_block1: BuildingBlock,
+#	_polarity1: int,
+#	_connection_side1: int,
+#	_building_block2: BuildingBlock,
+#	_polarity2: int,
+#	_connection_side2: int
+#) -> String:
+#
+#	var return_connection_id = schematic.add_blocks(
+#		_building_block1,
+#		_polarity1,
+#		_connection_side1,
+#		_building_block2,
+#		_polarity2,
+#		_connection_side2
+#	)
+#	schematic.loop_current_method()
+#
+#	return return_connection_id
+#
+#
+#func schematic_remove_connection():
+#	schematic.remove_connection(connection_id)
+#	schematic.loop_current_method()

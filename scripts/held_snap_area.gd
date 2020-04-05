@@ -16,7 +16,7 @@ onready var parent_block := get_parent().get_parent()
 onready var snap_sound := parent_block.get_node("AudioStreamPlayer3DSnap")
 onready var magnet_hum_sound := parent_block.get_node("AudioStreamPlayer3DMagnetHum")
 
-enum LocationOnBlock {LENGTH, WIDTH}
+enum LocationOnBlock {UNDEFINED, LENGTH, WIDTH, TOP}
 export (LocationOnBlock) var location_on_block
 
 
@@ -41,6 +41,7 @@ func _ready():
 
 
 func _process(delta):
+	
 	check_for_removal()
 	
 	if !snap_area_other_area:
@@ -79,7 +80,7 @@ func _on_Held_Snap_Area_visibility_changed():
 
 
 func _on_Held_Snap_Area_area_entered(area):
-	# it's grabbed otherwise we woudln't show the HeldSnapArea, just to be sure
+	# it's grabbed otherwise we wouldn't show the HeldSnapArea, just to be sure
 	if !parent_block.is_grabbed:
 		return
 		
@@ -87,6 +88,9 @@ func _on_Held_Snap_Area_area_entered(area):
 		return
 	
 	if !area.is_class("SnapArea"):
+		return
+	
+	if area.get_parent() == parent_block:
 		return
 	
 	if area.snapped:
@@ -99,8 +103,8 @@ func _on_Held_Snap_Area_area_entered(area):
 		return
 	
 	# don't allow adding length to length
-	if area.location_on_block == LocationOnBlock.LENGTH and location_on_block == LocationOnBlock.LENGTH:
-		return
+#	if area.location_on_block == LocationOnBlock.LENGTH and location_on_block == LocationOnBlock.LENGTH:
+#		return
 	
 	snap_area_other_area = area
 	other_area_parent_block = snap_area_other_area.get_parent()
@@ -129,7 +133,7 @@ func check_for_removal():
 		return
 
 	
-	if other_area_distance() < 0.05:
+	if other_area_distance() < 0.09:
 		return
 	
 	vibrate_controller(false)

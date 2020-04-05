@@ -308,7 +308,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Blöcks"
+config/name="Blöcks 2"
 run/main_scene="res://main.tscn"
 config/icon="res://icon.png"
 

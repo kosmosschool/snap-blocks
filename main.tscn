@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_LeftController.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/controller_grab.tscn" type="PackedScene" id=2]
@@ -8,10 +8,9 @@
 [ext_resource path="res://OQ_Toolkit/OQ_ARVRController/Feature_ControllerModel_Right.tscn" type="PackedScene" id=6]
 [ext_resource path="res://OQ_Toolkit/OQ_ARVRController/Feature_ControllerModel_Left.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scripts/main.gd" type="Script" id=8]
-[ext_resource path="res://scenes/building_blocks/lamp_5o.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/building_blocks/block_base.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scripts/controller_system.gd" type="Script" id=10]
 [ext_resource path="res://scripts/schematic.gd" type="Script" id=11]
-[ext_resource path="res://scenes/building_blocks/battery_3v.tscn" type="PackedScene" id=12]
 [ext_resource path="res://scripts/challenge.gd" type="Script" id=13]
 [ext_resource path="res://scripts/object_remover_system.gd" type="Script" id=14]
 [ext_resource path="res://scripts/challenge_system.gd" type="Script" id=15]
@@ -45,17 +44,15 @@ data = PoolByteArray( 0, 0, 255, 255, 0, 0, 2, 0, 0, 0, 254, 255, 1, 0, 2, 0, 25
 format = 1
 stereo = true
 
-[sub_resource type="PhysicsMaterial" id=4]
-
-[sub_resource type="BoxShape" id=5]
+[sub_resource type="BoxShape" id=4]
 margin = 0.001
 extents = Vector3( 5, 0.11, 5 )
 
-[sub_resource type="ShaderMaterial" id=6]
+[sub_resource type="ShaderMaterial" id=5]
 shader = ExtResource( 17 )
 shader_param/color = Vector3( 1, 1, 1 )
 
-[sub_resource type="ShaderMaterial" id=7]
+[sub_resource type="ShaderMaterial" id=6]
 shader = ExtResource( 17 )
 shader_param/color = Vector3( 0.95, 0.95, 0.95 )
 
@@ -175,23 +172,11 @@ stream = SubResource( 3 )
 
 [node name="AllBuildingBlocks" type="Spatial" parent="."]
 
-[node name="Battery3V" parent="AllBuildingBlocks" instance=ExtResource( 12 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.680863, -0.594242 )
-collision_mask = 2
-mass = 0.1
-physics_material_override = SubResource( 4 )
-contacts_reported = 1
-contact_monitor = true
-linear_damp = 0.1
+[node name="BlockBase1" parent="AllBuildingBlocks" instance=ExtResource( 9 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.762082, -0.396837 )
 
-[node name="Lamp5O" parent="AllBuildingBlocks" instance=ExtResource( 9 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.337576, 0.680863, -0.594242 )
-collision_mask = 2
-mass = 0.1
-physics_material_override = SubResource( 4 )
-contacts_reported = 1
-contact_monitor = true
-linear_damp = 0.1
+[node name="BlockBase2" parent="AllBuildingBlocks" instance=ExtResource( 9 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.768518, 0.743351, -0.157377 )
 
 [node name="AllMeasurePoints" type="Spatial" parent="."]
 script = ExtResource( 20 )
@@ -203,15 +188,15 @@ mode = 1
 
 [node name="CollisionShape" type="CollisionShape" parent="Table"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0871522, 0 )
-shape = SubResource( 5 )
+shape = SubResource( 4 )
 
 [node name="TableMesh" type="MeshInstance" parent="Table"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.145994, 0 )
 use_in_baked_light = true
 mesh = ExtResource( 30 )
 material/0 = ExtResource( 22 )
-material/1 = SubResource( 6 )
-material/2 = SubResource( 7 )
+material/1 = SubResource( 5 )
+material/2 = SubResource( 6 )
 material/3 = ExtResource( 29 )
 
 [node name="SpaceText" type="Spatial" parent="."]
