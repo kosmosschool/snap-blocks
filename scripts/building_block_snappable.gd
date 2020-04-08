@@ -216,28 +216,94 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 		if flip_diff_x > (PI / 2) and flip_diff_z <= (PI / 2):
 			y_rotation_extra = PI
 			x_rot_vec *= -1
-		
 	
 	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
 		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH):
-		# for a width-to-length snap, we use the angle between the local bases y direction to accomplish this
+		# for a width-to-width snap, we use the angle between the local bases y direction to accomplish this
 		# to make sure we are not affected by other rotation, we take the other block's basis' x component
 		# of this basis
 		
-		# rotate by 180° first so that the two basis direction are ligned up
-		rotate_object_local(Vector3(1, 0, 0), - (PI / 2))
+		rotate_object_local(Vector3(0, 1, 0), (PI / 2))
+		
 		this_basis = transform.basis.orthonormalized()
-		var this_basis_y_comp = this_basis.y.slide(other_block_basis.z)
-		
-		# we need this to figure out the sign of the angle
-		angle_sign_indicator = this_basis_y_comp.y - other_block_basis.x.y
-		
+		var this_basis_y_comp = this_basis.y.slide(other_block_basis.x)
+	
 		# the angle we're getting here is unsigned
-		x_rotation_diff = this_basis_y_comp.angle_to(other_block_basis.x)
+		x_rotation_diff = this_basis_y_comp.angle_to(other_block_basis.y)
+		# we need this to figure out the sign of the angle
+		angle_sign_indicator = this_basis_y_comp.z - other_block_basis.y.z
 		
-		# rotate back
-		rotate_object_local(Vector3(1, 0, 0), (PI / 2))
-		y_rotation_extra = - (PI / 2)
+		# compare z directions to prevent flipping
+		var this_basis_z_comp = this_basis.z.slide(other_block_basis.y)
+		var flip_diff_z = this_basis_z_comp.angle_to(other_block_basis.z)
+		
+		# compare x directions to prevent flipping
+		var this_basis_x_comp = this_basis.x.slide(other_block_basis.y)
+		var flip_diff_x = this_basis_x_comp.angle_to(other_block_basis.x)
+		
+		print("flip_diff_z ", flip_diff_z)
+		print("flip_diff_x ", flip_diff_x)
+		
+		if flip_diff_z > (PI / 2) and flip_diff_x > (PI / 2):
+			y_rotation_extra = PI
+			x_rot_vec *= -1
+		
+		if flip_diff_x > (PI / 2) and flip_diff_z <= (PI / 2):
+			y_rotation_extra = PI
+			x_rot_vec *= -1
+		
+		rotate_object_local(Vector3(0, 1, 0), - (PI / 2))
+		
+		y_rotation_extra -= (PI / 2)
+		print("y_rotation_extra ", y_rotation_extra)
+		
+	
+#	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
+#		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH):
+#		# for a width-to-length snap, we use the angle between the local bases y direction to accomplish this
+#		# to make sure we are not affected by other rotation, we take the other block's basis' x component
+#		# of this basis
+#
+#		# rotate by 90° first so that the two basis direction are ligned up
+#		rotate_object_local(Vector3(1, 0, 0), - (PI / 2))
+#		this_basis = transform.basis.orthonormalized()
+#		var this_basis_y_comp = this_basis.y.slide(other_block_basis.z)
+#
+#		# we need this to figure out the sign of the angle
+#		angle_sign_indicator = this_basis_y_comp.y - other_block_basis.x.y
+#
+#		# the angle we're getting here is unsigned
+#		x_rotation_diff = this_basis_y_comp.angle_to(other_block_basis.x)
+#
+#		# rotate back
+#		rotate_object_local(Vector3(1, 0, 0), (PI / 2))
+#
+#
+#		# FLIPPING
+#		rotate_object_local(Vector3(0, 1, 0), (PI / 2))
+#		this_basis = transform.basis.orthonormalized()
+#		# compare z directions to prevent flipping
+#		var this_basis_z_comp = this_basis.z.slide(other_block_basis.y)
+#		var flip_diff_z = this_basis_z_comp.angle_to(other_block_basis.z)
+#
+#		# compare x directions to prevent flipping
+#		var this_basis_x_comp = this_basis.x.slide(other_block_basis.y)
+#		var flip_diff_x = this_basis_x_comp.angle_to(other_block_basis.x)
+#
+#		print("flip_diff_z ", flip_diff_z)
+#		print("flip_diff_x ", flip_diff_x)
+#
+#		if flip_diff_z > (PI / 2) and flip_diff_x > (PI / 2):
+#			y_rotation_extra = PI
+##			x_rot_vec *= -1
+#
+#		if flip_diff_z > (PI / 2) and flip_diff_x <= (PI / 2):
+#			y_rotation_extra = PI
+#			#x_rot_vec *= -1
+#
+#		rotate_object_local(Vector3(0, 1, 0), - (PI / 2))
+#
+#		y_rotation_extra -= (PI / 2)
 	
 	
 	print("angle ", x_rotation_diff)
