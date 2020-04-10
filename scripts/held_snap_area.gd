@@ -16,7 +16,7 @@ onready var parent_block := get_parent().get_parent()
 onready var snap_sound := parent_block.get_node("AudioStreamPlayer3DSnap")
 onready var magnet_hum_sound := parent_block.get_node("AudioStreamPlayer3DMagnetHum")
 
-enum LocationOnBlock {UNDEFINED, LENGTH, WIDTH, TOP}
+enum LocationOnBlock {UNDEFINED, WIDTH, LENGTH_A, LENGTH_B, LENGTH_C, LENGTH_D}
 export (LocationOnBlock) var location_on_block
 
 

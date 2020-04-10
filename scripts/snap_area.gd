@@ -24,7 +24,7 @@ onready var parent_block := get_parent()
 #export (Polarity) var polarity
 #enum ConnectionSide {A, B}
 #export (ConnectionSide) var connection_side
-enum LocationOnBlock {UNDEFINED, LENGTH, WIDTH, TOP}
+enum LocationOnBlock {UNDEFINED, WIDTH, LENGTH_A, LENGTH_B, LENGTH_C, LENGTH_D}
 export (LocationOnBlock) var location_on_block
 
 

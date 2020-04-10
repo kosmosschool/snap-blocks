@@ -181,6 +181,7 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 	
 	# we need to find out the local x rotation of the this block
 	# it depends on the relative difference to the x rotation of the other block
+	var initial_rotation_diff : float
 	var x_rotation_diff : float
 	var y_rotation_diff : float
 	var z_rotation_diff : float
@@ -189,73 +190,48 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 	var angle_sign_indicator : float
 	var x_rot_vec := Vector3(1, 0, 0)
 	
-	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
-		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH):
-		# for a width-to-width snap, we use the angle between the local bases y direction to accomplish this
-		# to make sure we are not affected by other rotation, we take the other block's basis' x component
-		# of this basis
-		var this_basis_y_comp = this_basis.y.slide(other_block_basis.x)
 	
-		# the angle we're getting here is unsigned
-		x_rotation_diff = this_basis_y_comp.angle_to(other_block_basis.y)
-		# we need this to figure out the sign of the angle
-		angle_sign_indicator = this_basis_y_comp.z - other_block_basis.y.z
-		
-		# compare z directions to prevent flipping
-		var this_basis_z_comp = this_basis.z.slide(other_block_basis.y)
-		var flip_diff_z = this_basis_z_comp.angle_to(other_block_basis.z)
-		
-		# compare x directions to prevent flipping
-		var this_basis_x_comp = this_basis.x.slide(other_block_basis.y)
-		var flip_diff_x = this_basis_x_comp.angle_to(other_block_basis.x)
-		
-		if flip_diff_z > (PI / 2) and flip_diff_x > (PI / 2):
-			y_rotation_extra = PI
-			x_rot_vec *= -1
-		
-		if flip_diff_x > (PI / 2) and flip_diff_z <= (PI / 2):
-			y_rotation_extra = PI
-			x_rot_vec *= -1
-	
-	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
-		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH):
-		# for a width-to-width snap, we use the angle between the local bases y direction to accomplish this
-		# to make sure we are not affected by other rotation, we take the other block's basis' x component
-		# of this basis
-		
-		rotate_object_local(Vector3(0, 1, 0), (PI / 2))
-		
-		this_basis = transform.basis.orthonormalized()
-		var this_basis_y_comp = this_basis.y.slide(other_block_basis.x)
-	
-		# the angle we're getting here is unsigned
-		x_rotation_diff = this_basis_y_comp.angle_to(other_block_basis.y)
-		# we need this to figure out the sign of the angle
-		angle_sign_indicator = this_basis_y_comp.z - other_block_basis.y.z
-		
-		# compare z directions to prevent flipping
-		var this_basis_z_comp = this_basis.z.slide(other_block_basis.y)
-		var flip_diff_z = this_basis_z_comp.angle_to(other_block_basis.z)
-		
-		# compare x directions to prevent flipping
-		var this_basis_x_comp = this_basis.x.slide(other_block_basis.y)
-		var flip_diff_x = this_basis_x_comp.angle_to(other_block_basis.x)
-		
-		print("flip_diff_z ", flip_diff_z)
-		print("flip_diff_x ", flip_diff_x)
-		
-		if flip_diff_z > (PI / 2) and flip_diff_x > (PI / 2):
-			y_rotation_extra = PI
-			x_rot_vec *= -1
-		
-		if flip_diff_x > (PI / 2) and flip_diff_z <= (PI / 2):
-			y_rotation_extra = PI
-			x_rot_vec *= -1
-		
-		rotate_object_local(Vector3(0, 1, 0), - (PI / 2))
-		
-		y_rotation_extra -= (PI / 2)
-		print("y_rotation_extra ", y_rotation_extra)
+#	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
+#		and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH):
+#		# for a width-to-width snap, we use the angle between the local bases y direction to accomplish this
+#		# to make sure we are not affected by other rotation, we take the other block's basis' x component
+#		# of this basis
+#
+#		rotate_object_local(Vector3(0, 1, 0), (PI / 2))
+#
+#		this_basis = transform.basis.orthonormalized()
+#		#other_block_basis = other_area_parent.transform.basis.orthonormalized()
+#
+#		var this_basis_y_comp = this_basis.y.slide(other_block_basis.x)
+#
+#		# the angle we're getting here is unsigned
+#		x_rotation_diff = this_basis_y_comp.angle_to(other_block_basis.y)
+#		# we need this to figure out the sign of the angle
+#		angle_sign_indicator = this_basis_y_comp.z - other_block_basis.y.z
+#
+#		# compare z directions to prevent flipping
+#		var this_basis_z_comp = this_basis.z.slide(other_block_basis.y)
+#		var flip_diff_z = this_basis_z_comp.angle_to(other_block_basis.z)
+#
+#		# compare x directions to prevent flipping
+#		var this_basis_x_comp = this_basis.x.slide(other_block_basis.y)
+#		var flip_diff_x = this_basis_x_comp.angle_to(other_block_basis.x)
+#
+#		print("flip_diff_z ", flip_diff_z)
+#		print("flip_diff_x ", flip_diff_x)
+#
+#		if flip_diff_z > (PI / 2) and flip_diff_x > (PI / 2):
+#			y_rotation_extra = PI
+#			x_rot_vec *= -1
+#
+#		if flip_diff_x > (PI / 2) and flip_diff_z <= (PI / 2):
+#			y_rotation_extra = PI
+#			x_rot_vec *= -1
+#
+#		rotate_object_local(Vector3(0, 1, 0), - (PI / 2))
+#
+#		y_rotation_extra -= (PI / 2)
+#		print("y_rotation_extra ", y_rotation_extra)
 		
 	
 #	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
@@ -304,25 +280,118 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 #		rotate_object_local(Vector3(0, 1, 0), - (PI / 2))
 #
 #		y_rotation_extra -= (PI / 2)
+
 	
+	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
+			and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH):
+		# here's a good explanation on why getting the signed alpha with atan2 works:
+		# https://stackoverflow.com/questions/5188561/signed-angle-between-two-3d-vectors-with-same-origin-within-the-same-plane
+		
+		# for a width-to-width snap, we use the angle between the local bases y vectors to accomplish this
+		# we need to make sure that we get the two y vectors on a y-z plane, so we take the x vector component
+		# of this block
+		
+		# define vectors to calculate angle
+		var this_basis_vec = this_basis.y
+		var other_basis_vec = other_block_basis.y
+		var plane_normal = other_block_basis.x
+		
+		# define vectors for flipping
+		var this_basis_vec_flip = this_basis.x
+		var slide_vec_flip = other_block_basis.y
+		
+		# figure out if if flipped (i.e. this block rotated by y 180°), we compare the two x vectors
+		# and look at their dot product
+		var this_basis_x_comp = this_basis_vec_flip.slide(slide_vec_flip)
+		var flip_cos = this_basis_x_comp.dot(other_block_basis.x)
+		
+		# calculate signed angle
+		var this_basis_vec_comp = this_basis_vec.slide(plane_normal)
+		
+		var cross : Vector3
+		
+		if flip_cos < 0:
+			cross = this_basis_vec_comp.cross(other_basis_vec)
+			y_rotation_extra = PI
+		else:
+			cross = other_basis_vec.cross(this_basis_vec_comp)
+		
+		var dot = this_basis_vec_comp.dot(other_basis_vec)
+		
+		initial_rotation_diff = atan2(cross.dot(plane_normal), dot)
+
+
+	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
+			and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_A):
+		# for width-to-length_a snap, we again need the angle between the y vectors, but this time on the y-x plane
+		
+		# figure out if if flipped
+		var this_basis_x_comp = this_basis.x.slide(other_block_basis.y)
+		var dot_x = this_basis_x_comp.dot(other_block_basis.z)
+		
+		var this_basis_y_comp = this_basis.y.slide(other_block_basis.z)
+		
+		var cross_y : Vector3
+		
+		if dot_x < 0:
+			cross_y = this_basis_y_comp.cross(other_block_basis.y)
+			y_rotation_extra = PI
+		else:
+			cross_y = other_block_basis.y.cross(this_basis_y_comp)
+		
+		var dot_y = this_basis_y_comp.dot(other_block_basis.y)
+		
+		initial_rotation_diff = atan2(cross_y.dot(other_block_basis.z), dot_y)
+		
+		# we need to add the rotation extra beause this snap is always at a 90° (width to length)
+		y_rotation_extra -= (PI / 2)
 	
-	print("angle ", x_rotation_diff)
+	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
+			and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_D):
+		# for width-to-length_d snap, we again need the angle between the y vectors, but this time on the y-z plane
+		
+		# define vectors to calculate angle
+		var this_basis_vec = this_basis.x
+		var other_basis_vec = other_block_basis.y
+		
+		# figure out if if flipped
+		var this_basis_x_comp = this_basis.x.slide(other_block_basis.z)
+		var dot_x = this_basis_x_comp.dot(other_block_basis.y)
+		
+		var this_basis_y_comp = this_basis.y.slide(other_block_basis.x)
+		
+		var cross_y : Vector3
+		
+		if dot_x < 0:
+			cross_y = this_basis_y_comp.cross(other_block_basis.z)
+			y_rotation_extra = PI
+		else:
+			cross_y = other_block_basis.y.cross(this_basis_y_comp)
+		
+		var dot_y = this_basis_y_comp.dot(other_block_basis.z)
+		
+		initial_rotation_diff = atan2(cross_y.dot(other_block_basis.x), dot_y)
+		
+		# we need to add the rotation extra beause this snap is always at a 90° (width to length)
+		y_rotation_extra -= (PI / 2)
+
+
 	# figure out x rotation snap
-	if abs(x_rotation_diff) >= 0 and abs(x_rotation_diff) < (PI / 4):
+	if abs(initial_rotation_diff) >= 0 and abs(initial_rotation_diff) < (PI / 4):
 		print("1")
 		x_rotation_diff = 0
-	elif abs(x_rotation_diff) >= (PI / 4) and abs(x_rotation_diff) < (PI / 2):
+	elif abs(initial_rotation_diff) >= (PI / 4) and abs(initial_rotation_diff) < (PI / 2):
 		print("2")
 		x_rotation_diff = PI / 2
-	elif abs(x_rotation_diff) >= (PI / 2) and abs(x_rotation_diff) < (PI * 3 / 4):
+	elif abs(initial_rotation_diff) >= (PI / 2) and abs(initial_rotation_diff) < (PI * 3 / 4):
 		print("3")
 		x_rotation_diff = PI / 2
-	elif abs(x_rotation_diff) >= (PI * 3 / 4):
+	elif abs(initial_rotation_diff) >= (PI * 3 / 4):
 		print("4")
 		x_rotation_diff = PI
 	
 	# sign angle
-	if angle_sign_indicator < 0:
+	if initial_rotation_diff < 0:
 		x_rotation_diff *= -1
 	
 	print("x_rotation_diff ", x_rotation_diff)
