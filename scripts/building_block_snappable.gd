@@ -182,6 +182,7 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 	# we need to find out the local x rotation of the this block
 	# it depends on the relative difference to the x rotation of the other block
 	var x_rotation_new : float
+	var y_rotation_new : float
 	var z_rotation_new : float
 #	var x_rotation_diff : float
 #	var y_rotation_diff : float
@@ -269,19 +270,60 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 		# we need to add the rotation extra beause this snap is always at a 90° (width to length)
 		z_rotation_extra += (PI / 2)
 	
-	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_C
-			and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_A):
+	if ((this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_C
+			and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_A) or
+			(this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_A
+			and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_A)):
 		
 		var angles = blocks_angle(
 			this_basis.y,
 			other_block_basis.y,
 			other_block_basis.z,
-			Vector3(),
-			Vector3(),
-			Vector3()
+			this_basis.z,
+			other_block_basis.z,
+			other_block_basis.y
 		)
 		
 		z_rotation_new = snap_rotation(angles[0])
+		y_rotation_extra = angles[1]
+
+	if ((this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_B
+			and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_A) or
+			(this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_D
+			and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_A)):
+		
+		var angles = blocks_angle(
+			this_basis.x,
+			other_block_basis.x,
+			other_block_basis.z,
+			this_basis.y,
+			other_block_basis.z,
+			other_block_basis.y
+		)
+		
+		y_rotation_new = snap_rotation(angles[0])
+		x_rotation_extra = angles[1]
+		
+		x_rotation_extra += (PI / 2)
+	
+	if ((this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_A
+			and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_D) or
+			(this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_C
+			and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_D)):
+		
+		var angles = blocks_angle(
+			this_basis.x,
+			other_block_basis.x,
+			other_block_basis.y,
+			this_basis.z,
+			other_block_basis.y,
+			other_block_basis.z
+		)
+		
+		z_rotation_new = snap_rotation(angles[0])
+		x_rotation_extra = angles[1]
+		
+		x_rotation_extra -= (PI / 2)
 
 	
 	transform.basis = other_block_basis
@@ -291,21 +333,19 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 	rotate_object_local(Vector3(0, 0, 1), z_rotation_extra)
 	
 	rotate_object_local(Vector3(1, 0, 0), x_rotation_new)
+	rotate_object_local(Vector3(0, 1, 0), y_rotation_new)
 	rotate_object_local(Vector3(0, 0, 1), z_rotation_new)
 	
-	
-	
 	snap_end_transform.basis = global_transform.basis
-	
 	var move_by_vec = other_snap_area.global_transform.origin - this_snap_area.global_transform.origin
 	snap_end_transform.origin = global_transform.origin + move_by_vec
-	
 	global_transform = snap_start_transform
 	
 	set_mode(RigidBody.MODE_KINEMATIC)
 	moving_to_snap = true
 	overlapping = false
 	show_held_snap_areas(false)
+
 
 func snap_rotation(angle_to_snap) -> float:
 	# snaps rotation to next 90° angle and returns new angle
@@ -325,7 +365,8 @@ func snap_rotation(angle_to_snap) -> float:
 	
 	return new_angle
 
-func blocks_angle(vec_a, vec_b, vec_n, vec_flip_a, vec_flip_b, vec_flip_n) -> Array:
+
+func blocks_angle(vec_a, vec_b, vec_n, vec_flip_a = Vector3(), vec_flip_b = Vector3(), vec_flip_n = Vector3()) -> Array:
 	# this method calculates the signed angle between vec_a and vec_b on the plane with normal vec_n
 	# it also calculates the "flip angle" vec_flip_a and vec_flip_b
 	# on the plane vec_flip_n, which is either PI or 0.
