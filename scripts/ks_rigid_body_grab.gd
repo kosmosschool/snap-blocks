@@ -2,6 +2,17 @@ extends Feature_RigidBodyGrab
 
 class_name KSRigidBodyGrab
 
+# overriding from parent
+func _on_ARVRController_button_pressed(button_number):
+	if button_number != vr.CONTROLLER_BUTTON.GRIP_TRIGGER:
+		return
+	
+	if vr.button_pressed(vr.BUTTON.RIGHT_INDEX_TRIGGER):
+		return
+	
+	# if grab button, grab
+	grab()
+
 
 # overriding from parent to allow grabbing rigid bodies with MODE_KINEMATIC
 func grab():
@@ -28,3 +39,8 @@ func grab():
 				start_grab_velocity(grabbable_rigid_body);
 			vr.GrabTypes.HINGEJOINT:
 				start_grab_hinge_joint(grabbable_rigid_body);
+
+
+func overlapping_objects():
+	# returns overlapping bodies
+	return grab_area.get_overlapping_bodies();
