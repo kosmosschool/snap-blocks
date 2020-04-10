@@ -274,6 +274,28 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 		# we need to add the rotation extra beause this snap is always at a 90° (width to length)
 		y_rotation_extra += (PI / 2)
 	
+	if ((this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_B
+			and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH) or
+			(this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_D
+			and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH)):
+		# for width-to-length_a snap, we again need the angle between the y vectors, but this time on the y-x plane
+
+		var angles = blocks_angle(
+			this_basis.z,
+			other_block_basis.y,
+			other_block_basis.x,
+			this_basis.y,
+			other_block_basis.x,
+			other_block_basis.y
+		)
+		
+		y_rotation_new = snap_rotation(angles[0])
+		z_rotation_extra = angles[1]
+		
+		# we need to add the rotation extra beause this snap is always at a 90° (width to length)
+		x_rotation_extra -= (PI / 2)
+		z_rotation_extra -= (PI / 2)
+	
 	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
 			and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.LENGTH_D):
 		# for width-to-length_d snap, we again need the angle between the y vectors, but this time on the y-z plane
