@@ -37,31 +37,24 @@ func is_class(type):
 	return type == "SnapArea" or .is_class(type)
 
 
+func _ready():
+	connect("area_exited", self, "_on_Snap_Area_area_exited")
+
+
 func _process(delta):
-	check_for_removal()
-	
+#	check_for_removal()
+
 	if start_double_check:
 		double_check_timer += delta
-		
+
 		if double_check_timer > 0.25:
 			double_check_snap()
 			start_double_check = false
 			double_check_timer = 0.0
 
 
-# we use this custom method instead of the area_exited or get_overlapping_areas
-# we need to do this because with the small collisionshapes we use
-# the area keeps entering and exiting all the time (probably a bug in Godot)
-func check_for_removal():
+func  _on_Snap_Area_area_exited(area):
 	if !snap_area_other_area:
-		return
-	
-	# we have to do this check because it's possible the other area was deleted in the meantime
-	if !is_instance_valid(snap_area_other_area):
-		return
-
-
-	if other_area_distance() < 0.05:
 		return
 	
 	# if distance is greater, remove
@@ -71,6 +64,30 @@ func check_for_removal():
 	else:
 		snap_area_other_area = null
 		other_area_parent_block = null
+	
+
+# we use this custom method instead of the area_exited or get_overlapping_areas
+# we need to do this because with the small collisionshapes we use
+# the area keeps entering and exiting all the time (probably a bug in Godot)
+#func check_for_removal():
+#	if !snap_area_other_area:
+#		return
+#
+#	# we have to do this check because it's possible the other area was deleted in the meantime
+#	if !is_instance_valid(snap_area_other_area):
+#		return
+#
+#
+#	if other_area_distance() < 0.05:
+#		return
+#
+#	# if distance is greater, remove
+#	if is_master and snapped:
+#		snap_area_other_area.unsnap()
+#		unsnap()
+#	else:
+#		snap_area_other_area = null
+#		other_area_parent_block = null
 
 
 func unsnap():
@@ -97,17 +114,6 @@ func unsnap_both():
 	unsnap()
 
 
-#func setup_connection(_other_area):
-#	connection_id = schematic_add_blocks(
-#		parent_block,
-#		polarity,
-#		connection_side,
-#		_other_area.get_parent(),
-#		_other_area.polarity,
-#		_other_area.connection_side
-#	)
-#	snap_area_other_area.connection_id = connection_id
-
 # double checks if really not overlapping an area
 # called from parent after every succesful snap
 func start_double_check_snap():
@@ -129,44 +135,9 @@ func double_check_snap() -> void:
 			other_area_parent_block = overlapping_area.get_parent()
 			overlapping_area.other_area_parent_block = get_parent()
 			is_master = true
-#			setup_connection(overlapping_area)
-#			parent_block.spawn_measure_point(
-#				connection_side,
-#				connection_id,
-#				other_area_parent_block,
-#				overlapping_area.connection_side,
-#				global_transform.origin
-#			)
 			emit_signal("area_snapped")
 
 
 func other_area_distance() -> float:
 	return get_global_transform().origin.distance_to(snap_area_other_area.get_global_transform().origin)
 	
-	
-# update the schematic with this new connection
-#func schematic_add_blocks(
-#	_building_block1: BuildingBlock,
-#	_polarity1: int,
-#	_connection_side1: int,
-#	_building_block2: BuildingBlock,
-#	_polarity2: int,
-#	_connection_side2: int
-#) -> String:
-#
-#	var return_connection_id = schematic.add_blocks(
-#		_building_block1,
-#		_polarity1,
-#		_connection_side1,
-#		_building_block2,
-#		_polarity2,
-#		_connection_side2
-#	)
-#	schematic.loop_current_method()
-#
-#	return return_connection_id
-#
-#
-#func schematic_remove_connection():
-#	schematic.remove_connection(connection_id)
-#	schematic.loop_current_method()

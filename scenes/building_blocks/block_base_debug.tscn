@@ -1,11 +1,17 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=19 format=2]
 
+[ext_resource path="res://scripts/delete_bubble.gd" type="Script" id=1]
+[ext_resource path="res://scenes/measure_point.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scripts/building_block_snappable.gd" type="Script" id=3]
 [ext_resource path="res://materials/dark_dark_lax.tres" type="Material" id=4]
 [ext_resource path="res://scenes/snap_particles.tscn" type="PackedScene" id=5]
 [ext_resource path="res://materials/bright_lax.tres" type="Material" id=6]
 [ext_resource path="res://materials/lax.tres" type="Material" id=7]
 [ext_resource path="res://scripts/snap_area.gd" type="Script" id=8]
+[ext_resource path="res://scenes/cubes/cube_delete.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/text_label_2d.tscn" type="PackedScene" id=10]
+[ext_resource path="res://sounds/ElectricLightHum_short.wav" type="AudioStream" id=11]
+[ext_resource path="res://sounds/Magnet Click 1.wav" type="AudioStream" id=12]
 [ext_resource path="res://scripts/held_snap_area.gd" type="Script" id=13]
 [ext_resource path="res://meshes/big_block.mesh" type="ArrayMesh" id=14]
 
@@ -23,6 +29,9 @@ extents = Vector3( 0.02, 0.02, 0.02 )
 resource_local_to_scene = true
 margin = 0.005
 extents = Vector3( 0.03, 0.03, 0.07 )
+
+[sub_resource type="BoxShape" id=4]
+extents = Vector3( 0.02, 0.02, 0.02 )
 
 [node name="BlockBase" type="RigidBody"]
 collision_mask = 2
@@ -205,3 +214,102 @@ location_on_block = 3
 
 [node name="CollisionShape" type="CollisionShape" parent="HeldSnapAreas/HeldSnapArea10"]
 shape = SubResource( 3 )
+
+[node name="MeasurePoint" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0 )
+visible = false
+measure_point_type = 1
+
+[node name="DeleteBubble" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0 )
+script = ExtResource( 1 )
+
+[node name="Area" type="Area" parent="DeleteBubble"]
+
+[node name="CollisionShape" type="CollisionShape" parent="DeleteBubble/Area"]
+shape = SubResource( 4 )
+
+[node name="CubeDelete" parent="DeleteBubble" instance=ExtResource( 9 )]
+
+[node name="BlockLabel1" parent="." instance=ExtResource( 10 )]
+transform = Transform( 0.4, 0, 0, 0, -1.31134e-08, 1, 0, -0.3, -4.37114e-08, 0.082, 0.009, 0.02 )
+visible = false
+text = "5 Ω"
+font_size_multiplier = 5.0
+font_color = Color( 0.14902, 0.14902, 0.14902, 1 )
+background_color = Color( 0, 0, 0, 0 )
+h_align = 1
+v_align = 1
+
+[node name="BlockLabel2" parent="." instance=ExtResource( 10 )]
+transform = Transform( -0.4, 9.77524e-08, 5.30863e-14, 0, -4.88762e-08, 1, 1.30337e-07, 0.3, 1.62921e-07, -0.081969, 0.009, -0.0201225 )
+visible = false
+text = "5 Ω"
+font_size_multiplier = 5.0
+font_color = Color( 0.15, 0.15, 0.15, 1 )
+background_color = Color( 0, 0, 0, 0 )
+h_align = 1
+v_align = 1
+
+[node name="AudioStreamPlayer3DSnap" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 12 )
+
+[node name="AudioStreamPlayer3DMagnetHum" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 11 )
+
+[node name="DebugLetters" type="Spatial" parent="."]
+visible = false
+
+[node name="A" parent="DebugLetters" instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0763258 )
+text = "A"
+font_size_multiplier = 15.0
+font_color = Color( 0.12549, 0.737255, 0.580392, 1 )
+background_color = Color( 0, 0, 0, 0 )
+h_align = 1
+v_align = 1
+
+[node name="B" parent="DebugLetters" instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, -0.0797995, 0.00541233 )
+text = "B"
+font_size_multiplier = 15.0
+font_color = Color( 0.12549, 0.737255, 0.580392, 1 )
+background_color = Color( 0, 0, 0, 0 )
+h_align = 1
+v_align = 1
+
+[node name="C" parent="DebugLetters" instance=ExtResource( 10 )]
+transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, -1.07471e-08, 0, -0.0758665 )
+text = "C"
+font_size_multiplier = 15.0
+font_color = Color( 0.12549, 0.737255, 0.580392, 1 )
+background_color = Color( 0, 0, 0, 0 )
+h_align = 1
+v_align = 1
+
+[node name="D" parent="DebugLetters" instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 0.0762578, 0.00541235 )
+text = "D"
+font_size_multiplier = 15.0
+font_color = Color( 0.12549, 0.737255, 0.580392, 1 )
+background_color = Color( 0, 0, 0, 0 )
+h_align = 1
+v_align = 1
+
+[node name="A_W" parent="DebugLetters" instance=ExtResource( 10 )]
+transform = Transform( -1.62921e-07, 0, -1, 0, 1, 0, 1, 0, -1.62921e-07, -0.15293, 0, 0.000320718 )
+text = "A"
+font_size_multiplier = 15.0
+font_color = Color( 0.12549, 0.737255, 0.580392, 1 )
+background_color = Color( 0, 0, 0, 0 )
+h_align = 1
+v_align = 1
+
+[node name="B_W" parent="DebugLetters" instance=ExtResource( 10 )]
+transform = Transform( -1.62921e-07, 0, 1, 0, 1, 0, -1, 0, -1.62921e-07, 0.150604, 0, 0.000320668 )
+text = "B"
+font_size_multiplier = 15.0
+font_color = Color( 0.12549, 0.737255, 0.580392, 1 )
+background_color = Color( 0, 0, 0, 0 )
+h_align = 1
+v_align = 1

@@ -1392,5 +1392,6 @@ limits/debugger_stdout/max_messages_per_frame=100
 quality/driver/driver_name="GLES2"
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
+quality/depth_prepass/enable=false
 quality/filters/msaa=6
 environment/default_environment="res://default_env.tres"

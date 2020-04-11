@@ -21,7 +21,7 @@ var volt_measure_points : Dictionary
 onready var held_snap_areas = $HeldSnapAreas
 onready var held_snap_areas_children = held_snap_areas.get_children()
 onready var all_children = get_children()
-onready var snap_sound := $AudioStreamPlayer3DSnap
+#onready var snap_sound := $AudioStreamPlayer3DSnap
 onready var all_measure_points := get_node(global_vars.ALL_MEASURE_POINTS_PATH)
 onready var measure_point_scene = load(global_vars.MEASURE_POINT_FILE_PATH)
 
@@ -60,19 +60,33 @@ func is_class(type):
 
 func _ready():
 	connect_to_snap_area_signals()
+	connect("grab_started", self, "_on_Building_Block_Snappable_grab_started")
+	connect("grab_ended", self, "_on_Building_Block_Snappable_grab_ended")
 	if !is_grabbed:
 		show_held_snap_areas(false)
+		set_process(false)
+		set_physics_process(false)
 
 
 func _process(delta):
-	
 	if is_grabbed:
 		show_held_snap_areas(true)
 	elif !is_grabbed and !overlapping:
 		show_held_snap_areas(false)
-	
+
 	if moving_to_snap:
 		update_pos_to_snap(delta)
+
+
+func _on_Building_Block_Snappable_grab_started():
+	set_process(true)
+	set_physics_process(true)
+
+
+func _on_Building_Block_Snappable_grab_ended():
+	if !overlapping:
+		set_process(false)
+	
 
 
 func _on_SnapArea_area_snapped():
@@ -424,7 +438,7 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 	
 	global_transform = snap_start_transform
 	
-	set_mode(RigidBody.MODE_KINEMATIC)
+	set_mode(RigidBody.MODE_STATIC)
 	moving_to_snap = true
 	overlapping = false
 	show_held_snap_areas(false)
@@ -497,9 +511,11 @@ func update_pos_to_snap(delta: float) -> void:
 		moving_to_snap = false
 		snap_timer = 0.0
 		check_snap_areas()
-		if snap_sound:
-			snap_sound.play()
+#		if snap_sound:
+#			snap_sound.play()
 #		set_mode(RigidBody.MODE_RIGID)
+		set_process(false)
+		set_physics_process(false)
 		return
 	
 	global_transform = snap_start_transform.interpolate_with(snap_end_transform, interpolation_progress)

@@ -26,8 +26,8 @@ func grab():
 		for body in bodies:
 			if body is OQClass_GrabbableRigidBody:
 				var current_mode = body.get_mode()
-				if (current_mode == RigidBody.MODE_RIGID or current_mode == RigidBody.MODE_KINEMATIC) and body.is_grabbable:
-					if (current_mode == RigidBody.MODE_KINEMATIC):
+				if (current_mode == RigidBody.MODE_RIGID or current_mode == RigidBody.MODE_STATIC) and body.is_grabbable:
+					if (current_mode == RigidBody.MODE_STATIC):
 						body.set_mode(RigidBody.MODE_RIGID)
 					grabbable_rigid_body = body
 

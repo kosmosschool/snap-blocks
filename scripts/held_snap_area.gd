@@ -13,8 +13,7 @@ var snap_particles_node
 var overlapping := false setget , get_overlapping
 
 onready var parent_block := get_parent().get_parent()
-onready var snap_sound := parent_block.get_node("AudioStreamPlayer3DSnap")
-onready var magnet_hum_sound := parent_block.get_node("AudioStreamPlayer3DMagnetHum")
+#onready var magnet_hum_sound := parent_block.get_node("AudioStreamPlayer3DMagnetHum")
 
 enum LocationOnBlock {UNDEFINED, WIDTH, LENGTH_A, LENGTH_B, LENGTH_C, LENGTH_D}
 export (LocationOnBlock) var location_on_block
@@ -59,8 +58,8 @@ func _process(delta):
 	if snapping:
 		vibrate_controller(false)
 		destroy_particles()
-		if magnet_hum_sound:
-			magnet_hum_sound.stop()
+#		if magnet_hum_sound:
+#			magnet_hum_sound.stop()
 		snapping = false
 		parent_block.snap_to_block(self, snap_area_other_area)
 
@@ -120,8 +119,8 @@ func _on_Held_Snap_Area_area_entered(area):
 	parent_block.set_overlapping(true)
 	vibrate_controller(true)
 	spawn_particles()
-	if magnet_hum_sound:
-		magnet_hum_sound.play()
+#	if magnet_hum_sound:
+#		magnet_hum_sound.play()
 
 
 func check_for_removal():
@@ -138,8 +137,8 @@ func check_for_removal():
 	
 	vibrate_controller(false)
 	destroy_particles()
-	if magnet_hum_sound:
-		magnet_hum_sound.stop()
+#	if magnet_hum_sound:
+#		magnet_hum_sound.stop()
 	
 	snap_area_other_area = null
 	other_area_parent_block = null
