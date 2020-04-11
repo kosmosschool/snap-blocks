@@ -39,8 +39,8 @@ func _ready():
 
 # implement this in child
 func _on_right_ARVRController_button_pressed(button_number):
-	# if grip trigger pressed while index trigger being held down
-	if vr.button_pressed(vr.BUTTON.RIGHT_INDEX_TRIGGER) and button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER:
+	# if grip trigger pressed while B button being held down
+	if vr.button_pressed(vr.BUTTON.B) and button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER:
 		duplicate_block()
 
 
@@ -68,7 +68,6 @@ func duplicate_block():
 		all_building_blocks.add_child(block_instance)
 		# position
 		block_instance.global_transform = obj.global_transform
-		# let go of old object
 		
 		# grab
 		controller_grab.start_grab_hinge_joint(block_instance)

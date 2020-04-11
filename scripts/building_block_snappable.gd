@@ -69,16 +69,12 @@ func _ready():
 
 
 func _process(delta):
-	if is_grabbed:
-		show_held_snap_areas(true)
-	elif !is_grabbed and !overlapping:
-		show_held_snap_areas(false)
-
 	if moving_to_snap:
 		update_pos_to_snap(delta)
 
 
 func _on_Building_Block_Snappable_grab_started():
+	show_held_snap_areas(true)
 	set_process(true)
 	set_physics_process(true)
 
@@ -86,6 +82,8 @@ func _on_Building_Block_Snappable_grab_started():
 func _on_Building_Block_Snappable_grab_ended():
 	if !overlapping:
 		set_process(false)
+		set_physics_process(false)
+		show_held_snap_areas(false)
 	
 
 

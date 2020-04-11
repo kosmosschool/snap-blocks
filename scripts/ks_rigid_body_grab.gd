@@ -7,7 +7,7 @@ func _on_ARVRController_button_pressed(button_number):
 	if button_number != vr.CONTROLLER_BUTTON.GRIP_TRIGGER:
 		return
 	
-	if vr.button_pressed(vr.BUTTON.RIGHT_INDEX_TRIGGER):
+	if vr.button_pressed(vr.BUTTON.B):
 		return
 	
 	# if grab button, grab

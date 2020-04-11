@@ -39,6 +39,7 @@ func is_class(type):
 
 func _ready():
 	connect("area_exited", self, "_on_Snap_Area_area_exited")
+	set_process(false)
 
 
 func _process(delta):
@@ -51,6 +52,7 @@ func _process(delta):
 			double_check_snap()
 			start_double_check = false
 			double_check_timer = 0.0
+			set_process(false)
 
 
 func  _on_Snap_Area_area_exited(area):
@@ -117,6 +119,7 @@ func unsnap_both():
 # double checks if really not overlapping an area
 # called from parent after every succesful snap
 func start_double_check_snap():
+	set_process(true)
 	start_double_check = true
 
 
