@@ -415,8 +415,13 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 	rotate_object_local(Vector3(0, 0, 1), z_rotation_new)
 	
 	snap_end_transform.basis = global_transform.basis
-	var move_by_vec = other_snap_area.global_transform.origin - this_snap_area.global_transform.origin
+	
+	var this_snap_area_ext = this_snap_area.get_node("CollisionShape").shape.extents
+#	var other_snap_area_ext = other_snap_area.get_node("CollisionShape").shape.extents
+	var extra_move_by = this_snap_area.global_transform.basis.z * this_snap_area_ext.z
+	var move_by_vec = other_snap_area.global_transform.origin - this_snap_area.global_transform.origin + extra_move_by
 	snap_end_transform.origin = global_transform.origin + move_by_vec
+	
 	global_transform = snap_start_transform
 	
 	set_mode(RigidBody.MODE_KINEMATIC)
