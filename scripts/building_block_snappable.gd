@@ -21,7 +21,8 @@ var volt_measure_points : Dictionary
 onready var held_snap_areas = $HeldSnapAreas
 onready var held_snap_areas_children = held_snap_areas.get_children()
 onready var all_children = get_children()
-#onready var snap_sound := $AudioStreamPlayer3DSnap
+onready var audio_stream_player := $AudioStreamPlayer3D
+onready var snap_sound := preload("res://sounds/magnetic_click.wav")
 onready var all_measure_points := get_node(global_vars.ALL_MEASURE_POINTS_PATH)
 onready var measure_point_scene = load(global_vars.MEASURE_POINT_FILE_PATH)
 
@@ -143,33 +144,6 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 	snap_start_transform = global_transform
 
 	var other_area_parent = other_snap_area.get_parent()
-	# move to far position but in right direction
-	#global_transform.origin += other_snap_area.global_transform.basis.z.normalized() * 1000
-
-	# rotate it so that this z-vector is aligned with other areas
-	# z-vector, but in the opposite direction
-	#global_transform = this_snap_area.global_transform.looking_at(other_snap_area.global_transform.origin, Vector3(0, 1, 0))
-	
-#	global_transform.basis = other_snap_area.global_transform.basis
-	# rotate by 180° degrees
-#	rotate_y(PI)
-
-	# rotate by local y transform also
-#	rotate_y(-this_snap_area.rotation.y)
-
-	# move to close pos
-	# assuming other area's has a CollisionShape child and parent has CollisionShape child
-#	var this_snap_area_extents = this_snap_area.get_node("CollisionShape").shape.extents
-#	var other_snap_area_extents = other_snap_area.get_node("CollisionShape").shape.extents
-#
-#	var move_by_vec = other_snap_area.global_transform.origin - this_snap_area.global_transform.origin
-#	move_by_vec -= other_snap_area.global_transform.basis.z.normalized() * (this_snap_area_extents.z - 0.001)
-#	global_transform.origin += move_by_vec
-
-	# assign back
-#	snap_end_transform = global_transform
-#	global_transform = snap_start_transform
-#	var other_block_rotation = current_other_area_parent_block.rotation
 	var start_rotation = rotation
 	
 	# start with other block's rotation
@@ -179,26 +153,11 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 	var this_basis = transform.basis.orthonormalized()
 	var other_block_basis = other_area_parent.transform.basis.orthonormalized()
 	
-#	this_snap_global_basis.z.x = 0
-#	other_snap_global_basis.z.x = 0
-
-#	var projection = transform.basis.y.project(other_area_parent.transform.basis.y)
-#	var new_point = transform.basis.y - projection
-
-#	print("other_area_parent.transform.basis.y ", other_area_parent.transform.basis.y)
-#	print("new_point ", new_point)
-	
-#	new_point.x = 0
-#	other_area_parent.transform.basis.y.x = 0
-	
 	# we need to find out the local x rotation of the this block
 	# it depends on the relative difference to the x rotation of the other block
 	var x_rotation_new : float
 	var y_rotation_new : float
 	var z_rotation_new : float
-#	var x_rotation_diff : float
-#	var y_rotation_diff : float
-#	var z_rotation_diff : float
 	var x_rotation_extra : float
 	var y_rotation_extra : float
 	var z_rotation_extra : float
@@ -509,14 +468,18 @@ func update_pos_to_snap(delta: float) -> void:
 		moving_to_snap = false
 		snap_timer = 0.0
 		check_snap_areas()
-#		if snap_sound:
-#			snap_sound.play()
-#		set_mode(RigidBody.MODE_RIGID)
+		play_snap_sound()
 		set_process(false)
 		set_physics_process(false)
 		return
 	
 	global_transform = snap_start_transform.interpolate_with(snap_end_transform, interpolation_progress)
+
+
+func play_snap_sound():
+	if snap_sound and audio_stream_player:
+		audio_stream_player.set_stream(snap_sound)
+		audio_stream_player.play()
 
 
 # checks if there are still overlapping children or not

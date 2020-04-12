@@ -30,6 +30,7 @@ func is_class(type):
 
 func _ready():
 	connect("area_entered", self, "_on_Held_Snap_Area_area_entered")
+	connect("area_exited", self, "_on_Held_Snap_Area_area_exited")
 	connect("visibility_changed", self, "_on_Held_Snap_Area_visibility_changed")
 	
 	if !is_visible_in_tree():
@@ -41,7 +42,7 @@ func _ready():
 
 func _process(delta):
 	
-	check_for_removal()
+#	check_for_removal()
 	
 	if !snap_area_other_area:
 		return
@@ -101,10 +102,6 @@ func _on_Held_Snap_Area_area_entered(area):
 	if overlapping:
 		return
 	
-	# don't allow adding length to length
-#	if area.location_on_block == LocationOnBlock.LENGTH and location_on_block == LocationOnBlock.LENGTH:
-#		return
-	
 	snap_area_other_area = area
 	other_area_parent_block = snap_area_other_area.get_parent()
 	
@@ -123,16 +120,12 @@ func _on_Held_Snap_Area_area_entered(area):
 #		magnet_hum_sound.play()
 
 
-func check_for_removal():
+func _on_Held_Snap_Area_area_exited(area):
 	if !snap_area_other_area:
 		return
 	
 	# we have to do this check because it's possible the other area was deleted in the meantime
 	if !is_instance_valid(snap_area_other_area):
-		return
-
-	
-	if other_area_distance() < 0.09:
 		return
 	
 	vibrate_controller(false)
@@ -144,6 +137,29 @@ func check_for_removal():
 	other_area_parent_block = null
 	overlapping = false
 	parent_block.update_overlapping()
+
+
+#func check_for_removal():
+#	if !snap_area_other_area:
+#		return
+#
+#	# we have to do this check because it's possible the other area was deleted in the meantime
+#	if !is_instance_valid(snap_area_other_area):
+#		return
+#
+#
+#	if other_area_distance() < 0.055:
+#		return
+#
+#	vibrate_controller(false)
+#	destroy_particles()
+##	if magnet_hum_sound:
+##		magnet_hum_sound.stop()
+#
+#	snap_area_other_area = null
+#	other_area_parent_block = null
+#	overlapping = false
+#	parent_block.update_overlapping()
 
 
 func other_area_distance() -> float:

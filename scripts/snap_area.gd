@@ -59,6 +59,10 @@ func  _on_Snap_Area_area_exited(area):
 	if !snap_area_other_area:
 		return
 	
+	# we have to do this check because it's possible the other area was deleted in the meantime
+	if !is_instance_valid(snap_area_other_area):
+		return
+	
 	# if distance is greater, remove
 	if is_master and snapped:
 		snap_area_other_area.unsnap()

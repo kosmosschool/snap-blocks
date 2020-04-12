@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/Magnet Click 1.wav-2ad7bd91435dadc230ab5a83a74b29e3.sample"
+path="res://.import/magnetic_click.wav-491d6652e1e40b876c4aa0029dcbdd50.sample"
 
 [deps]
 
-source_file="res://sounds/Magnet Click 1.wav"
-dest_files=[ "res://.import/Magnet Click 1.wav-2ad7bd91435dadc230ab5a83a74b29e3.sample" ]
+source_file="res://sounds/magnetic_click.wav"
+dest_files=[ "res://.import/magnetic_click.wav-491d6652e1e40b876c4aa0029dcbdd50.sample" ]
 
 [params]
 
