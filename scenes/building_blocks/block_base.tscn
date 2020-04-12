@@ -199,7 +199,7 @@ location_on_block = 3
 shape = SubResource( 3 )
 
 [node name="HeldSnapArea10" type="Area" parent="HeldSnapAreas"]
-transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0.075, -0.145, 0 )
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0.075, -0.111, 0 )
 script = ExtResource( 13 )
 location_on_block = 3
 
