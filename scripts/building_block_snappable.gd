@@ -16,6 +16,8 @@ var snap_start_transform : Transform
 var snap_end_transform : Transform
 var interpolation_progress : float
 var volt_measure_points : Dictionary
+var other_area_parent
+var on_multi_mesh := false
 
 
 onready var held_snap_areas = $HeldSnapAreas
@@ -24,6 +26,7 @@ onready var all_children = get_children()
 onready var audio_stream_player := $AudioStreamPlayer3D
 onready var snap_sound := preload("res://sounds/magnetic_click.wav")
 onready var all_measure_points := get_node(global_vars.ALL_MEASURE_POINTS_PATH)
+onready var multi_mesh := get_node(global_vars.MULTI_MESH_PATH)
 onready var measure_point_scene = load(global_vars.MEASURE_POINT_FILE_PATH)
 
 export(PackedScene) var snap_particles_scene
@@ -143,7 +146,7 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 	# note tht this_snap_area is a HeldSnapArea and other_snap_area is a SnapArea
 	snap_start_transform = global_transform
 
-	var other_area_parent = other_snap_area.get_parent()
+	other_area_parent = other_snap_area.get_parent()
 	var start_rotation = rotation
 	
 	# start with other block's rotation
@@ -471,9 +474,20 @@ func update_pos_to_snap(delta: float) -> void:
 		play_snap_sound()
 		set_process(false)
 		set_physics_process(false)
+		add_to_multi_mesh()
+		if other_area_parent:
+			other_area_parent.add_to_multi_mesh()
+		other_area_parent = null
 		return
 	
 	global_transform = snap_start_transform.interpolate_with(snap_end_transform, interpolation_progress)
+
+
+func add_to_multi_mesh():
+	if !on_multi_mesh:
+		multi_mesh.add_block(self)
+		on_multi_mesh = true
+		visible = false
 
 
 func play_snap_sound():

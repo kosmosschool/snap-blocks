@@ -19,6 +19,7 @@ var ALL_SCREENS_PATH = TABLET_PATH + "/Screens"
 var CHALLENGE_SYSTEM_PATH = "/root/Main/ChallengeSystem"
 var CONTROLLER_SYSTEM_PATH = "/root/Main/ControllerSystem"
 var SPACE_TEXT_PATH = "/root/Main/SpaceText"
+var MULTI_MESH_PATH = "/root/Main/AllMultiMeshes/MultiMeshInstance"
 
 # resource paths
 var MEASURE_POINT_FILE_PATH = "res://scenes/measure_point.tscn"
