@@ -18,6 +18,9 @@ var interpolation_progress : float
 var volt_measure_points : Dictionary
 var other_area_parent
 var on_multi_mesh := false
+#var collision_switching := false
+#var collision_switch_timer := 0.0
+#var prev_collision_mask
 
 
 onready var held_snap_areas = $HeldSnapAreas
@@ -66,15 +69,31 @@ func _ready():
 	connect_to_snap_area_signals()
 	connect("grab_started", self, "_on_Building_Block_Snappable_grab_started")
 	connect("grab_ended", self, "_on_Building_Block_Snappable_grab_ended")
+	
+#	prev_collision_mask = get_collision_mask()
+	
 	if !is_grabbed:
 		show_held_snap_areas(false)
 		set_process(false)
 		set_physics_process(false)
+	
+#	if is_grabbed and vr.button_pressed(vr.BUTTON.B):
+#		# start timer to change collision layesr because this means that it has been duplicated
+#		collision_switching = true
+#		set_collision_mask_bit(4, true)
 
 
 func _process(delta):
 	if moving_to_snap:
 		update_pos_to_snap(delta)
+	
+#	if collision_switching:
+#		collision_switch_timer += delta
+#
+#		if collision_switch_timer > 1.0:
+#			set_collision_mask(prev_collision_mask)
+#			collision_switching = false
+		
 
 
 func _on_Building_Block_Snappable_grab_started():

@@ -109,6 +109,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/gauss_solver.gd"
 }, {
+"base": "BuildingBlock",
+"class": "GhostBlock",
+"language": "GDScript",
+"path": "res://scripts/ghost_block.gd"
+}, {
 "base": "Area",
 "class": "HeldSnapArea",
 "language": "GDScript",
@@ -280,6 +285,7 @@ _global_script_class_icons={
 "DeleteController": "",
 "Feature_RigidBodyGrab": "",
 "GaussSolver": "",
+"GhostBlock": "",
 "HeldSnapArea": "",
 "Junction": "",
 "KSButtonPressable": "",
