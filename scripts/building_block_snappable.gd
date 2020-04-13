@@ -81,6 +81,7 @@ func _on_Building_Block_Snappable_grab_started():
 	show_held_snap_areas(true)
 	set_process(true)
 	set_physics_process(true)
+	multi_mesh_remove()
 
 
 func _on_Building_Block_Snappable_grab_ended():
@@ -474,21 +475,28 @@ func update_pos_to_snap(delta: float) -> void:
 		play_snap_sound()
 		set_process(false)
 		set_physics_process(false)
-		add_to_multi_mesh()
+		multi_mesh_add()
 		if other_area_parent:
-			other_area_parent.add_to_multi_mesh()
+			other_area_parent.multi_mesh_add()
 		other_area_parent = null
 		return
 	
 	global_transform = snap_start_transform.interpolate_with(snap_end_transform, interpolation_progress)
 
 
-func add_to_multi_mesh():
+func multi_mesh_add():
 	if !on_multi_mesh:
 		multi_mesh.add_block(self)
 		on_multi_mesh = true
 		visible = false
 
+
+func multi_mesh_remove():
+	if on_multi_mesh:
+		multi_mesh.remove_block(self)
+		on_multi_mesh = false
+		visible = true
+	
 
 func play_snap_sound():
 	if snap_sound and audio_stream_player:

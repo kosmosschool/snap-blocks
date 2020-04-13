@@ -22,7 +22,6 @@ margin = 0.005
 extents = Vector3( 0.03, 0.03, 0.035 )
 
 [node name="BlockBase" type="RigidBody"]
-collision_mask = 2
 mass = 0.1
 contacts_reported = 1
 contact_monitor = true
