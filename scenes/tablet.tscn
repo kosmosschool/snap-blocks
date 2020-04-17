@@ -1,6 +1,5 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=17 format=2]
 
-[ext_resource path="res://scripts/button_challenge.gd" type="Script" id=1]
 [ext_resource path="res://scenes/minis/wire_mini.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/minis/lamp_mini_5o.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scenes/minis/switch_mini.tscn" type="PackedScene" id=4]
@@ -12,13 +11,11 @@
 [ext_resource path="res://scripts/button_screen_nav.gd" type="Script" id=10]
 [ext_resource path="res://scripts/screens_controller.gd" type="Script" id=11]
 [ext_resource path="res://scenes/ks_button_pressable.tscn" type="PackedScene" id=12]
-[ext_resource path="res://scripts/challenge_screen.gd" type="Script" id=13]
 [ext_resource path="res://scenes/minis/lamp_mini_10o.tscn" type="PackedScene" id=14]
 [ext_resource path="res://materials/bright_black.tres" type="Material" id=15]
 [ext_resource path="res://meshes/tablet.mesh" type="ArrayMesh" id=16]
 [ext_resource path="res://materials/black.tres" type="Material" id=17]
 [ext_resource path="res://materials/light_blue.tres" type="Material" id=18]
-[ext_resource path="res://scenes/ks_button_pressable_wide.tscn" type="PackedScene" id=19]
 
 [node name="Tablet" type="Spatial"]
 script = ExtResource( 5 )
@@ -40,7 +37,7 @@ material/3 = ExtResource( 8 )
 
 [node name="Screens" type="Spatial" parent="."]
 script = ExtResource( 11 )
-initial_screen = "ChallengesOverview"
+initial_screen = "Blocks"
 
 [node name="Blocks" type="Spatial" parent="Screens"]
 
@@ -67,174 +64,6 @@ transform = Transform( 1, -4.47035e-08, -5.96046e-08, -7.45058e-08, 1, 1.63913e-
 [node name="TabletItems" type="Spatial" parent="Screens/Blocks"]
 transform = Transform( 1, -5.96046e-08, 0, 0, 1, 0, 0, -4.47035e-08, 1, 0, 0, 0 )
 
-[node name="ChallengesOverview" type="Spatial" parent="Screens"]
-visible = false
-
-[node name="TitleLabel" parent="Screens/ChallengesOverview" instance=ExtResource( 9 )]
-transform = Transform( 1.2, 7.45058e-09, 0, 0, 0.55, -5.96046e-08, 0, 4.47035e-08, 1, -0.031, 0.091, 0 )
-text = "Select a Challenge"
-font_size_multiplier = 5.0
-background_color = Color( 0.101961, 0.101961, 0.101961, 1 )
-h_align = 1
-v_align = 1
-
-[node name="ChallengeButton1" parent="Screens/ChallengesOverview" instance=ExtResource( 19 )]
-transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, -0.121, 0, 0.003 )
-script = ExtResource( 10 )
-navigate_to = "Challenge1"
-
-[node name="Buttonlabel" parent="Screens/ChallengesOverview/ChallengeButton1" instance=ExtResource( 9 )]
-transform = Transform( 0.6, -4.47035e-08, 3.8743e-07, 8.9407e-08, 0.3, 9.93411e-08, -2.32458e-07, -2.98023e-08, 1, -8.2992e-05, 3.57628e-07, 0.00500011 )
-text = "Challenge 1"
-font_size_multiplier = 3.0
-background_color = Color( 0, 0, 0, 0 )
-h_align = 1
-v_align = 1
-
-[node name="ChallengeButton2" parent="Screens/ChallengesOverview" instance=ExtResource( 19 )]
-transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, -0.0316499, 3.57628e-07, 0.00300011 )
-script = ExtResource( 10 )
-navigate_to = "Challenge2"
-
-[node name="Buttonlabel" parent="Screens/ChallengesOverview/ChallengeButton2" instance=ExtResource( 9 )]
-transform = Transform( 0.6, -4.47035e-08, 3.8743e-07, 8.9407e-08, 0.3, 9.93411e-08, -2.32458e-07, -2.98023e-08, 1, 0, 0, 0.005 )
-text = "Challenge 2"
-font_size_multiplier = 3.0
-background_color = Color( 0, 0, 0, 0 )
-h_align = 1
-v_align = 1
-
-[node name="ChallengeButton3" parent="Screens/ChallengesOverview" instance=ExtResource( 19 )]
-transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.057, 0, 0.003 )
-script = ExtResource( 10 )
-navigate_to = "Challenge3"
-
-[node name="Buttonlabel" parent="Screens/ChallengesOverview/ChallengeButton3" instance=ExtResource( 9 )]
-transform = Transform( 0.6, -4.47035e-08, 3.8743e-07, 8.9407e-08, 0.3, 9.93411e-08, -2.32458e-07, -2.98023e-08, 1, 0, 0, 0.005 )
-text = "Challenge 3"
-font_size_multiplier = 3.0
-background_color = Color( 0, 0, 0, 0 )
-h_align = 1
-v_align = 1
-
-[node name="Challenge1" type="Spatial" parent="Screens"]
-visible = false
-script = ExtResource( 13 )
-
-[node name="TitleLabel" parent="Screens/Challenge1" instance=ExtResource( 9 )]
-transform = Transform( 1, 0, 0, 0, 0.5, -5.96046e-08, 0, 7.45058e-09, 1, -0.031, 0.091, 0 )
-text = "Challenge 1"
-font_size_multiplier = 5.0
-background_color = Color( 0.1, 0.1, 0.1, 1 )
-h_align = 1
-v_align = 1
-
-[node name="BodyLabel" parent="Screens/Challenge1" instance=ExtResource( 9 )]
-transform = Transform( 2.5, 2.98023e-08, 5.96046e-08, -1.19209e-07, 0.5, -1.19209e-07, -1.19209e-07, 5.96046e-08, 1, -0.031, 0.035, 0 )
-text = "Reach the following objectives to complete this challenge:"
-font_size_multiplier = 4.0
-background_color = Color( 0.1, 0.1, 0.1, 1 )
-
-[node name="DescriptionLabel" parent="Screens/Challenge1" instance=ExtResource( 9 )]
-transform = Transform( 2.5, 3.57628e-08, -4.08562e-15, -8.9407e-08, 1, -1.04308e-07, 8.88172e-16, 1.04308e-07, 1, -0.031, -0.038179, 0.000258777 )
-text = "- Obj 1: Have fun!
-- Obj2: Have even mor fun!!
-- Obj3: Shut up :-)"
-font_size_multiplier = 4.0
-background_color = Color( 0.1, 0.1, 0.1, 1 )
-
-[node name="StartStopButton" parent="Screens/Challenge1" instance=ExtResource( 19 )]
-transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, -0.031, -0.085, 0.003 )
-script = ExtResource( 1 )
-press_distance = 0.006
-
-[node name="Buttonlabel" parent="Screens/Challenge1/StartStopButton" instance=ExtResource( 9 )]
-transform = Transform( 0.6, -3.57628e-08, 3.8743e-07, 7.15256e-08, 0.3, 1.24176e-07, -2.32458e-07, -3.72529e-08, 1, 1.86265e-09, 0, 0.005 )
-text = "Start / Stop"
-font_size_multiplier = 3.0
-background_color = Color( 0, 0, 0, 0 )
-h_align = 1
-v_align = 1
-
-[node name="Challenge2" type="Spatial" parent="Screens"]
-script = ExtResource( 13 )
-challenge_index = 1
-
-[node name="TitleLabel" parent="Screens/Challenge2" instance=ExtResource( 9 )]
-transform = Transform( 1, 0, 0, 0, 0.5, -5.96046e-08, 0, 7.45058e-09, 1, -0.031, 0.091, 0.002 )
-text = "Challenge 3"
-font_size_multiplier = 5.0
-background_color = Color( 0.1, 0.1, 0.1, 1 )
-h_align = 1
-v_align = 1
-
-[node name="BodyLabel" parent="Screens/Challenge2" instance=ExtResource( 9 )]
-transform = Transform( 2.5, 2.98023e-08, 5.96046e-08, -1.19209e-07, 0.5, -1.19209e-07, -1.19209e-07, 5.96046e-08, 1, -0.031, 0.035, 0.002 )
-text = "Reach the following objectives to complete this challenge:"
-font_size_multiplier = 4.0
-background_color = Color( 0.1, 0.1, 0.1, 1 )
-
-[node name="DescriptionLabel" parent="Screens/Challenge2" instance=ExtResource( 9 )]
-transform = Transform( 2.5, 0, 2.98023e-08, -8.9407e-08, 1, -8.9407e-08, 0, 1.04308e-07, 1, -0.031, -0.041, 0.002 )
-text = "- Obj 1: Have fun!
-- Obj2: Have even mor fun!!
-- Obj3: Shut up :-)"
-font_size_multiplier = 4.0
-background_color = Color( 0.1, 0.1, 0.1, 1 )
-
-[node name="StartStopButton" parent="Screens/Challenge2" instance=ExtResource( 19 )]
-transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, -0.031, -0.085, 0.003 )
-script = ExtResource( 1 )
-challenge_index = 1
-
-[node name="Buttonlabel" parent="Screens/Challenge2/StartStopButton" instance=ExtResource( 9 )]
-transform = Transform( 0.6, -3.57628e-08, 3.8743e-07, 7.15256e-08, 0.3, 1.24176e-07, -2.32458e-07, -3.72529e-08, 1, 0, 0, 0.005 )
-text = "Start / Stop"
-font_size_multiplier = 3.0
-background_color = Color( 0, 0, 0, 0 )
-h_align = 1
-v_align = 1
-
-[node name="Challenge3" type="Spatial" parent="Screens"]
-visible = false
-script = ExtResource( 13 )
-challenge_index = 2
-
-[node name="TitleLabel" parent="Screens/Challenge3" instance=ExtResource( 9 )]
-transform = Transform( 1, 0, 0, 0, 0.5, -5.96046e-08, 0, 7.45058e-09, 1, -0.031, 0.091, 0.002 )
-text = "Challenge 3"
-font_size_multiplier = 5.0
-background_color = Color( 0.1, 0.1, 0.1, 1 )
-h_align = 1
-v_align = 1
-
-[node name="BodyLabel" parent="Screens/Challenge3" instance=ExtResource( 9 )]
-transform = Transform( 2.5, 2.98023e-08, 5.96046e-08, -1.19209e-07, 0.5, -1.19209e-07, -1.19209e-07, 5.96046e-08, 1, -0.031, 0.035, 0.002 )
-text = "Reach the following objectives to complete this challenge:"
-font_size_multiplier = 4.0
-background_color = Color( 0.1, 0.1, 0.1, 1 )
-
-[node name="DescriptionLabel" parent="Screens/Challenge3" instance=ExtResource( 9 )]
-transform = Transform( 2.5, 0, 2.98023e-08, -8.9407e-08, 1, -8.9407e-08, 0, 1.04308e-07, 1, -0.031, -0.041, 0.002 )
-text = "- Obj 1: Have fun!
-- Obj2: Have even mor fun!!
-- Obj3: Shut up :-)"
-font_size_multiplier = 4.0
-background_color = Color( 0.1, 0.1, 0.1, 1 )
-
-[node name="StartStopButton" parent="Screens/Challenge3" instance=ExtResource( 19 )]
-transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, -0.031, -0.085, 0.003 )
-script = ExtResource( 1 )
-challenge_index = 2
-
-[node name="Buttonlabel" parent="Screens/Challenge3/StartStopButton" instance=ExtResource( 9 )]
-transform = Transform( 0.6, -3.57628e-08, 3.8743e-07, 7.15256e-08, 0.3, 1.24176e-07, -2.32458e-07, -3.72529e-08, 1, 0, 0, 0.005 )
-text = "Start / Stop"
-font_size_multiplier = 3.0
-background_color = Color( 0, 0, 0, 0 )
-h_align = 1
-v_align = 1
-
 [node name="Navigation" type="Spatial" parent="."]
 
 [node name="BlocksButton" parent="Navigation" instance=ExtResource( 12 )]
@@ -245,7 +74,11 @@ navigate_to = "Blocks"
 [node name="Buttonlabel" parent="Navigation/BlocksButton" instance=ExtResource( 9 )]
 transform = Transform( 0.3, -4.09782e-08, 1.19209e-07, 5.21541e-08, 0.3, -4.47036e-08, -1.19209e-07, 2.98023e-08, 0.999999, 0, 0, 0.00488424 )
 text = "Blöcks"
+margin = 16
+billboard = false
+resize_mode = 1
 font_size_multiplier = 2.0
+font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0, 0, 0, 0 )
 h_align = 1
 v_align = 1
@@ -258,7 +91,11 @@ navigate_to = "ChallengesOverview"
 [node name="Buttonlabel" parent="Navigation/ChallengesButton" instance=ExtResource( 9 )]
 transform = Transform( 0.3, -3.72529e-08, 3.27826e-07, 4.84288e-08, 0.3, -2.98024e-08, -1.19209e-07, -1.49011e-09, 1, 1.49012e-08, -1.19209e-07, 0.00499997 )
 text = "Challenges"
+margin = 16
+billboard = false
+resize_mode = 1
 font_size_multiplier = 2.0
+font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0, 0, 0, 0 )
 h_align = 1
 v_align = 1

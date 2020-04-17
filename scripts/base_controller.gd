@@ -14,7 +14,7 @@ onready var right_controller = get_node(global_vars.CONTR_RIGHT_PATH)
 onready var grab_area_right = get_node(global_vars.CONTR_RIGHT_PATH + "/controller_grab/GrabArea")
 onready var controller_grab = get_node(global_vars.CONTR_RIGHT_PATH + "/controller_grab")
 onready var all_building_blocks = get_node(global_vars.ALL_BUILDING_BLOCKS_PATH) 
-onready var main_node = get_node("/root/Main")
+onready var movable_world_node = get_node(global_vars.MOVABLE_WORLD_PATH)
 onready var ghost_building_block_base = preload("res://scenes/building_blocks/ghost_block_base.tscn")
 
 
@@ -73,8 +73,7 @@ func create_ghost_block():
 		return
 	
 	var ghost_block_instance = ghost_building_block_base.instance()
-	main_node.add_child(ghost_block_instance)
-#	ghost_block_instance.set_ghost_mode(true)
+	movable_world_node.add_child(ghost_block_instance)
 	
 	# position
 	ghost_block_instance.global_transform = overlapping_block.global_transform
