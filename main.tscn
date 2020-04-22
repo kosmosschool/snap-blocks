@@ -10,7 +10,8 @@
 [ext_resource path="res://scripts/main.gd" type="Script" id=8]
 [ext_resource path="res://scenes/building_blocks/block_base.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scripts/controller_system.gd" type="Script" id=10]
-[ext_resource path="res://materials/proc_sky.tres" type="ProceduralSky" id=12]
+[ext_resource path="res://scripts/all_snap_areas.gd" type="Script" id=11]
+[ext_resource path="res://scripts/all_block_areas.gd" type="Script" id=12]
 [ext_resource path="res://scripts/object_remover_system.gd" type="Script" id=14]
 [ext_resource path="res://shaders/unshaded_color.shader" type="Shader" id=17]
 [ext_resource path="res://scenes/text_label_2d.tscn" type="PackedScene" id=18]
@@ -23,23 +24,19 @@
 [ext_resource path="res://materials/black.tres" type="Material" id=29]
 [ext_resource path="res://meshes/blocks_platform_3.mesh" type="ArrayMesh" id=30]
 
-[sub_resource type="Environment" id=1]
-background_mode = 2
-background_sky = ExtResource( 12 )
-
-[sub_resource type="BoxShape" id=3]
+[sub_resource type="BoxShape" id=1]
 margin = 0.001
 extents = Vector3( 5, 0.11, 5 )
 
-[sub_resource type="ShaderMaterial" id=4]
+[sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 17 )
 shader_param/color = Vector3( 1, 1, 1 )
 
-[sub_resource type="ShaderMaterial" id=5]
+[sub_resource type="ShaderMaterial" id=3]
 shader = ExtResource( 17 )
 shader_param/color = Vector3( 0.95, 0.95, 0.95 )
 
-[sub_resource type="MultiMesh" id=6]
+[sub_resource type="MultiMesh" id=4]
 transform_format = 1
 instance_count = 1000
 visible_instance_count = 0
@@ -64,7 +61,6 @@ stream = ExtResource( 26 )
 [node name="OQ_ARVROrigin" parent="." instance=ExtResource( 5 )]
 
 [node name="OQ_ARVRCamera" parent="OQ_ARVROrigin" instance=ExtResource( 3 )]
-environment = SubResource( 1 )
 
 [node name="OQ_LeftController" parent="OQ_ARVROrigin" instance=ExtResource( 1 )]
 
@@ -91,11 +87,7 @@ visible = false
 transform = Transform( 21.2217, 0, 0, 0, 8.12099, 0, 0, 0, 1, 0, 0, 0 )
 text = "Welcome to Blöcks, friend.
 Press X to open your tablet."
-margin = 16
-billboard = false
-resize_mode = 1
 font_size_multiplier = 45.0
-font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0.75, 0.45, 0.45, 1 )
 h_align = 1
 v_align = 1
@@ -109,21 +101,21 @@ mode = 1
 
 [node name="CollisionShape" type="CollisionShape" parent="MovableWorld/Table"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0871522, 0 )
-shape = SubResource( 3 )
+shape = SubResource( 1 )
 
 [node name="TableMesh" type="MeshInstance" parent="MovableWorld/Table"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.145994, 0 )
 use_in_baked_light = true
 mesh = ExtResource( 30 )
 material/0 = ExtResource( 22 )
-material/1 = SubResource( 4 )
-material/2 = SubResource( 5 )
+material/1 = SubResource( 2 )
+material/2 = SubResource( 3 )
 material/3 = ExtResource( 29 )
 
 [node name="AllMultiMeshes" type="Spatial" parent="MovableWorld"]
 
 [node name="MultiMeshInstance" type="MultiMeshInstance" parent="MovableWorld/AllMultiMeshes"]
-multimesh = SubResource( 6 )
+multimesh = SubResource( 4 )
 script = ExtResource( 25 )
 
 [node name="AllBuildingBlocks" type="Spatial" parent="MovableWorld"]
@@ -133,3 +125,9 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.762082, -0.396837 )
 
 [node name="BlockBase2" parent="MovableWorld/AllBuildingBlocks" instance=ExtResource( 9 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.768518, 0.743351, -0.157377 )
+
+[node name="AllSnapAreas" type="Spatial" parent="MovableWorld"]
+script = ExtResource( 11 )
+
+[node name="AllBlockAreas" type="Spatial" parent="MovableWorld"]
+script = ExtResource( 12 )

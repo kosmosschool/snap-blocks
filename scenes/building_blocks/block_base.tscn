@@ -23,8 +23,6 @@ extents = Vector3( 0.03, 0.03, 0.035 )
 
 [node name="BlockBase" type="RigidBody"]
 mass = 0.1
-contacts_reported = 1
-contact_monitor = true
 linear_damp = 0.1
 script = ExtResource( 3 )
 snap_particles_scene = ExtResource( 5 )
@@ -39,90 +37,103 @@ material/1 = null
 material/2 = null
 material/3 = null
 
-[node name="SnapArea1" type="Area" parent="."]
+[node name="SnapAreas" type="Spatial" parent="."]
+
+[node name="SnapArea1" type="Area" parent="SnapAreas"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.075, 0, 0.075 )
+monitoring = false
 script = ExtResource( 8 )
 location_on_block = 2
 
-[node name="CollisionShape" type="CollisionShape" parent="SnapArea1"]
+[node name="CollisionShape" type="CollisionShape" parent="SnapAreas/SnapArea1"]
 shape = SubResource( 2 )
 
-[node name="SnapArea2" type="Area" parent="."]
+[node name="SnapArea2" type="Area" parent="SnapAreas"]
 transform = Transform( -1.62921e-07, 0, 1, 0, 1, 0, -1, 0, -1.62921e-07, 0.15, 0, 0 )
+monitoring = false
 script = ExtResource( 8 )
 location_on_block = 1
 
-[node name="CollisionShape" type="CollisionShape" parent="SnapArea2"]
+[node name="CollisionShape" type="CollisionShape" parent="SnapAreas/SnapArea2"]
 shape = SubResource( 2 )
 
-[node name="SnapArea3" type="Area" parent="."]
+[node name="SnapArea3" type="Area" parent="SnapAreas"]
 transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, 0.075, 0, -0.075 )
+monitoring = false
 script = ExtResource( 8 )
 location_on_block = 4
 
-[node name="CollisionShape" type="CollisionShape" parent="SnapArea3"]
+[node name="CollisionShape" type="CollisionShape" parent="SnapAreas/SnapArea3"]
 shape = SubResource( 2 )
 
-[node name="SnapArea4" type="Area" parent="."]
+[node name="SnapArea4" type="Area" parent="SnapAreas"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.075, 0, 0.075 )
+monitoring = false
 script = ExtResource( 8 )
 location_on_block = 2
 
-[node name="CollisionShape" type="CollisionShape" parent="SnapArea4"]
+[node name="CollisionShape" type="CollisionShape" parent="SnapAreas/SnapArea4"]
 shape = SubResource( 2 )
 
-[node name="SnapArea5" type="Area" parent="."]
+[node name="SnapArea5" type="Area" parent="SnapAreas"]
 transform = Transform( -1.62921e-07, 0, -1, 0, 1, 0, 1, 0, -1.62921e-07, -0.15, 0, 0 )
+monitoring = false
 script = ExtResource( 8 )
 location_on_block = 1
 
-[node name="CollisionShape" type="CollisionShape" parent="SnapArea5"]
+[node name="CollisionShape" type="CollisionShape" parent="SnapAreas/SnapArea5"]
 shape = SubResource( 2 )
 
-[node name="SnapArea6" type="Area" parent="."]
+[node name="SnapArea6" type="Area" parent="SnapAreas"]
 transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, -0.075, 0, -0.075 )
+monitoring = false
 script = ExtResource( 8 )
 location_on_block = 4
 
-[node name="CollisionShape" type="CollisionShape" parent="SnapArea6"]
+[node name="CollisionShape" type="CollisionShape" parent="SnapAreas/SnapArea6"]
 shape = SubResource( 2 )
 
-[node name="SnapArea7" type="Area" parent="."]
+[node name="SnapArea7" type="Area" parent="SnapAreas"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, -0.075, 0.075, 0 )
+monitoring = false
 script = ExtResource( 8 )
 location_on_block = 5
 
-[node name="CollisionShape" type="CollisionShape" parent="SnapArea7"]
+[node name="CollisionShape" type="CollisionShape" parent="SnapAreas/SnapArea7"]
 shape = SubResource( 2 )
 
-[node name="SnapArea8" type="Area" parent="."]
+[node name="SnapArea8" type="Area" parent="SnapAreas"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0.075, 0.075, 0 )
+monitoring = false
 script = ExtResource( 8 )
 location_on_block = 5
 
-[node name="CollisionShape" type="CollisionShape" parent="SnapArea8"]
+[node name="CollisionShape" type="CollisionShape" parent="SnapAreas/SnapArea8"]
 shape = SubResource( 2 )
 
-[node name="SnapArea9" type="Area" parent="."]
+[node name="SnapArea9" type="Area" parent="SnapAreas"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, -0.075, -0.075, 0 )
+monitoring = false
 script = ExtResource( 8 )
 location_on_block = 3
 
-[node name="CollisionShape" type="CollisionShape" parent="SnapArea9"]
+[node name="CollisionShape" type="CollisionShape" parent="SnapAreas/SnapArea9"]
 shape = SubResource( 2 )
 
-[node name="SnapArea10" type="Area" parent="."]
+[node name="SnapArea10" type="Area" parent="SnapAreas"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0.075, -0.075, 0 )
+monitoring = false
 script = ExtResource( 8 )
 location_on_block = 3
 
-[node name="CollisionShape" type="CollisionShape" parent="SnapArea10"]
+[node name="CollisionShape" type="CollisionShape" parent="SnapAreas/SnapArea10"]
 shape = SubResource( 2 )
 
 [node name="HeldSnapAreas" type="Spatial" parent="."]
 
 [node name="HeldSnapArea1" type="Area" parent="HeldSnapAreas"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.075, 0, 0.1107 )
+monitorable = false
 script = ExtResource( 13 )
 location_on_block = 2
 
@@ -131,6 +142,7 @@ shape = SubResource( 3 )
 
 [node name="HeldSnapArea2" type="Area" parent="HeldSnapAreas"]
 transform = Transform( -1.62921e-07, 0, 1, 0, 1, 0, -1, 0, -1.62921e-07, 0.185744, 0, 5.58108e-09 )
+monitorable = false
 script = ExtResource( 13 )
 location_on_block = 1
 
@@ -139,6 +151,7 @@ shape = SubResource( 3 )
 
 [node name="HeldSnapArea3" type="Area" parent="HeldSnapAreas"]
 transform = Transform( -1, 0, 3.25841e-07, 0, 1, 0, -3.25841e-07, 0, -1, 0.075, 0, -0.111 )
+monitorable = false
 script = ExtResource( 13 )
 location_on_block = 4
 
@@ -147,6 +160,7 @@ shape = SubResource( 3 )
 
 [node name="HeldSnapArea4" type="Area" parent="HeldSnapAreas"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.075, 0, 0.111 )
+monitorable = false
 script = ExtResource( 13 )
 location_on_block = 2
 
@@ -155,6 +169,7 @@ shape = SubResource( 3 )
 
 [node name="HeldSnapArea5" type="Area" parent="HeldSnapAreas"]
 transform = Transform( -1.62921e-07, 0, -1, 0, 1, 0, 1, 0, -1.62921e-07, -0.186, 0, 0 )
+monitorable = false
 script = ExtResource( 13 )
 location_on_block = 1
 
@@ -163,6 +178,7 @@ shape = SubResource( 3 )
 
 [node name="HeldSnapArea6" type="Area" parent="HeldSnapAreas"]
 transform = Transform( -1, 0, 3.25841e-07, 0, 1, 0, -3.25841e-07, 0, -1, -0.075, 0, -0.111 )
+monitorable = false
 script = ExtResource( 13 )
 location_on_block = 4
 
@@ -171,6 +187,7 @@ shape = SubResource( 3 )
 
 [node name="HeldSnapArea7" type="Area" parent="HeldSnapAreas"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, -0.075, 0.111, 0 )
+monitorable = false
 script = ExtResource( 13 )
 location_on_block = 5
 
@@ -179,6 +196,7 @@ shape = SubResource( 3 )
 
 [node name="HeldSnapArea8" type="Area" parent="HeldSnapAreas"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0.075, 0.111, 0 )
+monitorable = false
 script = ExtResource( 13 )
 location_on_block = 5
 
@@ -187,6 +205,7 @@ shape = SubResource( 3 )
 
 [node name="HeldSnapArea9" type="Area" parent="HeldSnapAreas"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, -0.075, -0.111, 0 )
+monitorable = false
 script = ExtResource( 13 )
 location_on_block = 3
 
@@ -195,6 +214,7 @@ shape = SubResource( 3 )
 
 [node name="HeldSnapArea10" type="Area" parent="HeldSnapAreas"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0.075, -0.111, 0 )
+monitorable = false
 script = ExtResource( 13 )
 location_on_block = 3
 

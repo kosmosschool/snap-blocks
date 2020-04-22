@@ -16,7 +16,7 @@ var snap_start_transform : Transform
 var snap_end_transform : Transform
 var interpolation_progress : float
 var volt_measure_points : Dictionary
-var other_area_parent
+#var other_area_parent
 var on_multi_mesh := false
 #var collision_switching := false
 #var collision_switch_timer := 0.0
@@ -25,12 +25,16 @@ var on_multi_mesh := false
 
 onready var held_snap_areas = $HeldSnapAreas
 onready var held_snap_areas_children = held_snap_areas.get_children()
+onready var snap_areas = $SnapAreas
+onready var snap_areas_children = snap_areas.get_children()
 onready var all_children = get_children()
 onready var audio_stream_player := $AudioStreamPlayer3D
 onready var snap_sound := preload("res://sounds/magnetic_click.wav")
 onready var all_measure_points := get_node(global_vars.ALL_MEASURE_POINTS_PATH)
 onready var multi_mesh := get_node(global_vars.MULTI_MESH_PATH)
 onready var measure_point_scene = load(global_vars.MEASURE_POINT_FILE_PATH)
+onready var all_snap_areas := get_node(global_vars.ALL_SNAP_AREAS_PATH)
+onready var all_block_areas := get_node(global_vars.ALL_BLOCK_AREAS_PATH)
 
 export(PackedScene) var snap_particles_scene
 
@@ -100,7 +104,7 @@ func _on_Building_Block_Snappable_grab_started():
 	show_held_snap_areas(true)
 	set_process(true)
 	set_physics_process(true)
-	multi_mesh_remove()
+#	multi_mesh_remove()
 
 
 func _on_Building_Block_Snappable_grab_ended():
@@ -139,7 +143,7 @@ func show_held_snap_areas(show: bool) -> void:
 
 
 func connect_to_snap_area_signals():	
-	for child in all_children:
+	for child in snap_areas_children:
 		if child is SnapArea:
 			child.connect("area_snapped", self, "_on_SnapArea_area_snapped")
 			child.connect("area_unsnapped", self, "_on_SnapArea_area_unsnapped")
@@ -147,7 +151,7 @@ func connect_to_snap_area_signals():
 
 # after it moved to position, we need to check with snap areas are now overlapping
 func check_snap_areas() -> void:
-	for child in all_children:
+	for child in snap_areas_children:
 		if child is SnapArea:
 			if !child.get_snapped():
 				child.start_double_check_snap()
@@ -155,9 +159,7 @@ func check_snap_areas() -> void:
 
 # unsnaps all areas (needed for deleting block)
 func unsnap_all() -> void:
-	var all_children = get_children()
-	
-	for child in all_children:
+	for child in snap_areas_children:
 		if child is SnapArea:
 			child.unsnap_both()
 
@@ -165,16 +167,28 @@ func unsnap_all() -> void:
 func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 	# note tht this_snap_area is a HeldSnapArea and other_snap_area is a SnapArea
 	snap_start_transform = global_transform
-
-	other_area_parent = other_snap_area.get_parent()
-	var start_rotation = rotation
 	
-	# start with other block's rotation
-	var new_rotation = other_area_parent.rotation
+	# get other area's parent transform
+	var other_area_parent_transform = all_snap_areas.get_parent_transform(other_snap_area)
+	
+	var add_other_parent := false
+	var other_snap_area_parent
+	if not other_area_parent_transform:
+		# in this case the parent block is probably not part of a multi mesh, so add it
+		other_snap_area_parent = other_snap_area.get_parent().get_parent()
+		if not other_snap_area_parent as BuildingBlockSnappable:
+			return
+		
+		other_area_parent_transform = other_snap_area_parent.get_transform()
+		add_other_parent = true
+
+#	other_area_parent = other_snap_area.get_parent()
+	var start_rotation = rotation
 	
 	# orthonormalize just to be sure
 	var this_basis = transform.basis.orthonormalized()
-	var other_block_basis = other_area_parent.transform.basis.orthonormalized()
+#	var other_block_basis = other_area_parent.transform.basis.orthonormalized()
+	var other_block_basis = other_area_parent_transform.basis.orthonormalized()
 	
 	# we need to find out the local x rotation of the this block
 	# it depends on the relative difference to the x rotation of the other block
@@ -418,10 +432,15 @@ func snap_to_block(this_snap_area: Area, other_snap_area: Area):
 	
 	global_transform = snap_start_transform
 	
-	set_mode(RigidBody.MODE_STATIC)
+	set_mode(RigidBody.MODE_KINEMATIC)
 	moving_to_snap = true
 	overlapping = false
 	show_held_snap_areas(false)
+	
+	if add_other_parent:
+		# also add other parent ot multi_mesn
+		other_snap_area_parent.multi_mesh_add()
+		other_snap_area_parent.free_and_transfer()
 
 
 func snap_rotation(angle_to_snap) -> float:
@@ -490,31 +509,47 @@ func update_pos_to_snap(delta: float) -> void:
 		global_transform = snap_end_transform
 		moving_to_snap = false
 		snap_timer = 0.0
-		check_snap_areas()
+#		check_snap_areas()
 		play_snap_sound()
-		set_process(false)
-		set_physics_process(false)
 		multi_mesh_add()
-		if other_area_parent:
-			other_area_parent.multi_mesh_add()
-		other_area_parent = null
+		free_and_transfer()
+#		if other_area_parent:
+#			other_area_parent.multi_mesh_add()
+#			other_area_parent.queue_free()
+#		other_area_parent = null
 		return
 	
 	global_transform = snap_start_transform.interpolate_with(snap_end_transform, interpolation_progress)
 
 
+func free_and_transfer() -> void:
+	# frees this node and transfers SnapAreas to AllSnapAreas and creates an Area with CollisionShape
+	# transfer SnapAreas
+	for s in snap_areas_children:
+		all_snap_areas.add_snap_area(s)
+	
+	# create Area with CollisionShape
+	all_block_areas.add_block_area($CollisionShape)
+	
+	# ademässi
+	queue_free()
+	
+
 func multi_mesh_add():
-	if !on_multi_mesh:
-		multi_mesh.add_block(self)
-		on_multi_mesh = true
-		visible = false
+	multi_mesh.add_block(self)
+	on_multi_mesh = true
+#	visible = false
+#	set_process(false)
+#	set_physics_process(false)
 
 
-func multi_mesh_remove():
-	if on_multi_mesh:
-		multi_mesh.remove_block(self)
-		on_multi_mesh = false
-		visible = true
+#func multi_mesh_remove():
+#	if on_multi_mesh:
+#		multi_mesh.remove_block(self)
+#		on_multi_mesh = false
+#		visible = true
+#		set_process(true)
+#		set_physics_process(true)
 	
 
 func play_snap_sound():

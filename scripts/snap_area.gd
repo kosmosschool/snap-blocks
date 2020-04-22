@@ -38,8 +38,9 @@ func is_class(type):
 
 
 func _ready():
-	connect("area_exited", self, "_on_Snap_Area_area_exited")
+#	connect("area_exited", self, "_on_Snap_Area_area_exited")
 	set_process(false)
+	set_monitoring(false)
 
 
 func _process(delta):
@@ -55,21 +56,21 @@ func _process(delta):
 			set_process(false)
 
 
-func  _on_Snap_Area_area_exited(area):
-	if !snap_area_other_area:
-		return
-	
-	# we have to do this check because it's possible the other area was deleted in the meantime
-	if !is_instance_valid(snap_area_other_area):
-		return
-	
-	# if distance is greater, remove
-	if is_master and snapped:
-		snap_area_other_area.unsnap()
-		unsnap()
-	else:
-		snap_area_other_area = null
-		other_area_parent_block = null
+#func  _on_Snap_Area_area_exited(area):
+#	if !snap_area_other_area:
+#		return
+#
+#	# we have to do this check because it's possible the other area was deleted in the meantime
+#	if !is_instance_valid(snap_area_other_area):
+#		return
+#
+#	# if distance is greater, remove
+#	if is_master and snapped:
+#		snap_area_other_area.unsnap()
+#		unsnap()
+#	else:
+#		snap_area_other_area = null
+#		other_area_parent_block = null
 	
 
 # we use this custom method instead of the area_exited or get_overlapping_areas

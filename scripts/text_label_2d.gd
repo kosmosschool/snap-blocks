@@ -146,7 +146,7 @@ func _on_Text_Label_2D_visibility_changed():
 		set_process(false)
 	else:
 		set_process(true)
-		set_physics_process(true)
+#		set_physics_process(true)
 
 func resize():
 	match resize_mode:

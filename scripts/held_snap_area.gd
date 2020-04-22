@@ -7,7 +7,7 @@ class_name HeldSnapArea
 signal moved_to_snap
 
 var snap_area_other_area : Area
-var other_area_parent_block
+#var other_area_parent_block
 var snapping := false
 var snap_particles_node
 var overlapping := false setget , get_overlapping
@@ -90,7 +90,7 @@ func _on_Held_Snap_Area_area_entered(area):
 	if !area.is_class("SnapArea"):
 		return
 	
-	if area.get_parent() == parent_block:
+	if area.get_parent().get_parent() == parent_block:
 		return
 	
 	if area.snapped:
@@ -103,13 +103,13 @@ func _on_Held_Snap_Area_area_entered(area):
 		return
 	
 	snap_area_other_area = area
-	other_area_parent_block = snap_area_other_area.get_parent()
+#	other_area_parent_block = snap_area_other_area.get_parent()
 	
 	# if the other block is grabbed, don't do anything after all
-	if other_area_parent_block.is_grabbed:
-		snap_area_other_area = null
-		other_area_parent_block = null
-		return
+#	if other_area_parent_block.is_grabbed:
+#		snap_area_other_area = null
+#		other_area_parent_block = null
+#		return
 	
 	# if all tests pass, do this
 	overlapping = true
@@ -134,7 +134,7 @@ func _on_Held_Snap_Area_area_exited(area):
 #		magnet_hum_sound.stop()
 	
 	snap_area_other_area = null
-	other_area_parent_block = null
+#	other_area_parent_block = null
 	overlapping = false
 	parent_block.update_overlapping()
 

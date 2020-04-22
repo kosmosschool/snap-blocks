@@ -15,6 +15,7 @@ onready var grab_area_right = get_node(global_vars.CONTR_RIGHT_PATH + "/controll
 onready var controller_grab = get_node(global_vars.CONTR_RIGHT_PATH + "/controller_grab")
 onready var all_building_blocks = get_node(global_vars.ALL_BUILDING_BLOCKS_PATH) 
 onready var movable_world_node = get_node(global_vars.MOVABLE_WORLD_PATH)
+onready var building_block_base = preload("res://scenes/building_blocks/block_base.tscn")
 onready var ghost_building_block_base = preload("res://scenes/building_blocks/ghost_block_base.tscn")
 
 
@@ -43,6 +44,9 @@ func _on_right_ARVRController_button_pressed(button_number):
 	# if grip trigger pressed while B button being held down
 	if vr.button_pressed(vr.BUTTON.B) and button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER:
 		create_ghost_block()
+	
+	if button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER:
+		create_block()
 
 
 # implement this in child
@@ -66,7 +70,23 @@ func get_overlapping_block() -> BuildingBlockSnappable:
 	return null
 
 
-func create_ghost_block():
+func create_block() -> void:
+	# don't create if already holding something
+	if controller_grab.held_object:
+		return
+	
+	var block_instance = building_block_base.instance()
+	all_building_blocks.add_child(block_instance)
+	
+	var new_origin = controller_grab.global_transform.origin + controller_grab.global_transform.basis.z * -0.076
+	
+	block_instance.global_transform.origin = new_origin
+	block_instance.global_transform.basis = controller_grab.global_transform.basis
+	
+	controller_grab.start_grab_hinge_joint(block_instance)
+
+
+func create_ghost_block() -> void:
 	var overlapping_block = get_overlapping_block()
 	
 	if not overlapping_block:

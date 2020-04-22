@@ -39,28 +39,28 @@ func _process(delta):
 
 func _on_right_ARVRController_button_pressed(button_number):
 	# if grip trigger is pressed and it's also pressed on the left one
-	if button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER and vr.button_pressed(vr.BUTTON.LEFT_GRIP_TRIGGER):
+	if button_number == vr.CONTROLLER_BUTTON.INDEX_TRIGGER and vr.button_pressed(vr.BUTTON.LEFT_INDEX_TRIGGER):
 		# enter move mode
 		move_mode = true
 
 
 func _on_left_ARVRController_button_pressed(button_number):
 	# if grip trigger is pressed and it's also pressed on the right one
-	if button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER and vr.button_pressed(vr.BUTTON.RIGHT_GRIP_TRIGGER):
+	if button_number == vr.CONTROLLER_BUTTON.INDEX_TRIGGER and vr.button_pressed(vr.BUTTON.RIGHT_INDEX_TRIGGER):
 		# enter move mode
 		move_mode = true
 
 
 func process_move_mode() -> void:
 	# check if scale mode buttons still pressed
-	if vr.button_pressed(vr.BUTTON.LEFT_GRIP_TRIGGER) and vr.button_pressed(vr.BUTTON.RIGHT_GRIP_TRIGGER):
+	if vr.button_pressed(vr.BUTTON.LEFT_INDEX_TRIGGER) and vr.button_pressed(vr.BUTTON.RIGHT_INDEX_TRIGGER):
 		# little hack because the last pressed trigger isn't registred in the first frame this method starts
 		triggers_synced = true
 	
 	
 	if (triggers_synced and (
-		not vr.button_pressed(vr.BUTTON.LEFT_GRIP_TRIGGER) or
-		not vr.button_pressed(vr.BUTTON.RIGHT_GRIP_TRIGGER))):
+		not vr.button_pressed(vr.BUTTON.LEFT_INDEX_TRIGGER) or
+		not vr.button_pressed(vr.BUTTON.RIGHT_INDEX_TRIGGER))):
 		
 		move_mode = false
 		movement_init = false

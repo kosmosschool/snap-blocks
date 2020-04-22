@@ -9,6 +9,16 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Spatial",
+"class": "AllBlockAreas",
+"language": "GDScript",
+"path": "res://scripts/all_block_areas.gd"
+}, {
+"base": "Spatial",
+"class": "AllSnapAreas",
+"language": "GDScript",
+"path": "res://scripts/all_snap_areas.gd"
+}, {
 "base": "Resistor",
 "class": "Ammeter",
 "language": "GDScript",
@@ -23,6 +33,11 @@ _global_script_classes=[ {
 "class": "BaseController",
 "language": "GDScript",
 "path": "res://scripts/base_controller.gd"
+}, {
+"base": "Area",
+"class": "BlockArea",
+"language": "GDScript",
+"path": "res://scripts/block_area.gd"
 }, {
 "base": "Node",
 "class": "BlockLockSystem",
@@ -270,9 +285,12 @@ _global_script_classes=[ {
 "path": "res://scripts/wireable.gd"
 } ]
 _global_script_class_icons={
+"AllBlockAreas": "",
+"AllSnapAreas": "",
 "Ammeter": "",
 "AmmeterController": "",
 "BaseController": "",
+"BlockArea": "",
 "BlockLockSystem": "",
 "BuildingBlock": "",
 "BuildingBlockSnappable": "",
@@ -326,7 +344,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Blöcks 2"
+config/name="Snap Blocks"
 run/main_scene="res://main.tscn"
 config/icon="res://icon.png"
 
