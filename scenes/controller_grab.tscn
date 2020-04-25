@@ -16,8 +16,8 @@ radius = 0.0150348
 script = ExtResource( 1 )
 
 [node name="GrabArea" type="Area" parent="."]
-collision_layer = 2
-collision_mask = 5
+collision_layer = 4
+collision_mask = 3
 
 [node name="CollisionShape" type="CollisionShape" parent="GrabArea"]
 shape = SubResource( 1 )

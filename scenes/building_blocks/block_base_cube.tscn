@@ -12,6 +12,8 @@ margin = 0.001
 extents = Vector3( 0.05, 0.05, 0.05 )
 
 [node name="BlockBaseCube" type="RigidBody"]
+collision_layer = 3
+collision_mask = 3
 mass = 0.1
 linear_damp = 0.1
 script = ExtResource( 3 )

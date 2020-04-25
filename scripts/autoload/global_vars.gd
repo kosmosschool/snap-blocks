@@ -27,5 +27,5 @@ var AR_VR_ORIGIN_PATH = "/root/Main/OQ_ARVROrigin"
 
 # resource paths
 var MEASURE_POINT_FILE_PATH = "res://scenes/measure_point.tscn"
-var BASIC_BUILDING_BLOCK_PATH = "res://scenes/building_blocks/block_base.tscn"
+var BASIC_BUILDING_BLOCK_PATH = "res://scenes/building_blocks/block_base_cube.tscn"
 var BLOCK_AREA_SCRIPT_PATH = "res://scripts/block_area.gd"
