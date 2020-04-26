@@ -5,10 +5,19 @@ extends Area
 class_name BlockArea
 
 var collision_shape
+var building_block_scene
 
-onready var building_block_scene = load(global_vars.BASIC_BUILDING_BLOCK_PATH)
-onready var all_building_blocks = get_node(global_vars.ALL_BUILDING_BLOCKS_PATH)
-onready var controller_grab = get_node(global_vars.CONTR_RIGHT_PATH + "/controller_grab")
+var all_building_blocks
+var multi_mesh
+var controller_grab
+
+# we don't use _ready because this script is set from another script and _ready is not called
+
+func _init():
+	building_block_scene = preload("res://scenes/building_blocks/block_base_cube.tscn")
+	all_building_blocks = get_node(global_vars.ALL_BUILDING_BLOCKS_PATH)
+	multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
+	controller_grab = get_node(global_vars.CONTR_RIGHT_PATH + "/controller_grab")
 
 
 func remove_from_multi_mesh() -> void:
@@ -22,6 +31,8 @@ func remove_from_multi_mesh() -> void:
 
 	# grab
 	controller_grab.start_grab_hinge_joint(new_bb)
+	
+	multi_mesh.remove_area(self)
 	
 	# free this area
 	queue_free()

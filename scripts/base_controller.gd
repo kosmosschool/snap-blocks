@@ -46,7 +46,12 @@ func _on_right_ARVRController_button_pressed(button_number):
 		create_ghost_block()
 	
 	if button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER:
-		create_block()
+		var overlapping_block_area = get_overlapping_area()
+		
+		if overlapping_block_area:
+			overlapping_block_area.remove_from_multi_mesh()
+		else:
+			create_block()
 
 
 # implement this in child
@@ -57,6 +62,17 @@ func _on_Base_Controller_controller_selected():
 # implement this in child
 func _on_Base_Controller_controller_unselected():
 	pass
+
+
+func get_overlapping_area() -> Area:
+	# check if hovering over block
+	var overlapping_areas = controller_grab.overlapping_areas()
+	
+	for area in overlapping_areas:
+		if area is BlockArea:
+			return area
+	
+	return null
 
 
 func get_overlapping_block() -> BuildingBlockSnappable:

@@ -26,7 +26,8 @@ var snap_cand_inter_point : Vector3
 var snap_cand_normal : Vector3
 var snap_axis : int
 var snap_vec : Vector3
-var ready_to_snap := false
+var snap_ghost_spatial
+#var ready_to_snap := false
 #var collision_switching := false
 #var collision_switch_timer := 0.0
 #var prev_collision_mask
@@ -40,11 +41,13 @@ var ready_to_snap := false
 onready var audio_stream_player := $AudioStreamPlayer3D
 onready var collision_shape := $CollisionShape
 onready var snap_sound := preload("res://sounds/magnetic_click.wav")
+onready var ghost_block_scene = preload("res://scenes/building_blocks/ghost_block_base.tscn")
 onready var all_measure_points := get_node(global_vars.ALL_MEASURE_POINTS_PATH)
 onready var multi_mesh := get_node(global_vars.MULTI_MESH_PATH)
 onready var measure_point_scene = load(global_vars.MEASURE_POINT_FILE_PATH)
 onready var all_snap_areas := get_node(global_vars.ALL_SNAP_AREAS_PATH)
 onready var all_block_areas := get_node(global_vars.ALL_BLOCK_AREAS_PATH)
+onready var movable_world := get_node(global_vars.MOVABLE_WORLD_PATH)
 
 export(PackedScene) var snap_particles_scene
 
@@ -86,10 +89,10 @@ func _ready():
 	
 #	prev_collision_mask = get_collision_mask()
 	
-	if !is_grabbed:
+#	if !is_grabbed:
 #		show_held_snap_areas(false)
-		set_process(false)
-		set_physics_process(false)
+#		set_process(false)
+#		set_physics_process(false)
 	
 #	if is_grabbed and vr.button_pressed(vr.BUTTON.B):
 #		# start timer to change collision layesr because this means that it has been duplicated
@@ -110,17 +113,12 @@ func _process(delta):
 		
 
 func _physics_process(delta):
-#	if not is_grabbed:
-#		return
+	if not is_grabbed:
+		return
 	
 	if moving_to_snap:
 		return
 	
-	if ready_to_snap and snap_cand:
-		snap_to_cand()
-		ready_to_snap = false
-		return
-		
 	var z_distance = null
 	var space_state = get_world().direct_space_state
 	var ray_dest_z = global_transform.origin + transform.basis.z * ray_length
@@ -133,15 +131,23 @@ func _physics_process(delta):
 		snap_cand_inter_point = result_z["position"]
 		snap_cand_normal = result_z["normal"]
 		snap_axis = SnapAxis.Z
-#		snap_vec = transform.basis.z
+		
+		if not snap_ghost_spatial:
+			create_ghost()
+		
+		position_ghost()
 	else:
 		snap_cand = null
+		if snap_ghost_spatial:
+			snap_ghost_spatial.queue_free()
+			snap_ghost_spatial = null
 
 
 func _on_Building_Block_Snappable_grab_started():
+	pass
 #	show_held_snap_areas(true)
-	set_process(true)
-	set_physics_process(true)
+#	set_process(true)
+#	set_physics_process(true)
 #	multi_mesh_remove()
 
 
@@ -150,12 +156,11 @@ func _on_Building_Block_Snappable_grab_ended():
 #		set_process(false)
 #		set_physics_process(false)
 #		show_held_snap_areas(false)
-#	if snap_cand:
-#		snap_to_cand()
+	if snap_cand:
+		snap_to_cand()
 #	else:
 #		set_process(false)
 #		set_physics_process(false)
-	ready_to_snap = true
 
 
 func _on_SnapArea_area_snapped():
@@ -260,12 +265,53 @@ func snap_to_90(angle_to_snap) -> float:
 	return new_angle
 
 
-func snap_to_cand():
-	if snap_cand is RigidBody:
-		snap_cand.multi_mesh_add()
-		snap_cand = snap_cand.transfer_col_shape()
+func create_ghost():
+	snap_ghost_spatial = ghost_block_scene.instance()
+	movable_world.add_child(snap_ghost_spatial)
+
+
+func position_ghost():
+	snap_ghost_spatial.global_transform = snap_cand.global_transform
+	var snap_dir = vec_to_basis(snap_cand_normal, snap_cand.transform.basis)
+	var move_by_vec = snap_dir * collision_shape.shape.extents * 2
+	snap_ghost_spatial.global_transform.origin += move_by_vec
+
+
+func vec_to_basis(input_vec : Vector3, input_basis : Basis) -> Vector3:
+	# match an input vector to a basis
+	# necessary because normal returned by raycast is not exactly reliable
 	
+	var orth_x = input_vec.cross(input_basis.x)
+	var orth_y = input_vec.cross(input_basis.y)
+	var orth_z = input_vec.cross(input_basis.z)
+	
+	
+	var final_orth = orth_x
+	var snap_dir = input_basis.x
+	
+	if orth_y.length() < final_orth.length():
+		final_orth = orth_y
+		snap_dir = input_basis.y
+	
+	if orth_z.length() < final_orth.length():
+		final_orth = orth_z
+		snap_dir = input_basis.z
+	
+	# find out sign
+	if input_vec.dot(snap_dir) < 0:
+		snap_dir *= -1
+	
+	return snap_dir
+
+
+func snap_to_cand():
 	snap_start_transform = global_transform
+	
+	if snap_cand is RigidBody:
+		snap_cand = snap_cand.transfer_col_shape()
+		multi_mesh.add_area(snap_cand)
+	
+	
 	var ray_dir
 	var up_dir
 	if snap_axis == SnapAxis.Z:
@@ -274,76 +320,80 @@ func snap_to_cand():
 	
 	# find one orthogonal vector to normal that we can use to calculate the angles
 	# this works because the normal is one of the three local direction vectors
-	var snap_cand_orth = snap_cand_normal.cross(snap_cand.transform.basis.x)
-	print("snap_cand_orth ", snap_cand_orth)
-	if snap_cand_orth.length() < 0.001:
-		snap_cand_orth = snap_cand_normal.cross(snap_cand.transform.basis.y)
-		print("snap_cand_orth ", snap_cand_orth)
-		print("snap_cand.transform.basis.y ", snap_cand.transform.basis.z)
-	if snap_cand_orth.length() < 0.001:
-		snap_cand_orth = snap_cand_normal.cross(snap_cand.transform.basis.z)
+	var normal_dir_vec = vec_to_basis(snap_cand_normal, snap_cand.transform.basis)
 	
+	var snap_cand_orth = normal_dir_vec.cross(snap_cand.transform.basis.x)
+	if snap_cand_orth.length() < 0.001:
+		snap_cand_orth = normal_dir_vec.cross(snap_cand.transform.basis.y)
+	if snap_cand_orth.length() < 0.001:
+		snap_cand_orth = normal_dir_vec.cross(snap_cand.transform.basis.z)
 	
-	# compare this snap_vec to the other and calculate all 3 angles to rotate correctly later
-#	var angle_x = snap_vecs_angle(
-#		transform.basis.z,
-#		snap_cand_normal,
-#		transform.basis.x
+#	var angle = snap_vecs_angle(
+#		ray_dir,
+#		snap_cand.transform.basis.z,
+#		snap_ghost_spatial.transform.basis.y
 #	)
 #
-#	var angle_y = snap_vecs_angle(
-#		transform.basis.z,
-#		snap_cand_normal,
-#		transform.basis.y
-#	)
+#	print("angle ", angle)
+#
+#	var rotation_y := 0.0
+#	if abs(angle) > (PI / 2):
+#		rotation_y = PI
 
 	var angle_x = snap_vecs_angle(
 		ray_dir,
-		snap_cand_normal,
+		normal_dir_vec,
 		transform.basis.x
 	)
-	
+
 	var angle_y = snap_vecs_angle(
 		ray_dir,
-		snap_cand_normal,
+		normal_dir_vec,
 		transform.basis.y
 	)
 	
 	var angle_z = snap_vecs_angle(
 		up_dir,
-		snap_cand_orth,
+#		snap_cand_orth,
+		snap_cand.transform.basis.y,
 		transform.basis.z
 	)
 	
-	print("angle_x ", angle_x)
-	print("angle_y ", angle_y)
-	print("angle_z ", angle_z)
+#	print("angle_x", angle_x)
+#	print("angle_y", angle_y)
+#	print("angle_z", angle_z)
 	
 	angle_x = snap_to_90(angle_x)
 	angle_y = snap_to_90(angle_y)
 	angle_z = snap_to_90(angle_z)
 	
-	print("angle_x snapped ", angle_x)
-	print("angle_y snapped ", angle_y)
-	print("angle_z snapped ", angle_z)
-	
+#	print("angle_x snapped", angle_x)
+#	print("angle_y snapped", angle_y)
+#	print("angle_z snapped", angle_z)
+
 	rotate_object_local(Vector3(1, 0, 0), -angle_x)
 	rotate_object_local(Vector3(0, 1, 0), -angle_y)
 	rotate_object_local(Vector3(0, 0, 1), -angle_z)
 	
 	snap_end_transform.basis = global_transform.basis
 	
+	# get this again because of the rotation that happened
+	if snap_axis == SnapAxis.Z:
+		ray_dir = transform.basis.z
+	
 	var col_shape_extents = collision_shape.shape.extents
 	
 	# just take one extent, it's a cube and all are the same size for now
-	var this_surface_pos = global_transform.origin + transform.basis.z * col_shape_extents.x
-#	var other_surface_pos = other_snap_vec.normalized() * col_shape_extents.x / 2
-	var other_surface_pos = snap_cand.global_transform.origin + snap_cand_normal * col_shape_extents.x
+	var this_surface_pos = global_transform.origin + ray_dir * col_shape_extents.x
+	var other_surface_pos = snap_cand.global_transform.origin + normal_dir_vec * col_shape_extents.x
 	
 	var move_by_vec = other_surface_pos - this_surface_pos
-	snap_end_transform.origin = global_transform.origin + move_by_vec
 	
+	snap_end_transform.origin = global_transform.origin + move_by_vec
 	global_transform = snap_start_transform
+	
+	snap_ghost_spatial.queue_free()
+	snap_ghost_spatial = null
 	
 	set_mode(RigidBody.MODE_KINEMATIC)
 	moving_to_snap = true
@@ -390,29 +440,6 @@ func snap_to_cand():
 ##	var z_rotation_extra : float
 ##
 #
-#	# compare this snap_vec to the other and calculate all 3 angles to rotate correctly later
-#	var angle_x = snap_vecs_angle(
-#		snap_vec,
-#		other_snap_vec,
-#		transform_basis.x
-#	)
-#
-#	var angle_y = snap_vecs_angle(
-#		snap_vec,
-#		other_snap_vec,
-#		transform_basis.y
-#	)
-#
-#	var angle_z = snap_vecs_angle(
-#		snap_vec,
-#		other_snap_vec,
-#		transform_basis.z
-#	)
-#
-#	rotate_object_local(Vector3(1, 0, 0), angle_x)
-#	rotate_object_local(Vector3(0, 1, 0), angle_y)
-#	rotate_object_local(Vector3(0, 0, 1), angle_z)
-#
 #	snap_end_transform.basis = global_transform.basis
 #
 #	var col_shape_extents = get_node("CollisionShape").shape.extents
@@ -434,7 +461,6 @@ func snap_to_cand():
 ##	show_held_snap_areas(false)
 #
 #
-##	if (snap_axis == SnapAxis.Z and other_snap_axis == SnapAxis.Z):
 #
 #	if (this_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH
 #			and other_snap_area.location_on_block == HeldSnapArea.LocationOnBlock.WIDTH):
@@ -700,7 +726,7 @@ func snap_rotation(angle_to_snap) -> float:
 
 func snap_vecs_angle(vec_a, vec_b, vec_n) -> Array:
 	# this method calculates the signed angle between vec_a and vec_b on the plane with normal vec_n
-	# it also calculates the "flip angle" vec_flip_a and vec_flip_b
+	# it also calculates the "moving_to_snap angle" vec_flip_a and vec_flip_b
 	# on the plane vec_flip_n, which is either PI or 0.
 	#
 	# where
@@ -773,8 +799,9 @@ func update_pos_to_snap(delta: float) -> void:
 		snap_timer = 0.0
 #		check_snap_areas()
 		play_snap_sound()
-		multi_mesh_add()
-		transfer_col_shape()
+#		multi_mesh_add()
+		var transfered_area = transfer_col_shape()
+		multi_mesh.add_area(transfered_area)
 		queue_free()
 #		if other_area_parent:
 #			other_area_parent.multi_mesh_add()
@@ -798,7 +825,7 @@ func transfer_col_shape() -> Area:
 	
 
 func multi_mesh_add():
-	multi_mesh.add_block(self)
+	multi_mesh.add_area(self)
 	on_multi_mesh = true
 #	visible = false
 #	set_process(false)

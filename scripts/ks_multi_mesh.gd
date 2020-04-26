@@ -4,10 +4,10 @@ extends MultiMeshInstance
 class_name KSMultiMesh
 
 
-var block_index : Dictionary
+var area_index : Dictionary
 
 
-func add_block(block : BuildingBlockSnappable) -> void:
+func add_area(area : Area) -> void:
 	# add block to MultiMeshInstance
 	# save old transforms
 	# increment visibility 
@@ -15,16 +15,16 @@ func add_block(block : BuildingBlockSnappable) -> void:
 	multimesh.set_visible_instance_count(new_count)
 	
 	# update position of new instance
-	multimesh.set_instance_transform(new_count - 1, block.get_global_transform())
+	multimesh.set_instance_transform(new_count - 1, area.get_global_transform())
 	
 	# add to index
-	block_index[block] = block.get_global_transform()
+	area_index[area] = area.get_global_transform()
 
 
-func remove_block(block : BuildingBlockSnappable) -> void:
+func remove_area(area : Area) -> void:
 	# remove block from MultiMeshInstance
 	# try erasing
-	if !block_index.erase(block):
+	if !area_index.erase(area):
 		return
 	
 	# if erased successfully, set instances again
@@ -36,6 +36,6 @@ func remove_block(block : BuildingBlockSnappable) -> void:
 
 
 func set_instances() -> void:
-	var block_index_values = block_index.values()
-	for i in range(block_index_values.size()):
-		multimesh.set_instance_transform(i, block_index_values[i])
+	var area_index_values = area_index.values()
+	for i in range(area_index_values.size()):
+		multimesh.set_instance_transform(i, area_index_values[i])

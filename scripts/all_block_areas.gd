@@ -5,6 +5,7 @@ extends Spatial
 class_name AllBlockAreas
 
 onready var block_area_script = load(global_vars.BLOCK_AREA_SCRIPT_PATH)
+#onready var building_block_scene = preload("res://scenes/building_blocks/block_base_cube.tscn")
 
 func add_block_area(col_shape : CollisionShape) -> Area:
 	# duplicate collisionshape
@@ -18,6 +19,7 @@ func add_block_area(col_shape : CollisionShape) -> Area:
 	new_area.add_child(col_shape)
 	new_area.monitoring = false
 	new_area.set_script(block_area_script)
+#	new_area.building_block_scene = building_block_scene
 	new_area.set_collision_layer(2)
 	new_area.collision_shape = col_shape
 	
