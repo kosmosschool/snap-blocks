@@ -132,6 +132,15 @@ func _physics_process(delta):
 		snap_cand_normal = result_z["normal"]
 		snap_axis = SnapAxis.Z
 		
+		# check angle between normal and ray
+		var angle = transform.basis.z.angle_to(snap_cand_normal)
+		if angle < 2.2:
+			snap_cand = null
+			if snap_ghost_spatial:
+				snap_ghost_spatial.queue_free()
+				snap_ghost_spatial = null
+			return
+		
 		if not snap_ghost_spatial:
 			create_ghost()
 		
@@ -272,12 +281,13 @@ func create_ghost():
 
 func position_ghost():
 	snap_ghost_spatial.global_transform = snap_cand.global_transform
-	var snap_dir = vec_to_basis(snap_cand_normal, snap_cand.transform.basis)
+	var vec_to_basis_res = vec_to_basis(snap_cand_normal, snap_cand.transform.basis)
+	var snap_dir = vec_to_basis_res["dir_vec"]
 	var move_by_vec = snap_dir * collision_shape.shape.extents * 2
 	snap_ghost_spatial.global_transform.origin += move_by_vec
 
 
-func vec_to_basis(input_vec : Vector3, input_basis : Basis) -> Vector3:
+func vec_to_basis(input_vec : Vector3, input_basis : Basis) -> Dictionary:
 	# match an input vector to a basis
 	# necessary because normal returned by raycast is not exactly reliable
 	
@@ -288,20 +298,23 @@ func vec_to_basis(input_vec : Vector3, input_basis : Basis) -> Vector3:
 	
 	var final_orth = orth_x
 	var snap_dir = input_basis.x
+	var return_snap_axis = SnapAxis.X
 	
 	if orth_y.length() < final_orth.length():
 		final_orth = orth_y
 		snap_dir = input_basis.y
+		return_snap_axis = SnapAxis.Y
 	
 	if orth_z.length() < final_orth.length():
 		final_orth = orth_z
 		snap_dir = input_basis.z
+		return_snap_axis = SnapAxis.Z
 	
 	# find out sign
 	if input_vec.dot(snap_dir) < 0:
 		snap_dir *= -1
 	
-	return snap_dir
+	return {"dir_vec": snap_dir, "snap_axis": return_snap_axis}
 
 
 func snap_to_cand():
@@ -311,85 +324,100 @@ func snap_to_cand():
 		snap_cand = snap_cand.transfer_col_shape()
 		multi_mesh.add_area(snap_cand)
 	
-	
-	var ray_dir
-	var up_dir
-	if snap_axis == SnapAxis.Z:
-		ray_dir = transform.basis.z
-		up_dir = transform.basis.y
-	
 	# find one orthogonal vector to normal that we can use to calculate the angles
 	# this works because the normal is one of the three local direction vectors
-	var normal_dir_vec = vec_to_basis(snap_cand_normal, snap_cand.transform.basis)
+	var vec_to_basis_res = vec_to_basis(snap_cand_normal, snap_cand.transform.basis)
+	var normal_dir_vec = vec_to_basis_res["dir_vec"]
+	var normal_snap_axis  = vec_to_basis_res["snap_axis"]
 	
-	var snap_cand_orth = normal_dir_vec.cross(snap_cand.transform.basis.x)
-	if snap_cand_orth.length() < 0.001:
-		snap_cand_orth = normal_dir_vec.cross(snap_cand.transform.basis.y)
-	if snap_cand_orth.length() < 0.001:
-		snap_cand_orth = normal_dir_vec.cross(snap_cand.transform.basis.z)
+	var ray_dir
+#	var this_angle_z_vec
+#	var snap_cand_angle_z_vec
 	
-#	var angle = snap_vecs_angle(
+	var angle_y := 0.0
+	var angle_x := 0.0
+	
+	if snap_axis == SnapAxis.Z:
+		ray_dir = transform.basis.z
+#		this_angle_z_vec = transform.basis.y
+#		snap_cand_angle_z_vec = snap_cand.transform.basis.y
+		
+		var angle_y_diff = snap_vecs_angle(
+			ray_dir,
+			normal_dir_vec.abs(),
+			transform.basis.y
+		)
+		
+		if normal_snap_axis == SnapAxis.Y:
+			angle_x = PI / 2
+		
+		print("angle_y_diff ", angle_y_diff)
+		if abs(angle_y_diff) > (PI / 2):
+				angle_y = PI
+
+	
+#	var snap_cand_orth = normal_dir_vec.cross(snap_cand.transform.basis.x)
+#	if snap_cand_orth.length() < 0.001:
+#		snap_cand_orth = normal_dir_vec.cross(snap_cand.transform.basis.y)
+#	if snap_cand_orth.length() < 0.001:
+#		snap_cand_orth = normal_dir_vec.cross(snap_cand.transform.basis.z)
+	
+#	var angle_x = snap_vecs_angle(
 #		ray_dir,
-#		snap_cand.transform.basis.z,
-#		snap_ghost_spatial.transform.basis.y
+#		normal_dir_vec,
+#		transform.basis.x
 #	)
 #
-#	print("angle ", angle)
+#	var angle_y = snap_vecs_angle(
+#		ray_dir,
+#		normal_dir_vec,
+#		transform.basis.y
+#	)
 #
-#	var rotation_y := 0.0
-#	if abs(angle) > (PI / 2):
-#		rotation_y = PI
-
-	var angle_x = snap_vecs_angle(
-		ray_dir,
-		normal_dir_vec,
-		transform.basis.x
-	)
-
-	var angle_y = snap_vecs_angle(
-		ray_dir,
-		normal_dir_vec,
-		transform.basis.y
-	)
-	
-	var angle_z = snap_vecs_angle(
-		up_dir,
-#		snap_cand_orth,
-		snap_cand.transform.basis.y,
-		transform.basis.z
-	)
+#	var angle_z = snap_vecs_angle(
+#		this_angle_z_vec,
+#		snap_cand_angle_z_vec,
+###		snap_cand_orth,
+##		snap_cand.transform.basis.y,
+#		ray_dir
+#	)
 	
 #	print("angle_x", angle_x)
 #	print("angle_y", angle_y)
 #	print("angle_z", angle_z)
 	
-	angle_x = snap_to_90(angle_x)
-	angle_y = snap_to_90(angle_y)
-	angle_z = snap_to_90(angle_z)
+#	angle_x = snap_to_90(angle_x)
+#	angle_y = snap_to_90(angle_y)
+#	angle_z = snap_to_90(angle_z)
 	
 #	print("angle_x snapped", angle_x)
 #	print("angle_y snapped", angle_y)
 #	print("angle_z snapped", angle_z)
-
-	rotate_object_local(Vector3(1, 0, 0), -angle_x)
-	rotate_object_local(Vector3(0, 1, 0), -angle_y)
-	rotate_object_local(Vector3(0, 0, 1), -angle_z)
+	
+	# reset transform
+	transform.basis = snap_cand.transform.basis
+	
+	rotate_object_local(Vector3(1, 0, 0), angle_x)
+	rotate_object_local(Vector3(0, 1, 0), angle_y)
+#	rotate_object_local(Vector3(0, 0, 1), angle_z)
 	
 	snap_end_transform.basis = global_transform.basis
 	
 	# get this again because of the rotation that happened
-	if snap_axis == SnapAxis.Z:
-		ray_dir = transform.basis.z
+#	if snap_axis == SnapAxis.Z:
+#		ray_dir = transform.basis.z
 	
-	var col_shape_extents = collision_shape.shape.extents
+#	var col_shape_extents = collision_shape.shape.extents
 	
 	# just take one extent, it's a cube and all are the same size for now
-	var this_surface_pos = global_transform.origin + ray_dir * col_shape_extents.x
-	var other_surface_pos = snap_cand.global_transform.origin + normal_dir_vec * col_shape_extents.x
+#	var this_surface_pos = global_transform.origin + ray_dir * col_shape_extents.x
+#	var other_surface_pos = snap_cand.global_transform.origin + normal_dir_vec * col_shape_extents.x
+#
+#	var move_by_vec = other_surface_pos - this_surface_pos
+
+	snap_end_transform.origin = snap_ghost_spatial.global_transform.origin
 	
-	var move_by_vec = other_surface_pos - this_surface_pos
-	
-	snap_end_transform.origin = global_transform.origin + move_by_vec
+#	snap_end_transform.origin = global_transform.origin + move_by_vec
 	global_transform = snap_start_transform
 	
 	snap_ghost_spatial.queue_free()
