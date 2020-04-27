@@ -7,7 +7,7 @@ class_name BuildingBlockSnappable
 
 signal block_snapped_updated
 
-enum SnapAxis {X, Y, Z}
+enum SnapAxis {X, XM, Y, YM, Z, ZM}
 
 var moving_to_snap := false setget set_moving_to_snap, get_moving_to_snap
 var snapped := false setget set_snapped, get_snapped
@@ -27,6 +27,7 @@ var snap_cand_normal : Vector3
 var snap_axis : int
 var snap_vec : Vector3
 var snap_ghost_spatial
+var ray_dir : Vector3
 #var ready_to_snap := false
 #var collision_switching := false
 #var collision_switch_timer := 0.0
@@ -119,21 +120,45 @@ func _physics_process(delta):
 	if moving_to_snap:
 		return
 	
-	var z_distance = null
+	var distances_array = [10, 10, 10, 10, 10, 10]
+	var results_array = [null, null, null, null, null, null]
+	
 	var space_state = get_world().direct_space_state
 	var ray_dest_z = global_transform.origin + transform.basis.z * ray_length
+	var ray_dest_zm = global_transform.origin - transform.basis.z * ray_length
+	
 	# set collision mask to 4 (i.e. second bit only so that it only collides with other blocks)
 	var result_z = space_state.intersect_ray(global_transform.origin, ray_dest_z, [self], 2, true, true)
+	var result_zm = space_state.intersect_ray(global_transform.origin, ray_dest_zm, [self], 2, true, true)
 	
 	if not result_z.empty():
-		z_distance = global_transform.origin.distance_to(result_z["position"])
-		snap_cand = result_z["collider"]
-		snap_cand_inter_point = result_z["position"]
-		snap_cand_normal = result_z["normal"]
-		snap_axis = SnapAxis.Z
+		distances_array[0] = global_transform.origin.distance_to(result_z["position"])
+		result_z["snap_axis"] = SnapAxis.Z
+		result_z["ray_dir"] = transform.basis.z
+		results_array[0] = result_z
+		
+	if not result_zm.empty():
+		distances_array[1] = global_transform.origin.distance_to(result_zm["position"])
+		result_zm["snap_axis"] = SnapAxis.ZM
+		result_zm["ray_dir"] = -transform.basis.z
+		results_array[1] = result_zm
+	
+	# find ray with closest collision
+	var min_dist = distances_array.min()
+	var min_index = distances_array.find(min_dist)
+	
+	if min_index == -1:
+		return
+	
+	if min_dist < 10:
+		# take the closest hit
+		snap_cand = results_array[min_index]["collider"]
+		snap_cand_normal = results_array[min_index]["normal"]
+		snap_axis = results_array[min_index]["snap_axis"]
+		ray_dir = results_array[min_index]["ray_dir"]
 		
 		# check angle between normal and ray
-		var angle = transform.basis.z.angle_to(snap_cand_normal)
+		var angle = ray_dir.angle_to(snap_cand_normal)
 		if angle < 2.2:
 			snap_cand = null
 			if snap_ghost_spatial:
@@ -146,6 +171,7 @@ func _physics_process(delta):
 		
 		position_ghost()
 	else:
+		# no hit found
 		snap_cand = null
 		if snap_ghost_spatial:
 			snap_ghost_spatial.queue_free()
@@ -330,7 +356,6 @@ func snap_to_cand():
 	var normal_dir_vec = vec_to_basis_res["dir_vec"]
 	var normal_snap_axis  = vec_to_basis_res["snap_axis"]
 	
-	var ray_dir
 #	var this_angle_z_vec
 #	var snap_cand_angle_z_vec
 	
@@ -340,17 +365,21 @@ func snap_to_cand():
 	
 	var angle_y_add := 0.0
 	
-	if snap_axis == SnapAxis.Z:
+	if snap_axis == SnapAxis.Z or snap_axis == SnapAxis.ZM:
 		var same_dir := true
-		ray_dir = transform.basis.z
 #		this_angle_z_vec = transform.basis.y
 #		snap_cand_angle_z_vec = snap_cand.transform.basis.y
 		
 		var angle_y_diff = snap_vecs_angle(
-			ray_dir,
+			transform.basis.z,
 			normal_dir_vec.abs(),
 			transform.basis.y
 		)
+		
+		var y_z_diff_vec = -transform.basis.y
+		if abs(angle_y_diff) > (PI / 2):
+			same_dir = false
+			y_z_diff_vec = transform.basis.y
 		
 		var y_y_diff = snap_vecs_angle(
 			transform.basis.y,
@@ -358,16 +387,12 @@ func snap_to_cand():
 			transform.basis.z
 		)
 		
+		
 		var y_z_diff = snap_vecs_angle(
-			transform.basis.y,
+			y_z_diff_vec,
 			snap_cand.transform.basis.z,
 			transform.basis.z
 		)
-		
-		
-		if abs(angle_y_diff) > (PI / 2):
-			same_dir = false
-		
 		
 		if normal_snap_axis == SnapAxis.X:
 			angle_y = PI / 2
@@ -379,10 +404,13 @@ func snap_to_cand():
 		
 		if normal_snap_axis == SnapAxis.Y:
 			angle_x = - PI / 2
+			angle_z = snap_rotation(y_z_diff)
+			
 			if not same_dir:
 				angle_x *= -1
+
 			
-			angle_z = snap_rotation(y_z_diff)
+			
 			
 		
 		if normal_snap_axis == SnapAxis.Z:
