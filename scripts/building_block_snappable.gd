@@ -336,8 +336,12 @@ func snap_to_cand():
 	
 	var angle_y := 0.0
 	var angle_x := 0.0
+	var angle_z := 0.0
+	
+	var angle_y_add := 0.0
 	
 	if snap_axis == SnapAxis.Z:
+		var same_dir := true
 		ray_dir = transform.basis.z
 #		this_angle_z_vec = transform.basis.y
 #		snap_cand_angle_z_vec = snap_cand.transform.basis.y
@@ -348,13 +352,45 @@ func snap_to_cand():
 			transform.basis.y
 		)
 		
-		if normal_snap_axis == SnapAxis.Y:
-			angle_x = PI / 2
+		var y_y_diff = snap_vecs_angle(
+			transform.basis.y,
+			snap_cand.transform.basis.y,
+			transform.basis.z
+		)
 		
-		print("angle_y_diff ", angle_y_diff)
+		var y_z_diff = snap_vecs_angle(
+			transform.basis.y,
+			snap_cand.transform.basis.z,
+			transform.basis.z
+		)
+		
+		
 		if abs(angle_y_diff) > (PI / 2):
+			same_dir = false
+		
+		
+		if normal_snap_axis == SnapAxis.X:
+			angle_y = PI / 2
+			if not same_dir:
+				angle_y *= -1
+			
+			angle_z = snap_rotation(y_y_diff)
+		
+		
+		if normal_snap_axis == SnapAxis.Y:
+			angle_x = - PI / 2
+			if not same_dir:
+				angle_x *= -1
+			
+			angle_z = snap_rotation(y_z_diff)
+			
+		
+		if normal_snap_axis == SnapAxis.Z:
+			if not same_dir:
 				angle_y = PI
-
+			
+			angle_z = snap_rotation(y_y_diff)
+		
 	
 #	var snap_cand_orth = normal_dir_vec.cross(snap_cand.transform.basis.x)
 #	if snap_cand_orth.length() < 0.001:
@@ -399,7 +435,7 @@ func snap_to_cand():
 	
 	rotate_object_local(Vector3(1, 0, 0), angle_x)
 	rotate_object_local(Vector3(0, 1, 0), angle_y)
-#	rotate_object_local(Vector3(0, 0, 1), angle_z)
+	rotate_object_local(Vector3(0, 0, 1), angle_z)
 	
 	snap_end_transform.basis = global_transform.basis
 	
