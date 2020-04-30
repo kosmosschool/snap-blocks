@@ -87,7 +87,11 @@ visible = false
 transform = Transform( 21.2217, 0, 0, 0, 8.12099, 0, 0, 0, 1, 0, 0, 0 )
 text = "Welcome to Blöcks, friend.
 Press X to open your tablet."
+margin = 16
+billboard = false
+resize_mode = 1
 font_size_multiplier = 45.0
+font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0.75, 0.45, 0.45, 1 )
 h_align = 1
 v_align = 1
@@ -120,10 +124,10 @@ script = ExtResource( 25 )
 [node name="AllBuildingBlocks" type="Spatial" parent="MovableWorld"]
 
 [node name="BlockBaseCube" parent="MovableWorld/AllBuildingBlocks" instance=ExtResource( 9 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.405019, 0.323, -0.0874477 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.471683, 0.323, -0.0874477 )
 
 [node name="BlockBaseCube2" parent="MovableWorld/AllBuildingBlocks" instance=ExtResource( 9 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.635385, 0.323, -0.0874477 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.702049, 0.323, -0.0874477 )
 collision_layer = 2
 collision_mask = 1
 

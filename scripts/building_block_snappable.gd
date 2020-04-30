@@ -7,7 +7,7 @@ class_name BuildingBlockSnappable
 
 signal block_snapped_updated
 
-enum SnapAxis {X, XM, Y, YM, Z, ZM}
+enum SnapAxis {X, Y, Z}
 
 var moving_to_snap := false setget set_moving_to_snap, get_moving_to_snap
 var snapped := false setget set_snapped, get_snapped
@@ -126,22 +126,54 @@ func _physics_process(delta):
 	var space_state = get_world().direct_space_state
 	var ray_dest_z = global_transform.origin + transform.basis.z * ray_length
 	var ray_dest_zm = global_transform.origin - transform.basis.z * ray_length
+	var ray_dest_x = global_transform.origin + transform.basis.x * ray_length
+	var ray_dest_xm = global_transform.origin - transform.basis.x * ray_length
+	var ray_dest_y = global_transform.origin + transform.basis.y * ray_length
+	var ray_dest_ym = global_transform.origin - transform.basis.y * ray_length
 	
 	# set collision mask to 4 (i.e. second bit only so that it only collides with other blocks)
 	var result_z = space_state.intersect_ray(global_transform.origin, ray_dest_z, [self], 2, true, true)
 	var result_zm = space_state.intersect_ray(global_transform.origin, ray_dest_zm, [self], 2, true, true)
+	var result_x = space_state.intersect_ray(global_transform.origin, ray_dest_x, [self], 2, true, true)
+	var result_xm = space_state.intersect_ray(global_transform.origin, ray_dest_xm, [self], 2, true, true)
+	var result_y = space_state.intersect_ray(global_transform.origin, ray_dest_y, [self], 2, true, true)
+	var result_ym = space_state.intersect_ray(global_transform.origin, ray_dest_ym, [self], 2, true, true)
 	
 	if not result_z.empty():
 		distances_array[0] = global_transform.origin.distance_to(result_z["position"])
 		result_z["snap_axis"] = SnapAxis.Z
 		result_z["ray_dir"] = transform.basis.z
 		results_array[0] = result_z
-		
+
 	if not result_zm.empty():
 		distances_array[1] = global_transform.origin.distance_to(result_zm["position"])
-		result_zm["snap_axis"] = SnapAxis.ZM
+		result_zm["snap_axis"] = SnapAxis.Z
 		result_zm["ray_dir"] = -transform.basis.z
 		results_array[1] = result_zm
+
+	if not result_x.empty():
+		distances_array[0] = global_transform.origin.distance_to(result_x["position"])
+		result_x["snap_axis"] = SnapAxis.X
+		result_x["ray_dir"] = transform.basis.x
+		results_array[0] = result_x
+
+	if not result_xm.empty():
+		distances_array[0] = global_transform.origin.distance_to(result_xm["position"])
+		result_xm["snap_axis"] = SnapAxis.X
+		result_xm["ray_dir"] = -transform.basis.x
+		results_array[0] = result_xm
+	
+	if not result_y.empty():
+		distances_array[0] = global_transform.origin.distance_to(result_y["position"])
+		result_y["snap_axis"] = SnapAxis.Y
+		result_y["ray_dir"] = transform.basis.y
+		results_array[0] = result_y
+	
+	if not result_ym.empty():
+		distances_array[0] = global_transform.origin.distance_to(result_ym["position"])
+		result_ym["snap_axis"] = SnapAxis.Y
+		result_ym["ray_dir"] = -transform.basis.y
+		results_array[0] = result_ym
 	
 	# find ray with closest collision
 	var min_dist = distances_array.min()
@@ -320,27 +352,28 @@ func vec_to_basis(input_vec : Vector3, input_basis : Basis) -> Dictionary:
 	var orth_x = input_vec.cross(input_basis.x)
 	var orth_y = input_vec.cross(input_basis.y)
 	var orth_z = input_vec.cross(input_basis.z)
-	
+	var dir_vec : Vector3
 	
 	var final_orth = orth_x
-	var snap_dir = input_basis.x
+	var basis_dir = input_basis.x
 	var return_snap_axis = SnapAxis.X
 	
 	if orth_y.length() < final_orth.length():
 		final_orth = orth_y
-		snap_dir = input_basis.y
+		basis_dir = input_basis.y
 		return_snap_axis = SnapAxis.Y
 	
 	if orth_z.length() < final_orth.length():
 		final_orth = orth_z
-		snap_dir = input_basis.z
+		basis_dir = input_basis.z
 		return_snap_axis = SnapAxis.Z
 	
 	# find out sign
-	if input_vec.dot(snap_dir) < 0:
-		snap_dir *= -1
+	dir_vec = basis_dir
+	if input_vec.dot(basis_dir) < 0:
+		dir_vec *= -1
 	
-	return {"dir_vec": snap_dir, "snap_axis": return_snap_axis}
+	return {"dir_vec": dir_vec, "basis_dir": basis_dir, "snap_axis": return_snap_axis}
 
 
 func snap_to_cand():
@@ -355,24 +388,18 @@ func snap_to_cand():
 	var vec_to_basis_res = vec_to_basis(snap_cand_normal, snap_cand.transform.basis)
 	var normal_dir_vec = vec_to_basis_res["dir_vec"]
 	var normal_snap_axis  = vec_to_basis_res["snap_axis"]
-	
-#	var this_angle_z_vec
-#	var snap_cand_angle_z_vec
+	var snap_candid_current_basis_dir  = vec_to_basis_res["basis_dir"]
 	
 	var angle_y := 0.0
 	var angle_x := 0.0
 	var angle_z := 0.0
 	
-	var angle_y_add := 0.0
-	
-	if snap_axis == SnapAxis.Z or snap_axis == SnapAxis.ZM:
+	if snap_axis == SnapAxis.Z:
 		var same_dir := true
-#		this_angle_z_vec = transform.basis.y
-#		snap_cand_angle_z_vec = snap_cand.transform.basis.y
 		
 		var angle_y_diff = snap_vecs_angle(
 			transform.basis.z,
-			normal_dir_vec.abs(),
+			snap_candid_current_basis_dir,
 			transform.basis.y
 		)
 		
@@ -387,7 +414,6 @@ func snap_to_cand():
 			transform.basis.z
 		)
 		
-		
 		var y_z_diff = snap_vecs_angle(
 			y_z_diff_vec,
 			snap_cand.transform.basis.z,
@@ -401,7 +427,6 @@ func snap_to_cand():
 			
 			angle_z = snap_rotation(y_y_diff)
 		
-		
 		if normal_snap_axis == SnapAxis.Y:
 			angle_x = - PI / 2
 			angle_z = snap_rotation(y_z_diff)
@@ -409,17 +434,123 @@ func snap_to_cand():
 			if not same_dir:
 				angle_x *= -1
 
-			
-			
-			
-		
 		if normal_snap_axis == SnapAxis.Z:
 			if not same_dir:
 				angle_y = PI
 			
 			angle_z = snap_rotation(y_y_diff)
 		
+		transform.basis = snap_cand.transform.basis
 	
+		rotate_object_local(Vector3(1, 0, 0), angle_x)
+		rotate_object_local(Vector3(0, 1, 0), angle_y)
+		rotate_object_local(Vector3(0, 0, 1), angle_z)
+	
+	if snap_axis == SnapAxis.X:
+		var same_dir := true
+		
+		# we can refactor this i think
+		var angle_y_diff = snap_vecs_angle(
+			transform.basis.x,
+			snap_candid_current_basis_dir,
+			transform.basis.y
+		)
+		
+		var y_z_diff_vec = -transform.basis.y
+		if abs(angle_y_diff) > (PI / 2):
+			same_dir = false
+			y_z_diff_vec = transform.basis.y
+		
+		var y_y_diff = snap_vecs_angle(
+			transform.basis.y,
+			snap_cand.transform.basis.y,
+			transform.basis.x
+		)
+		
+		var y_z_diff = snap_vecs_angle(
+			y_z_diff_vec,
+			snap_cand.transform.basis.x,
+			transform.basis.x
+		)
+		
+		angle_x = snap_rotation(y_y_diff)
+		
+		if normal_snap_axis == SnapAxis.Z:
+			angle_y = - PI / 2
+			if not same_dir:
+				angle_y *= -1
+			
+		if normal_snap_axis == SnapAxis.Y:
+			angle_z = PI / 2
+			angle_x = snap_rotation(y_z_diff)
+			
+			if not same_dir:
+				angle_z *= -1
+		
+		# i think we can use this for all cases
+		if normal_snap_axis == snap_axis:
+			if not same_dir:
+				angle_y = PI
+		
+		
+		transform.basis = snap_cand.transform.basis
+		
+		rotate_object_local(Vector3(0, 1, 0), angle_y)
+		rotate_object_local(Vector3(0, 0, 1), angle_z)
+		rotate_object_local(Vector3(1, 0, 0), angle_x)
+	
+	
+	if snap_axis == SnapAxis.Y:
+		var same_dir := true
+		
+		# we can refactor this i think
+		var angle_y_diff = snap_vecs_angle(
+			transform.basis.y,
+			snap_candid_current_basis_dir,
+			transform.basis.z
+		)
+		
+		if abs(angle_y_diff) > (PI / 2):
+			same_dir = false
+		
+		var y_y_diff = snap_vecs_angle(
+			transform.basis.z,
+			snap_cand.transform.basis.z,
+			transform.basis.y
+		)
+		
+		var y_z_diff = snap_vecs_angle(
+			transform.basis.x,
+			snap_cand.transform.basis.x,
+			transform.basis.y
+		)
+		
+		angle_y = snap_rotation(y_y_diff)
+		
+		if normal_snap_axis == SnapAxis.X:
+			angle_z = - PI / 2
+			if not same_dir:
+				angle_z *= -1
+			
+		if normal_snap_axis == SnapAxis.Z:
+			angle_x = PI / 2
+			angle_y = snap_rotation(y_z_diff)
+
+			if not same_dir:
+				angle_x *= -1
+		
+		# i think we can use this for all cases
+		if normal_snap_axis == snap_axis:
+			if not same_dir:
+				angle_z = PI
+		
+		
+		transform.basis = snap_cand.transform.basis
+		
+		rotate_object_local(Vector3(0, 0, 1), angle_z)
+		rotate_object_local(Vector3(1, 0, 0), angle_x)
+		rotate_object_local(Vector3(0, 1, 0), angle_y)
+		
 #	var snap_cand_orth = normal_dir_vec.cross(snap_cand.transform.basis.x)
 #	if snap_cand_orth.length() < 0.001:
 #		snap_cand_orth = normal_dir_vec.cross(snap_cand.transform.basis.y)
@@ -459,11 +590,11 @@ func snap_to_cand():
 #	print("angle_z snapped", angle_z)
 	
 	# reset transform
-	transform.basis = snap_cand.transform.basis
-	
-	rotate_object_local(Vector3(1, 0, 0), angle_x)
-	rotate_object_local(Vector3(0, 1, 0), angle_y)
-	rotate_object_local(Vector3(0, 0, 1), angle_z)
+#	transform.basis = snap_cand.transform.basis
+#
+#	rotate_object_local(Vector3(1, 0, 0), angle_x)
+#	rotate_object_local(Vector3(0, 1, 0), angle_y)
+#	rotate_object_local(Vector3(0, 0, 1), angle_z)
 	
 	snap_end_transform.basis = global_transform.basis
 	
