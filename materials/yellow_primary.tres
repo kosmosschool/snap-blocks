@@ -4,4 +4,4 @@
 
 [resource]
 shader = ExtResource( 1 )
-shader_param/color = Vector3( 0.82, 0.82, 0.55 )
+shader_param/color = Vector3( 0.95, 0.95, 0.5 )

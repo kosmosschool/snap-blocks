@@ -62,6 +62,11 @@ func _on_left_ARVRController_button_pressed(button_number):
 		if button_click_sound:
 			button_click_sound.play()
 #		toggle_tablet()
+	
+	# if grip trigger is pressed and it's also pressed on the left one
+	if button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER and vr.button_pressed(vr.BUTTON.RIGHT_GRIP_TRIGGER):
+		# enter move mode
+		move_mode = true
 
 
 func process_move_mode() -> void:
