@@ -8,7 +8,6 @@ class_name ControllerSystem
 signal controller_type_changed
 
 var controller_type := 0
-var right_controller_models
 #var selected_controller
 var all_controllers : Array
 var move_mode := false
@@ -30,8 +29,7 @@ onready var button_click_sound = $AudioStreamPlayer3DClick
 func _ready():
 	if right_controller:
 		right_controller.connect("button_pressed", self, "_on_right_ARVRController_button_pressed")
-		right_controller_models = right_controller.get_node("Feature_ControllerModel_Right")
-		all_controllers = right_controller_models.get_children()
+		all_controllers = right_controller.get_node("KSControllerRight/ControllerTypes").get_children()
 		set_controller_type(controller_type)
 	
 	if left_controller:
@@ -115,7 +113,7 @@ func roundrobin() -> void:
 func set_controller_type(new_ct : int) -> void:
 	controller_type = new_ct
 	# update mesh
-	if right_controller_models:
+	if all_controllers:
 		# hide all
 		for child in all_controllers:
 			child.set_selected(false)

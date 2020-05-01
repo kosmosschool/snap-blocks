@@ -10,9 +10,8 @@ signal controller_unselected
 var select_default := false
 var selected := false setget set_selected, get_selected
 
-onready var right_controller = get_node(global_vars.CONTR_RIGHT_PATH)
-onready var grab_area_right = get_node(global_vars.CONTR_RIGHT_PATH + "/controller_grab/GrabArea")
-onready var controller_grab = get_node(global_vars.CONTR_RIGHT_PATH + "/controller_grab")
+onready var ar_vr_controller = get_parent().get_parent().get_parent()
+onready var controller_grab = get_node("../../ControllerGrab")
 onready var all_building_blocks = get_node(global_vars.ALL_BUILDING_BLOCKS_PATH) 
 onready var movable_world_node = get_node(global_vars.MOVABLE_WORLD_PATH)
 onready var building_block_base = preload("res://scenes/building_blocks/block_base_cube.tscn")
@@ -34,13 +33,12 @@ func get_selected():
 
 
 func _ready():
-	right_controller.connect("button_pressed", self, "_on_right_ARVRController_button_pressed")
-	connect("controller_selected", self, "_on_Base_Controller_controller_selected")
-	connect("controller_unselected", self, "_on_Base_Controller_controller_unselected")
+	ar_vr_controller.connect("button_pressed", self, "_on_ARVRController_button_pressed")
+#	connect("controller_selected", self, "_on_Base_Controller_controller_selected")
+#	connect("controller_unselected", self, "_on_Base_Controller_controller_unselected")
 
 
-# implement this in child
-func _on_right_ARVRController_button_pressed(button_number):
+func _on_ARVRController_button_pressed(button_number):
 	# if grip trigger pressed while B button being held down
 	if vr.button_pressed(vr.BUTTON.B) and button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER:
 		create_ghost_block()
@@ -48,20 +46,22 @@ func _on_right_ARVRController_button_pressed(button_number):
 	if button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER:
 		var overlapping_block_area = get_overlapping_area()
 		
+		print("overlapping_block_area ", overlapping_block_area)
+		
 		if overlapping_block_area:
-			overlapping_block_area.remove_from_multi_mesh()
+			overlapping_block_area.remove_from_multi_mesh(controller_grab)
 		else:
 			create_block()
 
 
-# implement this in child
-func _on_Base_Controller_controller_selected():
-	pass
-
-
-# implement this in child
-func _on_Base_Controller_controller_unselected():
-	pass
+## implement this in child
+#func _on_Base_Controller_controller_selected():
+#	pass
+#
+#
+## implement this in child
+#func _on_Base_Controller_controller_unselected():
+#	pass
 
 
 func get_overlapping_area() -> Area:
@@ -91,10 +91,15 @@ func create_block() -> void:
 	if controller_grab.held_object:
 		return
 	
+	var overlapping_block = get_overlapping_block()
+	
+	if overlapping_block:
+		return
+	
 	var block_instance = building_block_base.instance()
 	all_building_blocks.add_child(block_instance)
 	
-	var new_origin = controller_grab.global_transform.origin + controller_grab.global_transform.basis.z * -0.076
+	var new_origin = controller_grab.global_transform.origin + controller_grab.global_transform.basis.z * -0.058
 	
 	block_instance.global_transform.origin = new_origin
 	block_instance.global_transform.basis = controller_grab.global_transform.basis

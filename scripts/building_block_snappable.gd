@@ -121,6 +121,11 @@ func _physics_process(delta):
 		snap_axis = results_array[min_index]["snap_axis"]
 		ray_dir = results_array[min_index]["ray_dir"]
 		
+		# prevent snapping to block which is held on other hand
+		if snap_cand as BuildingBlockSnappable and snap_cand.is_grabbed:
+			snap_cand = null
+			return
+		
 		# check angle between normal and ray
 		var angle = ray_dir.angle_to(snap_cand_normal)
 		if angle < 2.2:

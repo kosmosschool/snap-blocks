@@ -1,4 +1,4 @@
-extends BuildingBlock
+extends KSGrabbableRigidBody
 
 
 class_name GhostBlock

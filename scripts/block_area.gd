@@ -9,7 +9,6 @@ var building_block_scene
 
 var all_building_blocks
 var multi_mesh
-var controller_grab
 
 # we don't use _ready because this script is set from another script and _ready is not called
 
@@ -17,10 +16,9 @@ func _init():
 	building_block_scene = preload("res://scenes/building_blocks/block_base_cube.tscn")
 	all_building_blocks = get_node(global_vars.ALL_BUILDING_BLOCKS_PATH)
 	multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
-	controller_grab = get_node(global_vars.CONTR_RIGHT_PATH + "/controller_grab")
 
 
-func remove_from_multi_mesh() -> void:
+func remove_from_multi_mesh(controller_grab) -> void:
 	# removes this "Block" from MultiMesh
 	# instance new building block at this position
 	var new_bb = building_block_scene.instance()

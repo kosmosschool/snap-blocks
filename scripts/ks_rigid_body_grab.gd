@@ -2,6 +2,7 @@ extends Feature_RigidBodyGrab
 
 class_name KSRigidBodyGrab
 
+
 # overriding from parent
 func _on_ARVRController_button_pressed(button_number):
 	if button_number != vr.CONTROLLER_BUTTON.GRIP_TRIGGER:
@@ -24,7 +25,7 @@ func grab():
 	var bodies = grab_area.get_overlapping_bodies();
 	if len(bodies) > 0:
 		for body in bodies:
-			if body is OQClass_GrabbableRigidBody:
+			if body is KSGrabbableRigidBody:
 #				var current_mode = body.get_mode()
 #				if (current_mode == RigidBody.MODE_RIGID or current_mode == RigidBody.MODE_KINEMATIC) and body.is_grabbable:
 				if body.is_grabbable:

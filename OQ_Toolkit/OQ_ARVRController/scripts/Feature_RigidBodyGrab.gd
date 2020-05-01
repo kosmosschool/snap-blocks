@@ -16,7 +16,7 @@ export var reparent_mesh = false
 export var collision_body_active := false
 
 func _ready():
-	controller = get_parent();
+	controller = get_parent().get_parent()
 	if (not controller is ARVRController):
 		vr.log_error(" in Feature_RigidBodyGrab: parent not ARVRController.");
 	
