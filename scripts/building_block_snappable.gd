@@ -23,22 +23,33 @@ var snap_vec : Vector3
 var snap_ghost_spatial
 var ray_dir : Vector3
 
-#onready var audio_stream_player := $AudioStreamPlayer3D
+#var main_color : Color setget set_main_color, get_main_color
+
 onready var collision_shape := $CollisionShape
-#onready var snap_sound := preload("res://sounds/magnetic_click.wav")
+onready var mesh_instance := $MeshInstance
 onready var ghost_block_scene = preload("res://scenes/building_blocks/ghost_block_base.tscn")
 onready var multi_mesh := get_node(global_vars.MULTI_MESH_PATH)
 onready var all_block_areas := get_node(global_vars.ALL_BLOCK_AREAS_PATH)
 onready var movable_world := get_node(global_vars.MOVABLE_WORLD_PATH)
+onready var controller_colors := get_node(global_vars.CONTR_RIGHT_PATH + "/KSControllerRight/ControllerColors")
 
 
 # this is a hacky workaround because of this issue: https://github.com/godotengine/godot/issues/25252
 func is_class(type):
 	return type == "BuildingBlockSnappable" or .is_class(type)
 
+#func set_main_color(new_value):
+#	main_color = new_value
+#	set_block_color(new_value)
+#
+#
+#func get_main_color():
+#	return main_color
+
 
 func _ready():
 	connect("grab_ended", self, "_on_Building_Block_Snappable_grab_ended")
+	set_material(controller_colors.get_current_material())
 
 
 func _process(delta):
@@ -152,6 +163,15 @@ func _on_Building_Block_Snappable_grab_ended():
 		snap_to_cand()
 
 
+func get_shader_color():
+	var main_material = mesh_instance.get_surface_material(0)
+	return main_material.get_shader_param("color")
+
+
+func set_material(new_mat : Material) -> void:
+	mesh_instance.set_surface_material(0, new_mat)
+
+
 func create_ghost():
 	snap_ghost_spatial = ghost_block_scene.instance()
 	movable_world.add_child(snap_ghost_spatial)
@@ -200,8 +220,12 @@ func snap_to_cand():
 	snap_start_transform = global_transform
 	
 	if snap_cand is RigidBody:
-		snap_cand = all_block_areas.add_block_area(snap_cand.get_node("CollisionShape"), false)
-		multi_mesh.add_area(snap_cand)
+		var snap_cand_color = snap_cand.get_shader_color()
+		snap_cand = all_block_areas.add_block_area(
+			snap_cand.get_node("CollisionShape"), snap_cand.mesh_instance.get_surface_material(0),
+			false
+		)
+		multi_mesh.add_area(snap_cand, snap_cand_color)
 	
 	# find one orthogonal vector to normal that we can use to calculate the angles
 	# this works because the normal is one of the three local direction vectors
@@ -432,8 +456,8 @@ func update_pos_to_snap(delta: float) -> void:
 		moving_to_snap = false
 		snap_timer = 0.0
 #		play_snap_sound()
-		var transfered_area = all_block_areas.add_block_area($CollisionShape)
-		multi_mesh.add_area(transfered_area)
+		var transfered_area = all_block_areas.add_block_area($CollisionShape, mesh_instance.get_surface_material(0))
+		multi_mesh.add_area(transfered_area, get_shader_color())
 		queue_free()
 		return
 	

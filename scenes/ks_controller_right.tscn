@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/controller_grab.tscn" type="PackedScene" id=1]
+[ext_resource path="res://meshes/big_square_block.mesh" type="ArrayMesh" id=2]
+[ext_resource path="res://scripts/controller_colors.gd" type="Script" id=3]
 [ext_resource path="res://scenes/default_controller_right.tscn" type="PackedScene" id=4]
+[ext_resource path="res://materials/bright_lax.tres" type="Material" id=5]
+[ext_resource path="res://materials/bright_yellow.tres" type="Material" id=6]
+[ext_resource path="res://materials/dark_dark_grey.tres" type="Material" id=7]
+[ext_resource path="res://materials/dark_green.tres" type="Material" id=8]
 
 [node name="KSControllerRight" type="Spatial"]
 
@@ -12,3 +18,14 @@ transform = Transform( 1, 0, 0, 0, 0.82086, 0.571129, 0, -0.571129, 0.82086, 0.0
 
 [node name="ControllerGrab" parent="." instance=ExtResource( 1 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01, -0.022, -0.038 )
+
+[node name="ControllerColors" type="Spatial" parent="."]
+script = ExtResource( 3 )
+all_materials = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ]
+
+[node name="MeshInstance" type="MeshInstance" parent="ControllerColors"]
+transform = Transform( 0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0.00859514, 0.00338955, 0.0456962 )
+mesh = ExtResource( 2 )
+material/0 = null
+material/1 = null
+material/2 = null

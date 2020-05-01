@@ -44,10 +44,10 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/challenge_screen.gd"
 }, {
-"base": "Node",
-"class": "ChallengeSystem",
+"base": "Spatial",
+"class": "ControllerColors",
 "language": "GDScript",
-"path": "res://scripts/challenge_system.gd"
+"path": "res://scripts/controller_colors.gd"
 }, {
 "base": "Node",
 "class": "ControllerSystem",
@@ -122,7 +122,7 @@ _global_script_class_icons={
 "ButtonPressable": "",
 "ButtonScreenNav": "",
 "ChallengeScreen": "",
-"ChallengeSystem": "",
+"ControllerColors": "",
 "ControllerSystem": "",
 "Feature_RigidBodyGrab": "",
 "GhostBlock": "",

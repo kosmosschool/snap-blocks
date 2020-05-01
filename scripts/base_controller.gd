@@ -46,8 +46,6 @@ func _on_ARVRController_button_pressed(button_number):
 	if button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER:
 		var overlapping_block_area = get_overlapping_area()
 		
-		print("overlapping_block_area ", overlapping_block_area)
-		
 		if overlapping_block_area:
 			overlapping_block_area.remove_from_multi_mesh(controller_grab)
 		else:

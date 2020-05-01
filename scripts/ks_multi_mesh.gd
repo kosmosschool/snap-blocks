@@ -7,7 +7,7 @@ class_name KSMultiMesh
 var area_index : Dictionary
 
 
-func add_area(area : Area) -> void:
+func add_area(area : Area, color: Vector3) -> void:
 	# add block to MultiMeshInstance
 	# save old transforms
 	# increment visibility 
@@ -16,6 +16,7 @@ func add_area(area : Area) -> void:
 	
 	# update position of new instance
 	multimesh.set_instance_transform(new_count - 1, area.get_global_transform())
+	multimesh.set_instance_custom_data(new_count - 1, Color(color.x, color.y, color.z, 1.0))
 	
 	# add to index
 	area_index[area] = area.get_global_transform()

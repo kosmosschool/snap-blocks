@@ -9,9 +9,14 @@ var building_block_scene
 
 var all_building_blocks
 var multi_mesh
+var block_material : Material setget set_block_material
+
+
+func set_block_material(new_value):
+	block_material = new_value
+
 
 # we don't use _ready because this script is set from another script and _ready is not called
-
 func _init():
 	building_block_scene = preload("res://scenes/building_blocks/block_base_cube.tscn")
 	all_building_blocks = get_node(global_vars.ALL_BUILDING_BLOCKS_PATH)
@@ -23,6 +28,9 @@ func remove_from_multi_mesh(controller_grab) -> void:
 	# instance new building block at this position
 	var new_bb = building_block_scene.instance()
 	all_building_blocks.add_child(new_bb)
+	
+	# set material
+	new_bb.set_material(block_material)
 	
 	# position
 	new_bb.global_transform = global_transform
