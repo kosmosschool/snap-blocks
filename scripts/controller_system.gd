@@ -38,7 +38,8 @@ func _ready():
 
 
 func _process(delta):
-	if move_mode:
+#	if move_mode:
+	if vr.button_pressed(vr.BUTTON.LEFT_GRIP_TRIGGER) and vr.button_pressed(vr.BUTTON.RIGHT_GRIP_TRIGGER):
 		process_move_mode()
 
 
@@ -51,9 +52,9 @@ func _on_right_ARVRController_button_pressed(button_number):
 		roundrobin()
 	
 	# if grip trigger is pressed and it's also pressed on the left one
-	if button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER and vr.button_pressed(vr.BUTTON.LEFT_GRIP_TRIGGER):
-		# enter move mode
-		move_mode = true
+#	if button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER and vr.button_pressed(vr.BUTTON.LEFT_GRIP_TRIGGER):
+#		# enter move mode
+#		move_mode = true
 
 
 func _on_left_ARVRController_button_pressed(button_number):
@@ -64,9 +65,9 @@ func _on_left_ARVRController_button_pressed(button_number):
 #		toggle_tablet()
 	
 	# if grip trigger is pressed and it's also pressed on the left one
-	if button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER and vr.button_pressed(vr.BUTTON.RIGHT_GRIP_TRIGGER):
-		# enter move mode
-		move_mode = true
+#	if button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER and vr.button_pressed(vr.BUTTON.RIGHT_GRIP_TRIGGER):
+#		# enter move mode
+#		move_mode = true
 
 
 func process_move_mode() -> void:

@@ -3,7 +3,7 @@ extends Spatial
 
 class_name ControllerColors
 
-var current_color_index := 0
+var current_color_index := 0 setget , get_current_color_index
 var all_secondary_materials : Array
 var all_ghost_materials : Array
 var all_secondary_ghost_materials : Array
@@ -13,6 +13,10 @@ onready var mesh_instance = $MeshInstance
 onready var unshaded_color_shader = preload("res://shaders/unshaded_color.shader")
 
 export (Array, Material) var all_materials
+
+
+func get_current_color_index():
+	return current_color_index
 
 
 func _ready():
@@ -75,9 +79,9 @@ func get_current_secondary_material() -> Material:
 	return all_secondary_materials[current_color_index]
 
 
-func get_current_ghost_material() -> Material:
-	return all_ghost_materials[current_color_index]
-	
-	
-func get_current_secondary_ghost_material() -> Material:
+func get_ghost_material_by_index(new_index) -> Material:
+	return all_ghost_materials[new_index]
+
+
+func get_secondary_ghost_material_by_index(new_index) -> Material:
 	return all_secondary_ghost_materials[current_color_index]

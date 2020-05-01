@@ -22,6 +22,7 @@ var snap_axis : int
 var snap_vec : Vector3
 var snap_ghost_spatial
 var ray_dir : Vector3
+var color_index : int
 
 #var main_color : Color setget set_main_color, get_main_color
 
@@ -51,6 +52,7 @@ func _ready():
 	connect("grab_ended", self, "_on_Building_Block_Snappable_grab_ended")
 	set_material(controller_colors.get_current_material())
 	set_secondary_material(controller_colors.get_current_secondary_material())
+	color_index = controller_colors.get_current_color_index()
 
 
 func _process(delta):
@@ -180,6 +182,7 @@ func set_secondary_material(new_mat : Material) -> void:
 func create_ghost():
 	snap_ghost_spatial = ghost_block_scene.instance()
 	movable_world.add_child(snap_ghost_spatial)
+	snap_ghost_spatial.set_materials_with_index(color_index)
 
 
 func position_ghost():

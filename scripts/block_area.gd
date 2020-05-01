@@ -36,6 +36,7 @@ func remove_from_multi_mesh(controller_grab) -> void:
 	
 	# set material
 	new_bb.set_material(block_material)
+	new_bb.set_secondary_material(block_material_secondary)
 	
 	# position
 	new_bb.global_transform = global_transform
