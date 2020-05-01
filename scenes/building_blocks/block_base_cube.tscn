@@ -1,9 +1,6 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://materials/bright_lax.tres" type="Material" id=1]
-[ext_resource path="res://materials/lax.tres" type="Material" id=2]
 [ext_resource path="res://scripts/building_block_snappable.gd" type="Script" id=3]
-[ext_resource path="res://materials/dark_dark_lax.tres" type="Material" id=4]
 [ext_resource path="res://meshes/big_square_block.mesh" type="ArrayMesh" id=6]
 
 [sub_resource type="BoxShape" id=1]
@@ -22,6 +19,5 @@ shape = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 mesh = ExtResource( 6 )
-material/0 = ExtResource( 1 )
-material/1 = ExtResource( 2 )
-material/2 = ExtResource( 4 )
+material/0 = null
+material/1 = null

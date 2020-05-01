@@ -50,6 +50,7 @@ func is_class(type):
 func _ready():
 	connect("grab_ended", self, "_on_Building_Block_Snappable_grab_ended")
 	set_material(controller_colors.get_current_material())
+	set_secondary_material(controller_colors.get_current_secondary_material())
 
 
 func _process(delta):
@@ -172,6 +173,10 @@ func set_material(new_mat : Material) -> void:
 	mesh_instance.set_surface_material(0, new_mat)
 
 
+func set_secondary_material(new_mat : Material) -> void:
+	mesh_instance.set_surface_material(1, new_mat)
+
+
 func create_ghost():
 	snap_ghost_spatial = ghost_block_scene.instance()
 	movable_world.add_child(snap_ghost_spatial)
@@ -222,7 +227,9 @@ func snap_to_cand():
 	if snap_cand is RigidBody:
 		var snap_cand_color = snap_cand.get_shader_color()
 		snap_cand = all_block_areas.add_block_area(
-			snap_cand.get_node("CollisionShape"), snap_cand.mesh_instance.get_surface_material(0),
+			snap_cand.get_node("CollisionShape"), 
+			snap_cand.mesh_instance.get_surface_material(0),
+			snap_cand.mesh_instance.get_surface_material(1),
 			false
 		)
 		multi_mesh.add_area(snap_cand, snap_cand_color)
@@ -456,7 +463,11 @@ func update_pos_to_snap(delta: float) -> void:
 		moving_to_snap = false
 		snap_timer = 0.0
 #		play_snap_sound()
-		var transfered_area = all_block_areas.add_block_area($CollisionShape, mesh_instance.get_surface_material(0))
+		var transfered_area = all_block_areas.add_block_area(
+			$CollisionShape,
+			mesh_instance.get_surface_material(0),
+			mesh_instance.get_surface_material(1)
+		)
 		multi_mesh.add_area(transfered_area, get_shader_color())
 		queue_free()
 		return

@@ -7,7 +7,12 @@ class_name AllBlockAreas
 onready var block_area_script = load(global_vars.BLOCK_AREA_SCRIPT_PATH)
 onready var audio_stream_player_snap := $AudioStreamPlayer3DSnap
 
-func add_block_area(col_shape : CollisionShape, block_matrial : Material, play_sound : bool = true) -> Area:
+func add_block_area(
+	col_shape : CollisionShape,
+	block_material : Material,
+	block_material_secondary : Material,
+	play_sound : bool = true) -> Area:
+		
 	# create area
 	var new_area = Area.new()
 	add_child(new_area)
@@ -18,7 +23,8 @@ func add_block_area(col_shape : CollisionShape, block_matrial : Material, play_s
 	new_area.set_script(block_area_script)
 	new_area.set_collision_layer(2)
 	new_area.collision_shape = col_shape
-	new_area.set_block_material(block_matrial)
+	new_area.set_block_material(block_material)
+	new_area.set_block_material_secondary(block_material_secondary)
 	
 	# reset col shape's transform because it's now a child of the area which has its transform
 	col_shape.transform = Transform()

@@ -17,10 +17,16 @@ onready var mesh_instance := $MeshInstance
 
 func _ready():
 	set_material(controller_colors.get_current_ghost_material())
+	set_secondary_material(controller_colors.get_current_secondary_ghost_material())
 
 
 func set_material(new_mat : Material) -> void:
 	mesh_instance.set_surface_material(0, new_mat)
+
+
+func set_secondary_material(new_mat : Material) -> void:
+	mesh_instance.set_surface_material(1, new_mat)
+
 #
 #func _process(delta):
 #	if not instantiating and prev_overlapping_size > 0 and block_scene and area.get_overlapping_bodies().size() == 0:

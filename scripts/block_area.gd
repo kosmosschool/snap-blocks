@@ -10,10 +10,15 @@ var building_block_scene
 var all_building_blocks
 var multi_mesh
 var block_material : Material setget set_block_material
+var block_material_secondary : Material setget set_block_material_secondary
 
 
 func set_block_material(new_value):
 	block_material = new_value
+
+
+func set_block_material_secondary(new_value):
+	block_material_secondary = new_value
 
 
 # we don't use _ready because this script is set from another script and _ready is not called

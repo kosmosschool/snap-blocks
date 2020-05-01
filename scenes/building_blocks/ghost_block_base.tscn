@@ -1,6 +1,5 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://materials/bright_lax_transparent.tres" type="Material" id=1]
 [ext_resource path="res://scripts/ghost_block.gd" type="Script" id=2]
 [ext_resource path="res://meshes/big_square_block.mesh" type="ArrayMesh" id=3]
 
@@ -23,9 +22,8 @@ shape = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 mesh = ExtResource( 3 )
-material/0 = ExtResource( 1 )
-material/1 = ExtResource( 1 )
-material/2 = ExtResource( 1 )
+material/0 = null
+material/1 = null
 
 [node name="Area" type="Area" parent="."]
 
