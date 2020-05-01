@@ -22,7 +22,7 @@ var left_contr_initial_y : float
 
 onready var right_controller = get_node(global_vars.CONTR_RIGHT_PATH)
 onready var left_controller = get_node(global_vars.CONTR_LEFT_PATH)
-onready var tablet = get_node(global_vars.TABLET_PATH)
+#onready var tablet = get_node(global_vars.TABLET_PATH)
 onready var ar_vr_origin = get_node(global_vars.AR_VR_ORIGIN_PATH)
 onready var button_click_sound = $AudioStreamPlayer3DClick
 
@@ -36,7 +36,7 @@ func _ready():
 	
 	if left_controller:
 		left_controller.connect("button_pressed", self, "_on_left_ARVRController_button_pressed")
-		tablet.visible = false
+#		tablet.visible = false
 
 
 func _process(delta):
@@ -63,7 +63,7 @@ func _on_left_ARVRController_button_pressed(button_number):
 	if button_number == vr.CONTROLLER_BUTTON.XA:
 		if button_click_sound:
 			button_click_sound.play()
-		toggle_tablet()
+#		toggle_tablet()
 
 
 func process_move_mode() -> void:
@@ -124,5 +124,5 @@ func set_controller_type(new_ct : int) -> void:
 		all_controllers[new_ct].set_selected(true)
 
 
-func toggle_tablet():
-	tablet.visible = !tablet.visible
+#func toggle_tablet():
+#	tablet.visible = !tablet.visible
