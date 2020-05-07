@@ -131,12 +131,22 @@ func _on_Button_Pressable_visibility_changed():
 	if !is_visible_in_tree():
 		set_process(false)
 		set_physics_process(false)
-		button_area.set_monitoring(false)
+		if button_area:
+			button_area.set_monitoring(false)
 	else:
 		set_process(true)
 		set_physics_process(true)
-		button_area.set_monitoring(true)
+		if button_area:
+			button_area.set_monitoring(true)
 
+
+func set_local_origin(new_origin : Vector3):
+	transform.origin = new_origin
+	initial_pos_local = get_transform().origin
+	initial_pos_global = get_global_transform().origin
+	button_forward_vector_norm = get_transform().basis.z.normalized()
+	button_half_length_vector = initial_pos_local + button_forward_vector_norm * z_scale / 2
+	
 
 func button_press(other_area: Area):
 	is_on = !is_on
