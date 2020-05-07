@@ -9,12 +9,16 @@ var building_block_scene
 
 var all_building_blocks
 var multi_mesh
-var block_material : Material setget set_block_material
+var block_material : Material setget set_block_material, get_block_material
 var block_material_secondary : Material setget set_block_material_secondary
 
 
 func set_block_material(new_value):
 	block_material = new_value
+
+
+func get_block_material():
+	return block_material
 
 
 func set_block_material_secondary(new_value):

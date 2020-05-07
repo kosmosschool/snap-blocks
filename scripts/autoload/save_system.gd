@@ -4,6 +4,7 @@ extends Node
 var current_file_path = "user://creation_2.json"
 
 onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
+onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
 
 
 func _ready():
@@ -26,8 +27,10 @@ func save_creation():
 	
 	
 	var new_data_dict = {
-		"all_block_areas": block_areas_serialized
+		"all_block_areas": block_areas_serialized,
 	}
+	
+	# get multi mesh
 	
 	# save to file
 	var save_file = File.new()
@@ -42,13 +45,14 @@ func load_creation(saved_file_path : String):
 	save_file.open(saved_file_path, File.READ)
 	var content = parse_json(save_file.get_as_text())
 	
-	print(typeof(content))
-	
 	if not content:
 		return
 	
 	# create all block areas
-	all_block_areas.recreate_from_save(content["all_block_areas"])
+	var added_areas = all_block_areas.recreate_from_save(content["all_block_areas"])
+	
+	# createa multi mesh
+	multi_mesh.recreate(added_areas)
 
 #func read_from_file() -> Dictionary:
 #	# get file content

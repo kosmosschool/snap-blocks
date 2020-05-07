@@ -229,14 +229,14 @@ func snap_to_cand():
 	
 	if snap_cand is RigidBody:
 		var snap_cand_rigid_body = snap_cand
-		var snap_cand_color = snap_cand.get_shader_color()
+#		var snap_cand_color = snap_cand.get_shader_color()
 		snap_cand = all_block_areas.add_block_area(
 			snap_cand.global_transform, 
 			snap_cand.mesh_instance.get_surface_material(0),
 			snap_cand.mesh_instance.get_surface_material(1),
 			false
 		)
-		multi_mesh.add_area(snap_cand, snap_cand_color)
+		multi_mesh.add_area(snap_cand)
 		snap_cand_rigid_body.queue_free()
 	
 	# find one orthogonal vector to normal that we can use to calculate the angles
@@ -473,7 +473,7 @@ func update_pos_to_snap(delta: float) -> void:
 			mesh_instance.get_surface_material(0),
 			mesh_instance.get_surface_material(1)
 		)
-		multi_mesh.add_area(transfered_area, get_shader_color())
+		multi_mesh.add_area(transfered_area)
 		queue_free()
 		return
 	

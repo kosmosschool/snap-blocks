@@ -46,9 +46,10 @@ func play_snap_sound(new_pos : Vector3):
 		audio_stream_player_snap.play()
 
 
-func recreate_from_save(saved_array : Array) -> void:
+func recreate_from_save(saved_array : Array) -> Array:
 	# recreates all blocks from saved file
 	
+	var added_areas : Array
 	# clear all areas
 	var all_children = get_children()
 	for c in all_children:
@@ -57,12 +58,15 @@ func recreate_from_save(saved_array : Array) -> void:
 	# recreate from saved
 	for s in saved_array:
 		var curr_mats = controller_colors.get_materials_by_name(s["material_name"])
-		add_block_area(
+		var added_area = add_block_area(
 			unserialize_transform(s["global_transform_serialized"]),
 			curr_mats[0],
 			curr_mats[1],
 			false
 		)
+		added_areas.append(added_area)
+	
+	return added_areas
 
 
 func unserialize_transform(transform_array : Array):
