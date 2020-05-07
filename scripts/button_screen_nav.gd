@@ -15,4 +15,3 @@ func button_press(other_area: Area):
 	
 	screens_controller.change_screen(navigate_to)
 	
-

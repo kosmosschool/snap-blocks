@@ -4,9 +4,11 @@ extends Spatial
 class_name ControllerColors
 
 var current_color_index := 0 setget , get_current_color_index
+var name_index : Array
 var all_secondary_materials : Array
 var all_ghost_materials : Array
 var all_secondary_ghost_materials : Array
+
 
 onready var ar_vr_controller = get_parent().get_parent()
 onready var mesh_instance = $MeshInstance
@@ -33,6 +35,10 @@ func _on_ARVRController_button_pressed(button_number):
 
 func create_ghost_and_secondary_materials() -> void:
 	for mat in all_materials:
+		# save color name (we use that later e.g. when saving or loading file)
+		# this way, we can change the index of the color as long as we don't change the file name
+		name_index.append(mat.resource_path.split("/")[-1].split(".")[0])
+		
 		var current_color = mat.get_shader_param("color")
 		
 		# ghost material
@@ -85,3 +91,12 @@ func get_ghost_material_by_index(new_index) -> Material:
 
 func get_secondary_ghost_material_by_index(new_index) -> Material:
 	return all_secondary_ghost_materials[current_color_index]
+
+
+func get_materials_by_name(mat_name : String) -> Array:
+	var i = name_index.find(mat_name)
+	
+	if i == -1:
+		return []
+	
+	return [all_materials[i], all_secondary_materials[i]]

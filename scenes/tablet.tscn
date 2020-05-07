@@ -1,5 +1,7 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=24 format=2]
 
+[ext_resource path="res://scripts/button_save.gd" type="Script" id=1]
+[ext_resource path="res://scripts/button_load.gd" type="Script" id=2]
 [ext_resource path="res://materials/medium_blue.tres" type="Material" id=8]
 [ext_resource path="res://scenes/text_label_2d.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scripts/button_screen_nav.gd" type="Script" id=10]
@@ -9,6 +11,39 @@
 [ext_resource path="res://meshes/tablet.mesh" type="ArrayMesh" id=16]
 [ext_resource path="res://materials/black.tres" type="Material" id=17]
 [ext_resource path="res://materials/light_blue.tres" type="Material" id=18]
+[ext_resource path="res://scenes/ks_button_pressable_small.tscn" type="PackedScene" id=23]
+[ext_resource path="res://images/icon_challenges_v5.png" type="Texture" id=26]
+[ext_resource path="res://images/icon_blocks.png" type="Texture" id=29]
+[ext_resource path="res://images/icon_arrow_right.png" type="Texture" id=30]
+[ext_resource path="res://images/icon_hints.png" type="Texture" id=31]
+[ext_resource path="res://images/icon_arrow_left.png" type="Texture" id=32]
+
+[sub_resource type="QuadMesh" id=1]
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_transparent = true
+flags_unshaded = true
+albedo_texture = ExtResource( 32 )
+
+[sub_resource type="SpatialMaterial" id=3]
+flags_transparent = true
+flags_unshaded = true
+albedo_texture = ExtResource( 30 )
+
+[sub_resource type="SpatialMaterial" id=4]
+flags_transparent = true
+flags_unshaded = true
+albedo_texture = ExtResource( 29 )
+
+[sub_resource type="SpatialMaterial" id=5]
+flags_transparent = true
+flags_unshaded = true
+albedo_texture = ExtResource( 26 )
+
+[sub_resource type="SpatialMaterial" id=6]
+flags_transparent = true
+flags_unshaded = true
+albedo_texture = ExtResource( 31 )
 
 [node name="Tablet" type="Spatial"]
 
@@ -22,32 +57,61 @@ material/3 = ExtResource( 8 )
 
 [node name="Screens" type="Spatial" parent="."]
 script = ExtResource( 11 )
-initial_screen = "Blocks"
+initial_screen = "SaveScreen"
 
-[node name="Blocks" type="Spatial" parent="Screens"]
+[node name="SaveScreen" type="Spatial" parent="Screens"]
 
-[node name="Positions" type="Spatial" parent="Screens/Blocks"]
+[node name="SaveButton" parent="Screens/SaveScreen" instance=ExtResource( 12 )]
+transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, -0.0618259, 0, 0.003 )
+script = ExtResource( 1 )
 
-[node name="Pos 1" type="Spatial" parent="Screens/Blocks/Positions"]
-transform = Transform( 1, -1.3411e-07, -1.78814e-07, -1.49012e-08, 1, 2.68221e-07, 0, -1.49012e-08, 1, -0.12, 0.07, 0.02 )
+[node name="LoadButton" parent="Screens/SaveScreen" instance=ExtResource( 12 )]
+transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0, 0, 0.003 )
+script = ExtResource( 2 )
 
-[node name="Pos 2" type="Spatial" parent="Screens/Blocks/Positions"]
-transform = Transform( 1, -5.96046e-08, -8.9407e-08, -7.45058e-08, 1, 1.49012e-07, 0, 1.63913e-07, 1, -0.031, 0.07, 0.02 )
+[node name="Hints" type="Spatial" parent="Screens"]
 
-[node name="Pos 3" type="Spatial" parent="Screens/Blocks/Positions"]
-transform = Transform( 1, -4.47035e-08, -5.96046e-08, -7.45058e-08, 1, 1.63913e-07, 5.96046e-08, 1.19209e-07, 1, 0.058, 0.07, 0.02 )
+[node name="TitleLabel" parent="Screens/Hints" instance=ExtResource( 9 )]
+transform = Transform( 1, 0, 0, 0, 0.5, -5.96046e-08, 0, 7.45058e-09, 1, -0.031, 0.091, 0.001 )
+text = "Hints"
+margin = 16
+billboard = false
+resize_mode = 1
+font_size_multiplier = 5.0
+font_color = Color( 1, 1, 1, 1 )
+background_color = Color( 0.1, 0.1, 0.1, 1 )
+h_align = 1
+v_align = 1
 
-[node name="Pos 4" type="Spatial" parent="Screens/Blocks/Positions"]
-transform = Transform( 1, -4.47035e-08, -5.96046e-08, -7.45058e-08, 1, 1.63913e-07, 5.96046e-08, 1.19209e-07, 1, -0.12, 0.018, 0.02 )
+[node name="DescriptionLabel" parent="Screens/Hints" instance=ExtResource( 9 )]
+transform = Transform( 2.5, 5.72203e-08, 4.76836e-08, -1.19209e-07, 1.2, -1.19209e-07, -1.19209e-07, 1.43051e-07, 1, -0.031, 0.00214136, 0.001 )
+text = "Hintihints"
+margin = 16
+billboard = false
+resize_mode = 1
+font_size_multiplier = 4.0
+font_color = Color( 1, 1, 1, 1 )
+background_color = Color( 0.1, 0.1, 0.1, 1 )
+h_align = 0
+v_align = 0
 
-[node name="Pos 6" type="Spatial" parent="Screens/Blocks/Positions"]
-transform = Transform( 1, -4.47035e-08, -5.96046e-08, -7.45058e-08, 1, 1.63913e-07, 5.96046e-08, 1.19209e-07, 1, -0.031, 0.018, 0.02 )
+[node name="BlocksButtonPrevious" parent="Screens/Hints" instance=ExtResource( 23 )]
+transform = Transform( 1, 2.98024e-08, -8.8818e-16, 0, 1, -1.19209e-07, 0, 0, 1, -0.139, -0.085, 0.003 )
+script = null
 
-[node name="Pos 7" type="Spatial" parent="Screens/Blocks/Positions"]
-transform = Transform( 1, -4.47035e-08, -5.96046e-08, -7.45058e-08, 1, 1.63913e-07, 5.96046e-08, 1.19209e-07, 1, 0.058, 0.018, 0.02 )
+[node name="MeshInstance3" type="MeshInstance" parent="Screens/Hints/BlocksButtonPrevious"]
+transform = Transform( 0.035, 0, 0, 0, 0.035, 0, 0, 0, 0.035, 0, 0, 0.005 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )
 
-[node name="TabletItems" type="Spatial" parent="Screens/Blocks"]
-transform = Transform( 1, -5.96046e-08, 0, 0, 1, 0, 0, -4.47035e-08, 1, 0, 0, 0 )
+[node name="BlocksButtonNext" parent="Screens/Hints" instance=ExtResource( 23 )]
+transform = Transform( 1, 2.98024e-08, -8.8818e-16, 0, 1, -1.19209e-07, 0, 0, 1, 0.0768719, -0.085, 0.003 )
+script = null
+
+[node name="MeshInstance3" type="MeshInstance" parent="Screens/Hints/BlocksButtonNext"]
+transform = Transform( 0.035, 0, 1.32349e-23, 0, 0.035, 0, 0, 0, 0.035, 0, 0, 0.005 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 3 )
 
 [node name="Navigation" type="Spatial" parent="."]
 
@@ -56,31 +120,27 @@ transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.14, 0.0
 script = ExtResource( 10 )
 navigate_to = "Blocks"
 
-[node name="Buttonlabel" parent="Navigation/BlocksButton" instance=ExtResource( 9 )]
-transform = Transform( 0.3, -4.09782e-08, 1.19209e-07, 5.21541e-08, 0.3, -4.47036e-08, -1.19209e-07, 2.98023e-08, 0.999999, 0, 0, 0.00488424 )
-text = "Blöcks"
-margin = 16
-billboard = false
-resize_mode = 1
-font_size_multiplier = 2.0
-font_color = Color( 1, 1, 1, 1 )
-background_color = Color( 0, 0, 0, 0 )
-h_align = 1
-v_align = 1
+[node name="MeshInstance3" type="MeshInstance" parent="Navigation/BlocksButton"]
+transform = Transform( 0.035, 5.21542e-10, -8.60268e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 4 )
 
 [node name="ChallengesButton" parent="Navigation" instance=ExtResource( 12 )]
 transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.14, 0.0368088, 0.003 )
 script = ExtResource( 10 )
 navigate_to = "ChallengesOverview"
 
-[node name="Buttonlabel" parent="Navigation/ChallengesButton" instance=ExtResource( 9 )]
-transform = Transform( 0.3, -3.72529e-08, 3.27826e-07, 4.84288e-08, 0.3, -2.98024e-08, -1.19209e-07, -1.49011e-09, 1, 1.49012e-08, -1.19209e-07, 0.00499997 )
-text = "Challenges"
-margin = 16
-billboard = false
-resize_mode = 1
-font_size_multiplier = 2.0
-font_color = Color( 1, 1, 1, 1 )
-background_color = Color( 0, 0, 0, 0 )
-h_align = 1
-v_align = 1
+[node name="MeshInstance3" type="MeshInstance" parent="Navigation/ChallengesButton"]
+transform = Transform( 0.035, 5.21542e-10, -8.27181e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 5 )
+
+[node name="HintsButton" parent="Navigation" instance=ExtResource( 12 )]
+transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.14, -0.007, 0.003 )
+script = ExtResource( 10 )
+navigate_to = "Hints"
+
+[node name="MeshInstance3" type="MeshInstance" parent="Navigation/HintsButton"]
+transform = Transform( 0.035, 5.21542e-10, -7.94093e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 6 )

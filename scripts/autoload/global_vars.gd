@@ -17,7 +17,11 @@ var CONTROLLER_SYSTEM_PATH = "/root/Main/ControllerSystem"
 var SPACE_TEXT_PATH = "/root/Main/SpaceText"
 var MULTI_MESH_PATH = "/root/Main/MovableWorld/AllMultiMeshes/MultiMeshInstance"
 var AR_VR_ORIGIN_PATH = "/root/Main/OQ_ARVROrigin"
+var TABLET_PATH = CONTR_LEFT_PATH + "/Tablet"
+var ALL_SCREENS_PATH = TABLET_PATH + "/Screens"
+var CONTROLLER_COLORS_PATH = CONTR_RIGHT_PATH + "/KSControllerRight/ControllerColors"
 
 # resource paths
 var BASIC_BUILDING_BLOCK_PATH = "res://scenes/building_blocks/block_base_cube.tscn"
 var BLOCK_AREA_SCRIPT_PATH = "res://scripts/block_area.gd"
+var CUBE_COLLISION_SHAPE_PATH = "res://shapes/cube_collision_shape.tres"

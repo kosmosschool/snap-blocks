@@ -61,3 +61,31 @@ func calc_snap_vec(intersection_point : Vector3, normal : Vector3) -> Vector3:
 	var return_vec =  global_transform.origin + normal
 	
 	return return_vec.normalized()
+
+
+func serialize_for_save() -> Dictionary:
+	
+	var save_dict = {
+		"global_transform_serialized": transform_to_array(global_transform),
+		"material_name": block_material.resource_path.split("/")[-1].split(".")[0]
+	}
+	
+	return save_dict
+
+
+func transform_to_array(input_trans : Transform) -> Array:
+	return [
+		input_trans.basis.x.x,
+		input_trans.basis.x.y,
+		input_trans.basis.x.z,
+		input_trans.basis.y.x,
+		input_trans.basis.y.y,
+		input_trans.basis.y.z,
+		input_trans.basis.z.x,
+		input_trans.basis.z.y,
+		input_trans.basis.z.z,
+		input_trans.origin.x,
+		input_trans.origin.y,
+		input_trans.origin.z
+	]
+	

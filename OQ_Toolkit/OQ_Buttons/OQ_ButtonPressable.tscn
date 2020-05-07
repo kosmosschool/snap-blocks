@@ -21,6 +21,8 @@ material/0 = ExtResource( 3 )
 material/1 = ExtResource( 4 )
 
 [node name="ButtonArea" type="Area" parent="."]
+collision_layer = 7
+collision_mask = 7
 
 [node name="CollisionShape" type="CollisionShape" parent="ButtonArea"]
 shape = SubResource( 1 )

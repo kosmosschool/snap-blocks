@@ -17,7 +17,7 @@ class_name GhostBlock
 # called by BuildingBlockSnappable
 func set_materials_with_index(color_index : int) -> void:
 	var mesh_instance := $MeshInstance
-	var controller_colors := get_node(global_vars.CONTR_RIGHT_PATH + "/KSControllerRight/ControllerColors")
+	var controller_colors := get_node(global_vars.CONTROLLER_COLORS_PATH)
 	
 	mesh_instance.set_surface_material(0, controller_colors.get_ghost_material_by_index(color_index))
 	mesh_instance.set_surface_material(1, controller_colors.get_secondary_ghost_material_by_index(color_index))

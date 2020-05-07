@@ -228,14 +228,16 @@ func snap_to_cand():
 	snap_start_transform = global_transform
 	
 	if snap_cand is RigidBody:
+		var snap_cand_rigid_body = snap_cand
 		var snap_cand_color = snap_cand.get_shader_color()
 		snap_cand = all_block_areas.add_block_area(
-			snap_cand.get_node("CollisionShape"), 
+			snap_cand.global_transform, 
 			snap_cand.mesh_instance.get_surface_material(0),
 			snap_cand.mesh_instance.get_surface_material(1),
 			false
 		)
 		multi_mesh.add_area(snap_cand, snap_cand_color)
+		snap_cand_rigid_body.queue_free()
 	
 	# find one orthogonal vector to normal that we can use to calculate the angles
 	# this works because the normal is one of the three local direction vectors
@@ -467,7 +469,7 @@ func update_pos_to_snap(delta: float) -> void:
 		snap_timer = 0.0
 #		play_snap_sound()
 		var transfered_area = all_block_areas.add_block_area(
-			$CollisionShape,
+			global_transform,
 			mesh_instance.get_surface_material(0),
 			mesh_instance.get_surface_material(1)
 		)

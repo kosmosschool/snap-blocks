@@ -108,7 +108,7 @@ func _on_ButtonArea_area_entered(area):
 	if !area_parent:
 		return
 	
-	if area_parent.name != "controller_grab":
+	if area_parent.name != "ControllerGrab":
 		return
 		
 	if !global_functions.controller_node_from_child(area):
