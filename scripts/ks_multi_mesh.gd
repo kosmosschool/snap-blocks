@@ -45,10 +45,13 @@ func set_instances() -> void:
 		multimesh.set_instance_custom_data(i, area_index_values[i]["color"])
 
 
-func recreate(new_areas : Array):
+func clear() -> void:
 	# reset
 	multimesh.set_visible_instance_count(0)
-	area_index.empty()
-	
+	area_index.clear()
+
+
+func recreate(new_areas : Array):
+	clear()
 	for a in new_areas:
 		add_area(a)

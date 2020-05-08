@@ -14,8 +14,11 @@ func _ready():
 	if not dir.dir_exists(save_dir):
 		dir.make_dir(save_dir)
 	
+	open_new_file()
+
+
+func open_new_file() -> void:
 	var all_files = get_all_saved_files()
-	
 	# set open file name based on number of files (this file is not saved yet)
 	open_file_name = str("creation_", all_files.size() + 1, ".json")
 
@@ -25,6 +28,11 @@ func save_creation():
 	# get all block areas
 	var block_areas_serialized : Array
 	var block_areas = all_block_areas.get_children()
+	
+	# don't save if there are no blocks snapped together
+	if block_areas.empty():
+		return
+	
 	for b in block_areas:
 		block_areas_serialized.append(b.serialize_for_save())
 	
@@ -76,6 +84,14 @@ func get_all_saved_files():
 		print("An error occurred when trying to access the path.")
 	
 	return all_file_paths
+
+
+func clear_and_new() -> void:
+	# deletes current creation, creates new file
+	all_block_areas.clear()
+	multi_mesh.clear()
+	
+	open_new_file()
 
 
 #func read_from_file() -> Dictionary:

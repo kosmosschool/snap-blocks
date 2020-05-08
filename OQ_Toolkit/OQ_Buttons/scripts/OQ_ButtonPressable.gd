@@ -18,6 +18,7 @@ var total_dist := 0.0
 var lerp_weight: float
 var start_time := 0.0
 var speed := 2.0
+var left_after_press = true
 
 onready var initial_pos_local: = get_transform().origin
 onready var initial_pos_global: = get_global_transform().origin
@@ -55,7 +56,7 @@ func _ready():
 
 func _process(delta):
 	
-	if touching:
+	if touching and left_after_press:
 		# if hand is touching the button, we need to know how far in it is pressed
 		
 		# check how much hand pos has changed in buttons local z direction
@@ -76,9 +77,10 @@ func _process(delta):
 			transform.origin = new_origin
 		elif total_dist > press_distance and !triggering:
 			total_dist = initial_pos_local.z - press_distance
-			transform.origin = Vector3(initial_pos_local.x, initial_pos_local.y, initial_pos_local.z - total_dist)
+			transform.origin = Vector3(initial_pos_local.x, initial_pos_local.y, initial_pos_local.z)
 			# trigger button press
 			triggering = true
+			left_after_press = false
 			button_press(hand_area)
 		
 		prev_hand_pos = hand_pos
@@ -124,6 +126,7 @@ func _on_ButtonArea_area_entered(area):
 
 func _on_ButtonArea_area_exited(area):
 	touching = false
+	left_after_press = true
 
 
 func _on_Button_Pressable_visibility_changed():

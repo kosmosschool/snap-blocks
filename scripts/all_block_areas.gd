@@ -46,14 +46,18 @@ func play_snap_sound(new_pos : Vector3):
 		audio_stream_player_snap.play()
 
 
-func recreate_from_save(saved_array : Array) -> Array:
-	# recreates all blocks from saved file
-	
-	var added_areas : Array
+func clear() -> void:
 	# clear all areas
 	var all_children = get_children()
 	for c in all_children:
 		c.queue_free()
+
+
+func recreate_from_save(saved_array : Array) -> Array:
+	# recreates all blocks from saved file
+	
+	var added_areas : Array
+	clear()
 	
 	# recreate from saved
 	for s in saved_array:
