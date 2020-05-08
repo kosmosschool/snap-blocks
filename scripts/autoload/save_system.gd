@@ -19,9 +19,28 @@ func _ready():
 
 func open_new_file() -> void:
 	var all_files = get_all_saved_files()
-	# set open file name based on number of files (this file is not saved yet)
-	open_file_name = str("creation_", all_files.size() + 1, ".json")
+	var newest_number
+	if all_files.empty():
+		newest_number = 1
+	else:
+		# set open file name based on newest file's number
+		# assumig all_files is order by created_at asc
+		newest_number = get_file_number(all_files[-1])
+		if newest_number == -1:
+			return
+		
+		newest_number += 1
+	open_file_name = str("creation_", newest_number, ".json")
 
+
+func get_file_number(input_file_name : String) -> int:
+	var r = RegEx.new()
+	r.compile("_\\d*")
+	var regex_result = r.search_all(input_file_name)
+	if regex_result.empty():
+		return -1
+
+	return regex_result[0].get_string().to_int()
 
 func save_creation():
 	# this overrides the old file
