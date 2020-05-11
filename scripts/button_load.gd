@@ -7,12 +7,41 @@ class_name ButtonLoad
 
 var file_name : String setget set_file_name
 
+onready var delete_mode := false
+onready var mesh_instance = $MeshInstance
+onready var default_mat_0 = mesh_instance.get_surface_material(0)
+onready var default_mat_1 = mesh_instance.get_surface_material(1)
+onready var load_screen = get_parent().get_parent()
+onready var delete_mat_0 = preload("res://materials/red_primary.tres")
+onready var delete_mat_1 = preload("res://materials/red_primary.tres")
+
+
+func _ready():
+	load_screen.connect("delete_mode_toggled", self, "_on_Load_Screen_delete_mode_toggled")
+
+
+func _on_Load_Screen_delete_mode_toggled():
+	delete_mode = !delete_mode
+	
+	if delete_mode:
+		mesh_instance.set_surface_material(0, delete_mat_0)
+		mesh_instance.set_surface_material(1, delete_mat_1)
+	else:
+		mesh_instance.set_surface_material(0, default_mat_0)
+		mesh_instance.set_surface_material(1, default_mat_1)
+
 
 func set_file_name(new_value):
 	file_name = new_value
+
 
 # overriding the parent function
 func button_press(other_area: Area):
 	.button_press(other_area)
 	
-	save_system.load_creation(file_name)
+	if !delete_mode:
+		save_system.load_creation(file_name)
+	else:
+		save_system.delete_creation(file_name)
+		load_screen.refresh_files()
+		load_screen.toggle_delete_mode()

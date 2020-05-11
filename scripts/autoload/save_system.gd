@@ -1,6 +1,10 @@
 extends Node
-# saves and reads from saved file
 
+
+class_name SaveSystem
+
+
+# saves and reads from saved file
 var save_dir = "user://saved_creations/"
 var open_file_name : String
 
@@ -88,6 +92,14 @@ func load_creation(saved_file_name : String):
 	open_file_name = saved_file_name
 
 
+func delete_creation(saved_file_name : String):
+	# delete file
+	var dir = Directory.new()
+	dir.remove(save_dir + saved_file_name)
+	
+	open_new_file()
+
+
 func get_all_saved_files():
 	var all_file_paths : Array
 	var dir = Directory.new()
@@ -103,6 +115,9 @@ func get_all_saved_files():
 	else:
 		print("An error occurred when trying to access the path.")
 	
+	# sort by file number, ascending
+	all_file_paths.sort_custom(SortByFileNumber, "sort_ascending")
+	
 	return all_file_paths
 
 
@@ -112,6 +127,26 @@ func clear_and_new() -> void:
 	multi_mesh.clear()
 	
 	open_new_file()
+
+
+class SortByFileNumber:
+	# we have to re-implement this function here again
+	# because the inner class doesn't have access to the outer class
+	# see here: https://github.com/godotengine/godot/issues/4472
+	static func get_file_number(input_file_name : String) -> int:
+		var r = RegEx.new()
+		r.compile("_\\d*")
+		var regex_result = r.search_all(input_file_name)
+		if regex_result.empty():
+			return -1
+	
+		return regex_result[0].get_string().to_int()
+	
+	# custom sorter class that sorts by file number
+	static func sort_ascending(a, b):
+		if get_file_number(a) < get_file_number(b):
+			return true
+		return false
 
 
 #func read_from_file() -> Dictionary:

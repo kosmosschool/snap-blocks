@@ -4,6 +4,8 @@ extends Spatial
 class_name LoadScreen
 
 
+signal delete_mode_toggled
+
 var first_button_origin = Vector3(-0.105, 0, 0.003)
 var offset_x = 0.05
 var offset_y = -0.05
@@ -115,4 +117,7 @@ func update_change_page_buttons() -> void:
 		button_prev.visible = false
 	elif current_page == total_pages:
 		button_next.visible = false
-	
+
+
+func toggle_delete_mode():
+	emit_signal("delete_mode_toggled")

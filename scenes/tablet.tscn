@@ -1,9 +1,10 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://scripts/button_save.gd" type="Script" id=1]
 [ext_resource path="res://scripts/button_new.gd" type="Script" id=2]
 [ext_resource path="res://scenes/load_screen.gd" type="Script" id=3]
 [ext_resource path="res://scripts/button_change_page_load.gd" type="Script" id=4]
+[ext_resource path="res://scripts/button_delete.gd" type="Script" id=5]
 [ext_resource path="res://materials/medium_blue.tres" type="Material" id=8]
 [ext_resource path="res://scenes/text_label_2d.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scripts/button_screen_nav.gd" type="Script" id=10]
@@ -81,11 +82,20 @@ transform = Transform( 0.035, 5.21542e-10, -7.94093e-23, 0, 0.035, -2.08615e-09,
 mesh = SubResource( 1 )
 material/0 = SubResource( 5 )
 
-[node name="SaveButton2" parent="Screens/LoadScreen" instance=ExtResource( 12 )]
+[node name="NewButton" parent="Screens/LoadScreen" instance=ExtResource( 12 )]
 transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, -0.0578201, 0.079, 0.003 )
 script = ExtResource( 2 )
 
-[node name="MeshInstance4" type="MeshInstance" parent="Screens/LoadScreen/SaveButton2"]
+[node name="MeshInstance4" type="MeshInstance" parent="Screens/LoadScreen/NewButton"]
+transform = Transform( 0.035, 5.21542e-10, -7.94093e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 5 )
+
+[node name="DeleteButton" parent="Screens/LoadScreen" instance=ExtResource( 12 )]
+transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, -0.118662, 0.079, 0.003 )
+script = ExtResource( 5 )
+
+[node name="MeshInstance4" type="MeshInstance" parent="Screens/LoadScreen/DeleteButton"]
 transform = Transform( 0.035, 5.21542e-10, -7.94093e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 5 )
