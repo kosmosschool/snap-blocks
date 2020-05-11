@@ -77,7 +77,7 @@ func load_creation(saved_file_name : String):
 	if not content:
 		return
 	
-	print("file app_version ", content["app_version"])
+#	print("file app_version ", content["app_version"])
 	# create all block areas
 	var added_areas = all_block_areas.recreate_from_save(content["all_block_areas"])
 	

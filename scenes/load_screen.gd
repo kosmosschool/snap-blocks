@@ -12,6 +12,7 @@ var row_size := 4
 var current_page := 1
 var total_pages := 1
 var all_files_paginated : Dictionary
+var load_buttons : Array
 
 onready var load_buttons_node = $LoadButtons
 onready var button_prev = $ButtonPrevious
@@ -21,17 +22,30 @@ onready var button_load_script = preload("res://scripts/button_load.gd")
 
 
 func _ready():
-#	connect("visibility_changed", self, "_on_Load_Screen_visibility_changed")
+	create_load_buttons()
 	refresh_files()
 
 
-#func _on_Load_Screen_visibility_changed():
-#	if visible:
-#		refresh_files()
-#		update_change_page_buttons()
+func create_load_buttons() -> void:
+	for i in range(page_size):
+		var file_button = file_button_scene.instance()
+		file_button.set_script(button_load_script)
+		load_buttons_node.add_child(file_button)
+
+		# position
+		var offset_y_mod = floor(i / row_size)
+		var offset_x_mod = i - (offset_y_mod * row_size)
+		var new_origin = first_button_origin + Vector3(offset_x_mod * offset_x, offset_y_mod * offset_y, 0)
+		file_button.set_local_origin(new_origin)
+		# update text and font size
+		var text_label = file_button.get_node("2DTextLabel")
+		text_label.set_font_size_multiplier(4)
+	
+	load_buttons = load_buttons_node.get_children()
 
 
 func refresh_files():
+	
 	var all_files : Array = save_system.get_all_saved_files()
 	all_files_paginated = paginate(all_files)
 	
@@ -43,32 +57,21 @@ func refresh_files():
 
 
 func display_load_buttons() -> void:
-	# destroy old buttons
-	var old_buttons = load_buttons_node.get_children()
-	for o in old_buttons:
-		o.queue_free()
+	# hide all to start
+	for b in load_buttons:
+		b.visible = false
 	
 	var current_page_files = all_files_paginated[current_page]
 	for i in range(current_page_files.size()):
-		var file_button = file_button_scene.instance()
-		file_button.set_script(button_load_script)
-		load_buttons_node.add_child(file_button)
-		file_button.set_file_name(current_page_files[i])
-
-		# position
+		var current_button = load_buttons[i]
+		current_button.visible = true
+		current_button.set_file_name(current_page_files[i])
 		
-		var offset_y_mod = floor(i / row_size)
-		var offset_x_mod = i - (offset_y_mod * row_size)
-		var new_origin = first_button_origin + Vector3(offset_x_mod * offset_x, offset_y_mod * offset_y, 0)
-		file_button.set_local_origin(new_origin)
-
-		# update text and font size
+		# update text
 		var current_file_number = save_system.get_file_number(current_page_files[i])
-		var text_label = file_button.get_node("2DTextLabel")
+		var text_label = current_button.get_node("2DTextLabel")
 		text_label.set_text(str(current_file_number))
-		text_label.set_font_size_multiplier(4)
-	
-	
+
 
 func paginate(input_array : Array) -> Dictionary:
 	var return_dict : Dictionary
