@@ -42,6 +42,7 @@ func get_file_number(input_file_name : String) -> int:
 
 	return regex_result[0].get_string().to_int()
 
+
 func save_creation():
 	# this overrides the old file
 	# get all block areas
@@ -55,8 +56,8 @@ func save_creation():
 	for b in block_areas:
 		block_areas_serialized.append(b.serialize_for_save())
 	
-	
 	var new_data_dict = {
+		"app_version": global_functions.get_current_version(),
 		"all_block_areas": block_areas_serialized,
 	}
 	
@@ -69,7 +70,6 @@ func save_creation():
 
 
 func load_creation(saved_file_name : String):
-	print("saved_file_path ", saved_file_name)
 	var save_file = File.new()
 	save_file.open(save_dir + saved_file_name, File.READ)
 	var content = parse_json(save_file.get_as_text())
@@ -77,6 +77,7 @@ func load_creation(saved_file_name : String):
 	if not content:
 		return
 	
+	print("file app_version ", content["app_version"])
 	# create all block areas
 	var added_areas = all_block_areas.recreate_from_save(content["all_block_areas"])
 	

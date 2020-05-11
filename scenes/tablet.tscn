@@ -1,8 +1,9 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://scripts/button_save.gd" type="Script" id=1]
 [ext_resource path="res://scripts/button_new.gd" type="Script" id=2]
 [ext_resource path="res://scenes/load_screen.gd" type="Script" id=3]
+[ext_resource path="res://scripts/button_change_page_load.gd" type="Script" id=4]
 [ext_resource path="res://materials/medium_blue.tres" type="Material" id=8]
 [ext_resource path="res://scenes/text_label_2d.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scripts/button_screen_nav.gd" type="Script" id=10]
@@ -64,7 +65,7 @@ initial_screen = "LoadScreen"
 script = ExtResource( 3 )
 
 [node name="TitleLabel" parent="Screens/LoadScreen" instance=ExtResource( 9 )]
-transform = Transform( 1, 0, 0, 0, 0.5, -5.96046e-08, 0, 7.45058e-09, 1, -0.031, 0.024972, 0.000999999 )
+transform = Transform( 1, 0, 0, 0, 0.5, -5.96046e-08, 0, 7.45058e-09, 1, -0.031, 0.0407314, 0.000999999 )
 text = "Load Creation"
 font_size_multiplier = 5.0
 background_color = Color( 0.1, 0.1, 0.1, 1 )
@@ -90,6 +91,25 @@ mesh = SubResource( 1 )
 material/0 = SubResource( 5 )
 
 [node name="LoadButtons" type="Spatial" parent="Screens/LoadScreen"]
+
+[node name="ButtonPrevious" parent="Screens/LoadScreen" instance=ExtResource( 23 )]
+transform = Transform( 1, 2.98024e-08, -8.8818e-16, 0, 1, -1.19209e-07, 0, 0, 1, -0.139, -0.0927344, 0.003 )
+script = ExtResource( 4 )
+page_direction = 1
+
+[node name="MeshInstance3" type="MeshInstance" parent="Screens/LoadScreen/ButtonPrevious"]
+transform = Transform( 0.035, 0, 0, 0, 0.035, 0, 0, 0, 0.035, 0, 0, 0.005 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )
+
+[node name="ButtonNext" parent="Screens/LoadScreen" instance=ExtResource( 23 )]
+transform = Transform( 1, 2.98024e-08, -8.8818e-16, 0, 1, -1.19209e-07, 0, 0, 1, 0.0768719, -0.0927344, 0.003 )
+script = ExtResource( 4 )
+
+[node name="MeshInstance3" type="MeshInstance" parent="Screens/LoadScreen/ButtonNext"]
+transform = Transform( 0.035, 0, 1.32349e-23, 0, 0.035, 0, 0, 0, 0.035, 0, 0, 0.005 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 3 )
 
 [node name="Hints" type="Spatial" parent="Screens"]
 visible = false

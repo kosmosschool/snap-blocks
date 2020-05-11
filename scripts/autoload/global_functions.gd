@@ -52,3 +52,16 @@ func stop_all_vibration():
 	
 	if left_controller:
 		left_controller.set_rumble(0)
+
+
+func get_current_version() -> int:
+	var export_config = ConfigFile.new()
+	var err = export_config.load("res://export_presets.cfg")
+	if err == OK:
+		var version_val = export_config.get_value("preset.0.options", "version/code")
+		if version_val:
+			return version_val
+		else:
+			return -1
+	else:
+		return -1

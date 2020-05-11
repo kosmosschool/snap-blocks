@@ -30,6 +30,11 @@ _global_script_classes=[ {
 "path": "res://scripts/building_block_snappable.gd"
 }, {
 "base": "KSButtonPressable",
+"class": "ButtonChangePageLoad",
+"language": "GDScript",
+"path": "res://scripts/button_change_page_load.gd"
+}, {
+"base": "KSButtonPressable",
 "class": "ButtonLoad",
 "language": "GDScript",
 "path": "res://scripts/button_load.gd"
@@ -139,6 +144,7 @@ _global_script_class_icons={
 "BaseController": "",
 "BlockArea": "",
 "BuildingBlockSnappable": "",
+"ButtonChangePageLoad": "",
 "ButtonLoad": "",
 "ButtonNew": "",
 "ButtonPressable": "",
@@ -184,6 +190,7 @@ singletons=[ "res://addons/godot_ovrmobile/godot_ovrmobile.gdnlib" ]
 
 msaa=true
 texture=false
+version=false
 
 [importer_defaults]
 
