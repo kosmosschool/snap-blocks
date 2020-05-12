@@ -4,7 +4,8 @@ extends Spatial
 class_name LoadScreen
 
 
-signal delete_mode_toggled
+signal delete_mode_selected
+signal load_mode_selected
 
 var first_button_origin = Vector3(-0.105, 0, 0.003)
 var offset_x = 0.05
@@ -15,17 +16,27 @@ var current_page := 1
 var total_pages := 1
 var all_files_paginated : Dictionary
 var load_buttons : Array
+var delete_mode := false setget , get_delete_mode
+
+var LOAD_MODE_TITLE = "Load Creation"
+var DELETE_MODE_TITLE = "Delete Creation"
 
 onready var load_buttons_node = $LoadButtons
 onready var button_prev = $ButtonPrevious
 onready var button_next = $ButtonNext
+onready var title_label = $TitleLabel
 onready var file_button_scene = preload("res://scenes/ks_button_pressable_text.tscn")
 onready var button_load_script = preload("res://scripts/button_load.gd")
+
+
+func get_delete_mode():
+	return delete_mode
 
 
 func _ready():
 	create_load_buttons()
 	refresh_files()
+	title_label.set_text(LOAD_MODE_TITLE)
 
 
 func create_load_buttons() -> void:
@@ -120,4 +131,13 @@ func update_change_page_buttons() -> void:
 
 
 func toggle_delete_mode():
-	emit_signal("delete_mode_toggled")
+	delete_mode = !delete_mode
+	
+	if delete_mode:
+		title_label.set_text(DELETE_MODE_TITLE)
+		emit_signal("delete_mode_selected")
+	else:
+		title_label.set_text(LOAD_MODE_TITLE)
+		emit_signal("load_mode_selected")
+	
+	
