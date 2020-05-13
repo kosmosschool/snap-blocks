@@ -9,20 +9,17 @@ var building_block_scene
 
 var all_building_blocks
 var multi_mesh
-var block_material : Material setget set_block_material, get_block_material
-var block_material_secondary : Material setget set_block_material_secondary
+var color_name : String setget set_color_name, get_color_name
+
+onready var controller_colors := get_node(global_vars.CONTR_RIGHT_PATH + "/KSControllerRight/ControllerColors")
 
 
-func set_block_material(new_value):
-	block_material = new_value
+func set_color_name(new_value):
+	color_name = new_value
 
 
-func get_block_material():
-	return block_material
-
-
-func set_block_material_secondary(new_value):
-	block_material_secondary = new_value
+func get_color_name():
+	return color_name
 
 
 # we don't use _ready because this script is set from another script and _ready is not called
@@ -39,8 +36,7 @@ func remove_from_multi_mesh(controller_grab) -> void:
 	all_building_blocks.add_child(new_bb)
 	
 	# set material
-	new_bb.set_material(block_material)
-	new_bb.set_secondary_material(block_material_secondary)
+	new_bb.set_color(color_name)
 	
 	# position
 	new_bb.global_transform = global_transform
@@ -62,7 +58,7 @@ func calc_snap_vec(intersection_point : Vector3, normal : Vector3) -> Vector3:
 	var col_shape_extents = collision_shape.shape.extents
 	
 #	var return_vec = intersection_point + ( -1 * normal * col_shape_extents / 2 - global_transform.origin)
-	var return_vec =  global_transform.origin + normal
+	var return_vec = global_transform.origin + normal
 	
 	return return_vec.normalized()
 
@@ -71,7 +67,7 @@ func serialize_for_save() -> Dictionary:
 	
 	var save_dict = {
 		"global_transform_serialized": transform_to_array(global_transform),
-		"material_name": block_material.resource_path.split("/")[-1].split(".")[0]
+		"color_name": color_name
 	}
 	
 	return save_dict

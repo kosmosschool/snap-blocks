@@ -1,18 +1,20 @@
 shader_type spatial;
 
-render_mode unshaded, cull_disabled;
+render_mode unshaded;
 
-uniform bool primary;
+
+varying vec3 primary_color;
+varying vec3 secondary_color;
 
 void vertex() {
-	if (primary) {
-		COLOR = INSTANCE_CUSTOM;
-	} else {
-		// TODO: what happens when value negative?
-		COLOR = vec4(INSTANCE_CUSTOM.x - 0.05, INSTANCE_CUSTOM.y - 0.05, INSTANCE_CUSTOM.z - 0.05, 1.0);
-	}
+	primary_color = vec3(INSTANCE_CUSTOM.x, INSTANCE_CUSTOM.y, INSTANCE_CUSTOM.z);
+	secondary_color = vec3(INSTANCE_CUSTOM.x - 0.05, INSTANCE_CUSTOM.y - 0.05, INSTANCE_CUSTOM.z - 0.05);
 }
 
 void fragment() {
-	ALBEDO = vec3(COLOR[0],COLOR[1],COLOR[2]);
+	if (UV.x < 0.02 || UV.x > 0.98 || UV.y < 0.02 || UV.y > 0.98) {
+		ALBEDO = secondary_color;
+	} else {
+		ALBEDO = primary_color;
+	}
 }

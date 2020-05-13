@@ -15,12 +15,17 @@ class_name GhostBlock
 
 
 # called by BuildingBlockSnappable
-func set_materials_with_index(color_index : int) -> void:
+#func set_materials_with_index(color_index : int) -> void:
+#	var mesh_instance := $MeshInstance
+#	var controller_colors := get_node(global_vars.CONTROLLER_COLORS_PATH)
+#
+#	mesh_instance.set_surface_material(0, controller_colors.get_ghost_material_by_index(color_index))
+#	mesh_instance.set_surface_material(1, controller_colors.get_secondary_ghost_material_by_index(color_index))
+
+# called by BuildingBlockSnappable
+func set_color(new_color: Vector3) -> void:
 	var mesh_instance := $MeshInstance
-	var controller_colors := get_node(global_vars.CONTROLLER_COLORS_PATH)
-	
-	mesh_instance.set_surface_material(0, controller_colors.get_ghost_material_by_index(color_index))
-	mesh_instance.set_surface_material(1, controller_colors.get_secondary_ghost_material_by_index(color_index))
+	mesh_instance.get_surface_material(0).set_shader_param("color", new_color)
 
 #
 #func _process(delta):

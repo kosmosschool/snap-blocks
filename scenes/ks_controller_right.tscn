@@ -1,23 +1,10 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scenes/controller_grab.tscn" type="PackedScene" id=1]
-[ext_resource path="res://materials/white_primary.tres" type="Material" id=2]
 [ext_resource path="res://scripts/controller_colors.gd" type="Script" id=3]
 [ext_resource path="res://scenes/default_controller_right.tscn" type="PackedScene" id=4]
-[ext_resource path="res://materials/yellow_primary.tres" type="Material" id=5]
-[ext_resource path="res://meshes/block_cube.mesh" type="ArrayMesh" id=6]
-[ext_resource path="res://materials/green_dark_primary.tres" type="Material" id=7]
-[ext_resource path="res://materials/red_primary.tres" type="Material" id=8]
-[ext_resource path="res://materials/black_primary.tres" type="Material" id=9]
-[ext_resource path="res://materials/blue_dark_primary.tres" type="Material" id=10]
-[ext_resource path="res://materials/violet_primary.tres" type="Material" id=11]
-[ext_resource path="res://materials/grey_primary.tres" type="Material" id=12]
-[ext_resource path="res://materials/blue_primary.tres" type="Material" id=13]
-[ext_resource path="res://materials/green_primary.tres" type="Material" id=14]
-[ext_resource path="res://materials/orange_primary.tres" type="Material" id=15]
-[ext_resource path="res://materials/brown_primary.tres" type="Material" id=16]
-[ext_resource path="res://materials/brown_dark_primary.tres" type="Material" id=17]
-[ext_resource path="res://materials/olive_primary.tres" type="Material" id=18]
+[ext_resource path="res://meshes/cube.tres" type="CubeMesh" id=6]
+[ext_resource path="res://materials/cube_default_mat.tres" type="Material" id=19]
 
 [node name="KSControllerRight" type="Spatial"]
 
@@ -31,10 +18,8 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01, -0.022, -0.038 )
 
 [node name="ControllerColors" type="Spatial" parent="."]
 script = ExtResource( 3 )
-all_materials = [ ExtResource( 11 ), ExtResource( 13 ), ExtResource( 10 ), ExtResource( 9 ), ExtResource( 12 ), ExtResource( 14 ), ExtResource( 7 ), ExtResource( 18 ), ExtResource( 17 ), ExtResource( 16 ), ExtResource( 15 ), ExtResource( 8 ), ExtResource( 5 ), ExtResource( 2 ) ]
 
 [node name="MeshInstance" type="MeshInstance" parent="ControllerColors"]
 transform = Transform( 0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0.00859514, 0.00338955, 0.0456962 )
 mesh = ExtResource( 6 )
-material/0 = null
-material/1 = null
+material/0 = ExtResource( 19 )

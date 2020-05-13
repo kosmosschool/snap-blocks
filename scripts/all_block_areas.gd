@@ -13,25 +13,24 @@ onready var audio_stream_player_snap := get_node("../AudioStreamPlayer3DSnap")
 
 func add_block_area(
 	cube_transform : Transform,
-	block_material : Material,
-	block_material_secondary : Material,
+	color_name : String,
 	play_sound : bool = true) -> Area:
 	
 	# create area
 	var new_area = Area.new()
 	add_child(new_area)
 	new_area.global_transform = cube_transform
-	# create CollisionShape
 	
+	# create CollisionShape
 	var col_shape_node = CollisionShape.new()
 	col_shape_node.set_shape(cube_col_shape)
+	col_shape_node.set_name("CollisionShape")
 	new_area.add_child(col_shape_node)
 	new_area.monitoring = false
 	new_area.set_script(block_area_script)
 	new_area.set_collision_layer(2)
 	new_area.collision_shape = col_shape_node
-	new_area.set_block_material(block_material)
-	new_area.set_block_material_secondary(block_material_secondary)
+	new_area.set_color_name(color_name)
 
 	
 	if play_sound:
@@ -61,11 +60,9 @@ func recreate_from_save(saved_array : Array) -> Array:
 	
 	# recreate from saved
 	for s in saved_array:
-		var curr_mats = controller_colors.get_materials_by_name(s["material_name"])
 		var added_area = add_block_area(
 			unserialize_transform(s["global_transform_serialized"]),
-			curr_mats[0],
-			curr_mats[1],
+			s["color_name"],
 			false
 		)
 		added_areas.append(added_area)

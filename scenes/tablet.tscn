@@ -158,18 +158,19 @@ material/0 = SubResource( 3 )
 
 [node name="Navigation" type="Spatial" parent="."]
 
-[node name="BlocksButton" parent="Navigation" instance=ExtResource( 12 )]
+[node name="LoadSaveButton" parent="Navigation" instance=ExtResource( 12 )]
 transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.14, 0.081, 0.003 )
 script = ExtResource( 10 )
 navigate_to = "LoadScreen"
 
-[node name="MeshInstance3" type="MeshInstance" parent="Navigation/BlocksButton"]
+[node name="MeshInstance3" type="MeshInstance" parent="Navigation/LoadSaveButton"]
 transform = Transform( 0.035, 5.21542e-10, -8.60268e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 4 )
 
 [node name="ChallengesButton" parent="Navigation" instance=ExtResource( 12 )]
 transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.14, 0.0368088, 0.003 )
+visible = false
 script = ExtResource( 10 )
 navigate_to = "ChallengesOverview"
 
@@ -180,6 +181,7 @@ material/0 = SubResource( 5 )
 
 [node name="HintsButton" parent="Navigation" instance=ExtResource( 12 )]
 transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.14, -0.007, 0.003 )
+visible = false
 script = ExtResource( 10 )
 navigate_to = "Hints"
 

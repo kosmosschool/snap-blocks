@@ -22,9 +22,8 @@ var snap_axis : int
 var snap_vec : Vector3
 var snap_ghost_spatial
 var ray_dir : Vector3
-var color_index : int
+var color_name : String
 
-#var main_color : Color setget set_main_color, get_main_color
 
 onready var collision_shape := $CollisionShape
 onready var mesh_instance := $MeshInstance
@@ -39,20 +38,16 @@ onready var controller_colors := get_node(global_vars.CONTR_RIGHT_PATH + "/KSCon
 func is_class(type):
 	return type == "BuildingBlockSnappable" or .is_class(type)
 
-#func set_main_color(new_value):
-#	main_color = new_value
-#	set_block_color(new_value)
-#
-#
-#func get_main_color():
-#	return main_color
-
 
 func _ready():
 	connect("grab_ended", self, "_on_Building_Block_Snappable_grab_ended")
-	set_material(controller_colors.get_current_material())
-	set_secondary_material(controller_colors.get_current_secondary_material())
-	color_index = controller_colors.get_current_color_index()
+	set_color(controller_colors.get_current_color_name())
+	
+#	var mdt = MeshDataTool.new()
+#	mdt.create_from_surface(mesh_instance.mesh, 0)
+#	print("mdt.get_vertex_count() 0: ", mdt.get_vertex_count())
+#	mdt.create_from_surface(mesh_instance.mesh, 1)
+#	print("mdt.get_vertex_count() 1: ", mdt.get_vertex_count())
 
 
 func _process(delta):
@@ -166,23 +161,15 @@ func _on_Building_Block_Snappable_grab_ended():
 		snap_to_cand()
 
 
-func get_shader_color():
-	var main_material = mesh_instance.get_surface_material(0)
-	return main_material.get_shader_param("color")
-
-
-func set_material(new_mat : Material) -> void:
-	mesh_instance.set_surface_material(0, new_mat)
-
-
-func set_secondary_material(new_mat : Material) -> void:
-	mesh_instance.set_surface_material(1, new_mat)
+func set_color(new_color_name : String) -> void:
+	color_name = new_color_name
+	mesh_instance.get_surface_material(0).set_shader_param("color", controller_colors.get_color_by_name(new_color_name))
 
 
 func create_ghost():
 	snap_ghost_spatial = ghost_block_scene.instance()
 	movable_world.add_child(snap_ghost_spatial)
-	snap_ghost_spatial.set_materials_with_index(color_index)
+	snap_ghost_spatial.set_color(mesh_instance.get_surface_material(0).get_shader_param("color"))
 
 
 func position_ghost():
@@ -229,11 +216,9 @@ func snap_to_cand():
 	
 	if snap_cand is RigidBody:
 		var snap_cand_rigid_body = snap_cand
-#		var snap_cand_color = snap_cand.get_shader_color()
 		snap_cand = all_block_areas.add_block_area(
 			snap_cand.global_transform, 
-			snap_cand.mesh_instance.get_surface_material(0),
-			snap_cand.mesh_instance.get_surface_material(1),
+			snap_cand.color_name,
 			false
 		)
 		multi_mesh.add_area(snap_cand)
@@ -467,20 +452,12 @@ func update_pos_to_snap(delta: float) -> void:
 		global_transform = snap_end_transform
 		moving_to_snap = false
 		snap_timer = 0.0
-#		play_snap_sound()
-		var transfered_area = all_block_areas.add_block_area(
+		var transferred_area = all_block_areas.add_block_area(
 			global_transform,
-			mesh_instance.get_surface_material(0),
-			mesh_instance.get_surface_material(1)
+			color_name
 		)
-		multi_mesh.add_area(transfered_area)
+		multi_mesh.add_area(transferred_area)
 		queue_free()
 		return
 	
 	global_transform = snap_start_transform.interpolate_with(snap_end_transform, interpolation_progress)
-
-
-#func play_snap_sound():
-#	if snap_sound and audio_stream_player:
-#		audio_stream_player.set_stream(snap_sound)
-#		audio_stream_player.play()

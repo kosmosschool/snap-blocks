@@ -1,8 +1,14 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://meshes/block_cube.mesh" type="ArrayMesh" id=1]
 [ext_resource path="res://shapes/cube_collision_shape.tres" type="Shape" id=2]
 [ext_resource path="res://scripts/building_block_snappable.gd" type="Script" id=3]
+[ext_resource path="res://shaders/unshaded_cube_color.shader" type="Shader" id=4]
+[ext_resource path="res://meshes/cube.tres" type="CubeMesh" id=5]
+
+[sub_resource type="ShaderMaterial" id=1]
+resource_local_to_scene = true
+shader = ExtResource( 4 )
+shader_param/color = Vector3( 0.5, 0.5, 0.5 )
 
 [node name="BlockBaseCube" type="RigidBody"]
 collision_layer = 3
@@ -15,6 +21,5 @@ script = ExtResource( 3 )
 shape = ExtResource( 2 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
-mesh = ExtResource( 1 )
-material/0 = null
-material/1 = null
+mesh = ExtResource( 5 )
+material/0 = SubResource( 1 )
