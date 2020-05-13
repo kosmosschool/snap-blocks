@@ -9,6 +9,7 @@ var building_block_scene
 
 var all_building_blocks
 var multi_mesh
+var all_block_areas
 var color_name : String setget set_color_name, get_color_name
 
 onready var controller_colors := get_node(global_vars.CONTR_RIGHT_PATH + "/KSControllerRight/ControllerColors")
@@ -26,6 +27,7 @@ func get_color_name():
 func _init():
 	building_block_scene = preload("res://scenes/building_blocks/block_base_cube.tscn")
 	all_building_blocks = get_node(global_vars.ALL_BUILDING_BLOCKS_PATH)
+	all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
 	multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
 
 
@@ -44,6 +46,7 @@ func remove_from_multi_mesh(controller_grab) -> void:
 	# grab
 	controller_grab.start_grab_hinge_joint(new_bb)
 	
+	all_block_areas.remove_origin(global_transform.origin)
 	multi_mesh.remove_area(self)
 	
 	# free this area

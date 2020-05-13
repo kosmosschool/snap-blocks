@@ -24,7 +24,6 @@ var snap_ghost_spatial
 var ray_dir : Vector3
 var color_name : String
 
-
 onready var collision_shape := $CollisionShape
 onready var mesh_instance := $MeshInstance
 onready var ghost_block_scene = preload("res://scenes/building_blocks/ghost_block_base.tscn")
@@ -221,7 +220,8 @@ func snap_to_cand():
 			snap_cand.color_name,
 			false
 		)
-		multi_mesh.add_area(snap_cand)
+#		multi_mesh.add_area(snap_cand)
+		multi_mesh.recreate()
 		snap_cand_rigid_body.queue_free()
 	
 	# find one orthogonal vector to normal that we can use to calculate the angles
@@ -456,7 +456,8 @@ func update_pos_to_snap(delta: float) -> void:
 			global_transform,
 			color_name
 		)
-		multi_mesh.add_area(transferred_area)
+#		multi_mesh.add_area(transferred_area)
+		multi_mesh.recreate()
 		queue_free()
 		return
 	

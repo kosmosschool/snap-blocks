@@ -4,6 +4,7 @@ extends Spatial
 # logic for collection of all block areas of blocks added to MultiMesh
 class_name AllBlockAreas
 
+var all_origins : Array
 
 onready var block_area_script = load(global_vars.BLOCK_AREA_SCRIPT_PATH)
 onready var cube_col_shape = load(global_vars.CUBE_COLLISION_SHAPE_PATH)
@@ -31,7 +32,9 @@ func add_block_area(
 	new_area.set_collision_layer(2)
 	new_area.collision_shape = col_shape_node
 	new_area.set_color_name(color_name)
-
+	
+	all_origins.append(round_origin(new_area.global_transform.origin))
+	
 	
 	if play_sound:
 		play_snap_sound(new_area.global_transform.origin)
@@ -50,6 +53,8 @@ func clear() -> void:
 	var all_children = get_children()
 	for c in all_children:
 		c.queue_free()
+	
+	all_origins.clear()
 
 
 func recreate_from_save(saved_array : Array) -> Array:
@@ -85,3 +90,17 @@ func unserialize_transform(transform_array : Array):
 
 	return return_transform
 
+
+func remove_origin(block_orig : Vector3) -> void:
+	all_origins.erase(round_origin(block_orig))
+
+
+# called by ks_multi_mesh
+func block_exists(block_orig : Vector3) -> bool:
+	return all_origins.has(round_origin(block_orig))
+
+
+func round_origin(vec : Vector3) -> Vector3:
+	# rounds so that we can compare origins better
+	var rs = 0.01
+	return Vector3(stepify(vec.x, rs), stepify(vec.y, rs), stepify(vec.z, rs))
