@@ -1,49 +1,59 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://scripts/button_save.gd" type="Script" id=1]
 [ext_resource path="res://scripts/button_new.gd" type="Script" id=2]
 [ext_resource path="res://scenes/load_screen.gd" type="Script" id=3]
 [ext_resource path="res://scripts/button_change_page_load.gd" type="Script" id=4]
 [ext_resource path="res://scripts/button_delete.gd" type="Script" id=5]
+[ext_resource path="res://images/icon_save.png" type="Texture" id=6]
+[ext_resource path="res://materials/trash_closed.tres" type="Material" id=7]
 [ext_resource path="res://materials/medium_blue.tres" type="Material" id=8]
 [ext_resource path="res://scenes/text_label_2d.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scripts/button_screen_nav.gd" type="Script" id=10]
 [ext_resource path="res://scripts/screens_controller.gd" type="Script" id=11]
 [ext_resource path="res://scenes/ks_button_pressable.tscn" type="PackedScene" id=12]
+[ext_resource path="res://images/icon_new_file.png" type="Texture" id=13]
+[ext_resource path="res://images/icon_menu.png" type="Texture" id=14]
 [ext_resource path="res://materials/bright_black.tres" type="Material" id=15]
 [ext_resource path="res://meshes/tablet.mesh" type="ArrayMesh" id=16]
 [ext_resource path="res://materials/black.tres" type="Material" id=17]
 [ext_resource path="res://materials/light_blue.tres" type="Material" id=18]
+[ext_resource path="res://materials/red_primary.tres" type="Material" id=19]
+[ext_resource path="res://materials/red_secondary.tres" type="Material" id=20]
+[ext_resource path="res://materials/trash_open.tres" type="Material" id=21]
 [ext_resource path="res://scenes/ks_button_pressable_small.tscn" type="PackedScene" id=23]
-[ext_resource path="res://images/icon_challenges_v5.png" type="Texture" id=26]
-[ext_resource path="res://images/icon_blocks.png" type="Texture" id=29]
 [ext_resource path="res://images/icon_arrow_right.png" type="Texture" id=30]
 [ext_resource path="res://images/icon_hints.png" type="Texture" id=31]
 [ext_resource path="res://images/icon_arrow_left.png" type="Texture" id=32]
 
 [sub_resource type="QuadMesh" id=1]
 
-[sub_resource type="SpatialMaterial" id=5]
-flags_transparent = true
-flags_unshaded = true
-albedo_texture = ExtResource( 26 )
-
 [sub_resource type="SpatialMaterial" id=2]
 flags_transparent = true
 flags_unshaded = true
-albedo_texture = ExtResource( 32 )
+albedo_texture = ExtResource( 6 )
 
 [sub_resource type="SpatialMaterial" id=3]
 flags_transparent = true
 flags_unshaded = true
-albedo_texture = ExtResource( 30 )
+albedo_texture = ExtResource( 13 )
 
 [sub_resource type="SpatialMaterial" id=4]
 flags_transparent = true
 flags_unshaded = true
-albedo_texture = ExtResource( 29 )
+albedo_texture = ExtResource( 32 )
+
+[sub_resource type="SpatialMaterial" id=5]
+flags_transparent = true
+flags_unshaded = true
+albedo_texture = ExtResource( 30 )
 
 [sub_resource type="SpatialMaterial" id=6]
+flags_transparent = true
+flags_unshaded = true
+albedo_texture = ExtResource( 14 )
+
+[sub_resource type="SpatialMaterial" id=7]
 flags_transparent = true
 flags_unshaded = true
 albedo_texture = ExtResource( 31 )
@@ -66,7 +76,7 @@ initial_screen = "LoadScreen"
 script = ExtResource( 3 )
 
 [node name="TitleLabel" parent="Screens/LoadScreen" instance=ExtResource( 9 )]
-transform = Transform( 1, 0, 0, 0, 0.5, -5.96046e-08, 0, 7.45058e-09, 1, -0.031, 0.0407314, 0.000999999 )
+transform = Transform( 2.3, 0, 0, 0, 0.5, -1.49012e-08, 0, 7.45058e-09, 1, -0.032, 0.036, 0.001 )
 text = "Load Creation"
 font_size_multiplier = 5.0
 background_color = Color( 0.1, 0.1, 0.1, 1 )
@@ -74,31 +84,34 @@ h_align = 1
 v_align = 1
 
 [node name="SaveButton" parent="Screens/LoadScreen" instance=ExtResource( 12 )]
-transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.00448282, 0.079, 0.003 )
+transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.028, 0.081, 0.003 )
 script = ExtResource( 1 )
 
-[node name="MeshInstance4" type="MeshInstance" parent="Screens/LoadScreen/SaveButton"]
+[node name="MeshInstanceIcon" type="MeshInstance" parent="Screens/LoadScreen/SaveButton"]
 transform = Transform( 0.035, 5.21542e-10, -7.94093e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
-material/0 = SubResource( 5 )
+material/0 = SubResource( 2 )
 
 [node name="NewButton" parent="Screens/LoadScreen" instance=ExtResource( 12 )]
-transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, -0.0578201, 0.079, 0.003 )
+transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, -0.032, 0.081, 0.003 )
 script = ExtResource( 2 )
 
-[node name="MeshInstance4" type="MeshInstance" parent="Screens/LoadScreen/NewButton"]
+[node name="MeshInstanceIcon" type="MeshInstance" parent="Screens/LoadScreen/NewButton"]
 transform = Transform( 0.035, 5.21542e-10, -7.94093e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
-material/0 = SubResource( 5 )
+material/0 = SubResource( 3 )
 
 [node name="DeleteButton" parent="Screens/LoadScreen" instance=ExtResource( 12 )]
-transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, -0.118662, 0.079, 0.003 )
+transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, -0.092, 0.081, 0.003 )
 script = ExtResource( 5 )
+custom_mat_0 = ExtResource( 19 )
+custom_mat_1 = ExtResource( 20 )
+on_icon_mat = ExtResource( 21 )
 
-[node name="MeshInstance4" type="MeshInstance" parent="Screens/LoadScreen/DeleteButton"]
+[node name="MeshInstanceIcon" type="MeshInstance" parent="Screens/LoadScreen/DeleteButton"]
 transform = Transform( 0.035, 5.21542e-10, -7.94093e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
-material/0 = SubResource( 5 )
+material/0 = ExtResource( 7 )
 
 [node name="LoadButtons" type="Spatial" parent="Screens/LoadScreen"]
 
@@ -110,7 +123,7 @@ page_direction = 1
 [node name="MeshInstance3" type="MeshInstance" parent="Screens/LoadScreen/ButtonPrevious"]
 transform = Transform( 0.035, 0, 0, 0, 0.035, 0, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
+material/0 = SubResource( 4 )
 
 [node name="ButtonNext" parent="Screens/LoadScreen" instance=ExtResource( 23 )]
 transform = Transform( 1, 2.98024e-08, -8.8818e-16, 0, 1, -1.19209e-07, 0, 0, 1, 0.0768719, -0.0927344, 0.003 )
@@ -119,7 +132,7 @@ script = ExtResource( 4 )
 [node name="MeshInstance3" type="MeshInstance" parent="Screens/LoadScreen/ButtonNext"]
 transform = Transform( 0.035, 0, 1.32349e-23, 0, 0.035, 0, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
-material/0 = SubResource( 3 )
+material/0 = SubResource( 5 )
 
 [node name="Hints" type="Spatial" parent="Screens"]
 visible = false
@@ -145,7 +158,7 @@ script = null
 [node name="MeshInstance3" type="MeshInstance" parent="Screens/Hints/BlocksButtonPrevious"]
 transform = Transform( 0.035, 0, 0, 0, 0.035, 0, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
+material/0 = SubResource( 4 )
 
 [node name="BlocksButtonNext" parent="Screens/Hints" instance=ExtResource( 23 )]
 transform = Transform( 1, 2.98024e-08, -8.8818e-16, 0, 1, -1.19209e-07, 0, 0, 1, 0.0768719, -0.085, 0.003 )
@@ -154,7 +167,7 @@ script = null
 [node name="MeshInstance3" type="MeshInstance" parent="Screens/Hints/BlocksButtonNext"]
 transform = Transform( 0.035, 0, 1.32349e-23, 0, 0.035, 0, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
-material/0 = SubResource( 3 )
+material/0 = SubResource( 5 )
 
 [node name="Navigation" type="Spatial" parent="."]
 
@@ -163,10 +176,10 @@ transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.14, 0.0
 script = ExtResource( 10 )
 navigate_to = "LoadScreen"
 
-[node name="MeshInstance3" type="MeshInstance" parent="Navigation/LoadSaveButton"]
-transform = Transform( 0.035, 5.21542e-10, -8.60268e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
+[node name="MeshInstanceIcon" type="MeshInstance" parent="Navigation/LoadSaveButton"]
+transform = Transform( 0.035, 5.21542e-10, -7.27919e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
-material/0 = SubResource( 4 )
+material/0 = SubResource( 6 )
 
 [node name="ChallengesButton" parent="Navigation" instance=ExtResource( 12 )]
 transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.14, 0.0368088, 0.003 )
@@ -177,7 +190,7 @@ navigate_to = "ChallengesOverview"
 [node name="MeshInstance3" type="MeshInstance" parent="Navigation/ChallengesButton"]
 transform = Transform( 0.035, 5.21542e-10, -8.27181e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
-material/0 = SubResource( 5 )
+material/0 = SubResource( 2 )
 
 [node name="HintsButton" parent="Navigation" instance=ExtResource( 12 )]
 transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.14, -0.007, 0.003 )
@@ -188,4 +201,4 @@ navigate_to = "Hints"
 [node name="MeshInstance3" type="MeshInstance" parent="Navigation/HintsButton"]
 transform = Transform( 0.035, 5.21542e-10, -7.94093e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
-material/0 = SubResource( 6 )
+material/0 = SubResource( 7 )

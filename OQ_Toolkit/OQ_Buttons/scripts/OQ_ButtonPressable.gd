@@ -26,10 +26,14 @@ onready var button_forward_vector_norm = get_transform().basis.z.normalized()
 onready var z_scale = scale.z
 onready var button_mesh := $MeshInstance
 onready var button_area := $ButtonArea
+onready var default_mat_0 = button_mesh.get_surface_material(0)
+onready var default_mat_1 = button_mesh.get_surface_material(1)
 
 export var press_distance := 0.008
-export(Material) var off_material
-export(Material) var on_material
+export(Material) var custom_mat_0
+export(Material) var custom_mat_1
+export(Material) var custom_mat_on_0
+export(Material) var custom_mat_on_1
 export var on_on_start := false
 
 
@@ -40,6 +44,12 @@ func _ready():
 	connect("visibility_changed", self, "_on_Button_Pressable_visibility_changed")
 	
 	button_half_length_vector = initial_pos_local + button_forward_vector_norm * z_scale / 2
+	
+	if custom_mat_0:
+		button_mesh.set_surface_material(0, custom_mat_0)
+	
+	if custom_mat_1:
+		button_mesh.set_surface_material(1, custom_mat_1)
 	
 	# initialize
 	if (on_on_start):
@@ -168,7 +178,22 @@ func button_turn_off():
 
 
 func switch_mat(_is_on):
-	if _is_on:
-		button_mesh.set_material_override(on_material)
+	if not _is_on:
+		if custom_mat_0 and custom_mat_on_0:
+			# only set custom mat if there was a custom on mat
+			button_mesh.set_surface_material(0, custom_mat_0)
+		elif custom_mat_on_0:
+			# only set default mat if there was a custom on mat
+			button_mesh.set_surface_material(0, default_mat_0)
+			
+		if custom_mat_1 and custom_mat_on_1:
+			# only set custom mat if there was a custom on mat
+			button_mesh.set_surface_material(1, custom_mat_1)
+		elif custom_mat_on_1:
+			# only set default mat if there was a custom on mat
+			button_mesh.set_surface_material(1, default_mat_1)
 	else:
-		button_mesh.set_material_override(off_material)
+		if custom_mat_on_0:
+			button_mesh.set_surface_material(0, custom_mat_on_0)
+		if custom_mat_on_1:
+			button_mesh.set_surface_material(1, custom_mat_on_1)

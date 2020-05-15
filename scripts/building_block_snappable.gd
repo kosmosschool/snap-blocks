@@ -53,6 +53,7 @@ func _process(delta):
 	if moving_to_snap:
 		update_pos_to_snap(delta)
 
+
 func _physics_process(delta):
 	if not is_grabbed:
 		return
@@ -221,7 +222,7 @@ func snap_to_cand():
 			false
 		)
 #		multi_mesh.add_area(snap_cand)
-		multi_mesh.recreate()
+		multi_mesh.add_recreate(snap_cand)
 		snap_cand_rigid_body.queue_free()
 	
 	# find one orthogonal vector to normal that we can use to calculate the angles
@@ -457,7 +458,7 @@ func update_pos_to_snap(delta: float) -> void:
 			color_name
 		)
 #		multi_mesh.add_area(transferred_area)
-		multi_mesh.recreate()
+		multi_mesh.add_recreate(transferred_area)
 		queue_free()
 		return
 	

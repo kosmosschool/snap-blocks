@@ -8,11 +8,9 @@ class_name ButtonLoad
 var file_name : String setget set_file_name
 
 onready var mesh_instance = $MeshInstance
-onready var default_mat_0 = mesh_instance.get_surface_material(0)
-onready var default_mat_1 = mesh_instance.get_surface_material(1)
 onready var load_screen = get_parent().get_parent()
 onready var delete_mat_0 = preload("res://materials/red_primary.tres")
-onready var delete_mat_1 = preload("res://materials/red_primary.tres")
+onready var delete_mat_1 = preload("res://materials/red_secondary.tres")
 
 
 func _ready():

@@ -14,12 +14,13 @@ var page_size := 8
 var row_size := 4
 var current_page := 1
 var total_pages := 1
-var all_files_paginated : Dictionary
+var all_files_paginated : Dictionary setget , get_all_files_paginated
 var load_buttons : Array
 var delete_mode := false setget , get_delete_mode
 
 var LOAD_MODE_TITLE = "Load Creation"
 var DELETE_MODE_TITLE = "Delete Creation"
+var EMPTY_TITLE = "Save your Creations to see them here"
 
 onready var load_buttons_node = $LoadButtons
 onready var button_prev = $ButtonPrevious
@@ -29,6 +30,10 @@ onready var file_button_scene = preload("res://scenes/ks_button_pressable_text.t
 onready var button_load_script = preload("res://scripts/button_load.gd")
 
 
+func get_all_files_paginated():
+	return all_files_paginated
+
+
 func get_delete_mode():
 	return delete_mode
 
@@ -36,7 +41,6 @@ func get_delete_mode():
 func _ready():
 	create_load_buttons()
 	refresh_files()
-	title_label.set_text(LOAD_MODE_TITLE)
 
 
 func create_load_buttons() -> void:
@@ -60,7 +64,13 @@ func create_load_buttons() -> void:
 func refresh_files():
 	
 	var all_files : Array = save_system.get_all_saved_files()
+	
 	all_files_paginated = paginate(all_files)
+	
+	if all_files_paginated.empty():
+		title_label.set_text(EMPTY_TITLE)
+	else:
+		title_label.set_text(LOAD_MODE_TITLE)
 	
 	# calculate how many pages we have
 	total_pages = ceil(all_files.size() / float(page_size))
@@ -73,6 +83,9 @@ func display_load_buttons() -> void:
 	# hide all to start
 	for b in load_buttons:
 		b.visible = false
+	
+	if all_files_paginated.empty() or not all_files_paginated.has(current_page):
+		return
 	
 	var current_page_files = all_files_paginated[current_page]
 	for i in range(current_page_files.size()):
@@ -116,6 +129,11 @@ func change_page(page_direction : int) -> void:
 
 
 func update_change_page_buttons() -> void:
+	if all_files_paginated.empty():
+		button_next.visible = false
+		button_prev.visible = false
+		return
+		
 	if total_pages == 1:
 		button_next.visible = false
 		button_prev.visible = false
