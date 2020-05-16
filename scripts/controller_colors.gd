@@ -23,30 +23,33 @@ var ALL_COLORS = {
 	"white": Vector3(1.0, 1.0, 1.0)
 }
 
-onready var ar_vr_controller = get_parent().get_parent()
+
 onready var mesh_instance = $MeshInstance
 
 
 func _ready():
-	ar_vr_controller.connect("button_pressed", self, "_on_ARVRController_button_pressed")
 	current_color_name = ALL_COLORS.keys()[0]
 	update_mini_block()
 
 
-func _on_ARVRController_button_pressed(button_number):
-	# if grip trigger pressed while B button being held down
-	if button_number == vr.CONTROLLER_BUTTON.XA:
-		rotate_material()
-
-
-func rotate_material() -> void:
+# called by ControllerDefault
+func rotate_material(dir : int) -> void:
 	var keys = ALL_COLORS.keys()
 	var i = keys.find(current_color_name)
 	var new_i
-	if i + 1 == ALL_COLORS.size():
-		new_i = 0
-	else:
-		new_i = i + 1
+	
+	if dir == 0:
+		# next color
+		if i + 1 == ALL_COLORS.size():
+			new_i = 0
+		else:
+			new_i = i + 1
+	elif dir == 1:
+		# previous color
+		if i == 0:
+			new_i = ALL_COLORS.size() - 1
+		else:
+			new_i = i - 1
 		
 	current_color_name = keys[new_i]
 	

@@ -22,8 +22,9 @@
 [ext_resource path="res://materials/black.tres" type="Material" id=29]
 
 [sub_resource type="Environment" id=1]
-background_mode = 2
+background_mode = 1
 background_sky = ExtResource( 9 )
+background_color = Color( 0.333333, 0.623529, 0.815686, 1 )
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Spatial

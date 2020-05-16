@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://scripts/button_save.gd" type="Script" id=1]
 [ext_resource path="res://scripts/button_new.gd" type="Script" id=2]
@@ -23,7 +23,6 @@
 [ext_resource path="res://materials/trash_open.tres" type="Material" id=21]
 [ext_resource path="res://scenes/ks_button_pressable_small.tscn" type="PackedScene" id=23]
 [ext_resource path="res://images/icon_arrow_right.png" type="Texture" id=30]
-[ext_resource path="res://images/icon_hints.png" type="Texture" id=31]
 [ext_resource path="res://images/icon_arrow_left.png" type="Texture" id=32]
 
 [sub_resource type="QuadMesh" id=1]
@@ -52,11 +51,6 @@ albedo_texture = ExtResource( 30 )
 flags_transparent = true
 flags_unshaded = true
 albedo_texture = ExtResource( 14 )
-
-[sub_resource type="SpatialMaterial" id=7]
-flags_transparent = true
-flags_unshaded = true
-albedo_texture = ExtResource( 31 )
 
 [node name="Tablet" type="Spatial"]
 
@@ -180,25 +174,3 @@ navigate_to = "LoadScreen"
 transform = Transform( 0.035, 5.21542e-10, -7.27919e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 6 )
-
-[node name="ChallengesButton" parent="Navigation" instance=ExtResource( 12 )]
-transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.14, 0.0368088, 0.003 )
-visible = false
-script = ExtResource( 10 )
-navigate_to = "ChallengesOverview"
-
-[node name="MeshInstance3" type="MeshInstance" parent="Navigation/ChallengesButton"]
-transform = Transform( 0.035, 5.21542e-10, -8.27181e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="HintsButton" parent="Navigation" instance=ExtResource( 12 )]
-transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.14, -0.007, 0.003 )
-visible = false
-script = ExtResource( 10 )
-navigate_to = "Hints"
-
-[node name="MeshInstance3" type="MeshInstance" parent="Navigation/HintsButton"]
-transform = Transform( 0.035, 5.21542e-10, -7.94093e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 7 )

@@ -53,6 +53,15 @@ func remove_from_multi_mesh(controller_grab) -> void:
 	queue_free()
 
 
+func delete_from_multi_mesh() -> void:
+	all_block_areas.remove_origin(global_transform.origin)
+	multi_mesh.remove_area(self)
+	
+	# free this area
+	queue_free()
+
+
+
 func calc_snap_vec(intersection_point : Vector3, normal : Vector3) -> Vector3:
 	# calculates snap vector based on intersection point and normal
 	# this is vector goes from the block's origin through the mid-point of the area where the intersection

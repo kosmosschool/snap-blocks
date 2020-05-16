@@ -3,7 +3,6 @@ extends MultiMeshInstance
 
 class_name KSMultiMesh
 
-var all_origins : Array
 
 var areas_to_recreate : Array
 var current_area_thread : Area
@@ -41,7 +40,6 @@ func _add_area_thread(userdata):
 			break
 		
 		mutex.lock()
-#		add_area(current_area_thread)
 		current_visibility_intance_count = 0
 		for a in areas_to_recreate:
 			if a == thread_area_to_ignore:
@@ -151,25 +149,8 @@ func add_area(area : Area, check_neighbors = true) -> void:
 
 func remove_area(area : Area) -> void:
 	# remove block from MultiMeshInstance
-#	clear()
 	thread_area_to_ignore = area
 	recreate()
-#	var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH).get_children()
-#
-#	current_visibility_intance_count = 0
-#	for a in all_block_areas:
-#
-#		if a == area:
-#			# skip if there's the area that we just removed
-#			continue
-#		add_area(a)
-#
-#	multimesh.set_visible_instance_count(current_visibility_intance_count)
-
-
-func clear() -> void:
-	# reset
-	multimesh.set_visible_instance_count(0)
 
 
 func recreate(new_areas : Array = get_node(global_vars.ALL_BLOCK_AREAS_PATH).get_children()):

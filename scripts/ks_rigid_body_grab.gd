@@ -3,6 +3,8 @@ extends Feature_RigidBodyGrab
 class_name KSRigidBodyGrab
 
 
+onready var controller_system = get_node(global_vars.CONTROLLER_SYSTEM_PATH)
+
 # overriding from parent
 func _on_ARVRController_button_pressed(button_number):
 	if button_number != vr.CONTROLLER_BUTTON.GRIP_TRIGGER:
@@ -18,6 +20,9 @@ func _on_ARVRController_button_pressed(button_number):
 # overriding from parent to allow grabbing rigid bodies with MODE_KINEMATIC
 func grab():
 	if (held_object):
+		return
+	
+	if controller_system.get_controller_type() == 0:
 		return
 	
 	# find the right rigid body to grab
