@@ -13,6 +13,9 @@ func _on_ARVRController_button_pressed(button_number):
 	if vr.button_pressed(vr.BUTTON.B):
 		return
 	
+	if controller_system.get_controller_type() != 0:
+		return
+	
 	# if grab button, grab
 	grab()
 
@@ -20,9 +23,6 @@ func _on_ARVRController_button_pressed(button_number):
 # overriding from parent to allow grabbing rigid bodies with MODE_KINEMATIC
 func grab():
 	if (held_object):
-		return
-	
-	if controller_system.get_controller_type() == 0:
 		return
 	
 	# find the right rigid body to grab

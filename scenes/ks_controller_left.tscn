@@ -9,6 +9,7 @@
 
 [node name="DefaultControllerLeft" parent="ControllerTypes" instance=ExtResource( 1 )]
 transform = Transform( 1, 0, 0, 0, 0.82086, 0.571129, 0, -0.571129, 0.82086, -0.019, -0.029, 0.03 )
+script = null
 
 [node name="ControllerGrab" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.01, -0.022, -0.038 )

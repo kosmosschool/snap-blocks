@@ -6,13 +6,12 @@ class_name BlockArea
 
 var collision_shape
 var building_block_scene
+var mm_indices : Array
 
 var all_building_blocks
 var multi_mesh
 var all_block_areas
 var color_name : String setget set_color_name, get_color_name
-
-onready var controller_colors := get_node(global_vars.CONTR_RIGHT_PATH + "/KSControllerRight/ControllerColors")
 
 
 func set_color_name(new_value):
@@ -60,6 +59,23 @@ func delete_from_multi_mesh() -> void:
 	# free this area
 	queue_free()
 
+
+func recolor() -> void:
+	# changes color to currently selected color
+	var controller_colors := get_node(global_vars.CONTR_RIGHT_PATH + "/KSControllerRight/ControllerColors")
+	color_name = controller_colors.get_current_color_name()
+	multi_mesh.recolor_area(self)
+
+
+func clear_mm_indices() -> void:
+	# pretty self-explanatory, isn't it?
+	mm_indices.clear()
+
+
+func append_mm_index(new_index : int) -> void:
+	# keeps track of which indices on multi mesh are currently assigned to this one
+	# e.g., useful for recoloring
+	mm_indices.append(new_index)
 
 
 func calc_snap_vec(intersection_point : Vector3, normal : Vector3) -> Vector3:

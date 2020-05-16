@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/controller_grab.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/controller_delete.gd" type="Script" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://scenes/default_controller_right.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scripts/controller_default.gd" type="Script" id=5]
 [ext_resource path="res://meshes/cube.tres" type="CubeMesh" id=6]
+[ext_resource path="res://scripts/controller_recolor.gd" type="Script" id=7]
 [ext_resource path="res://materials/cube_default_mat.tres" type="Material" id=19]
 
 [node name="KSControllerRight" type="Spatial"]
@@ -19,6 +20,10 @@ script = ExtResource( 5 )
 [node name="DeleteControllerRight" parent="ControllerTypes" instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 0.82086, 0.571129, 0, -0.571129, 0.82086, 0.019, -0.029, 0.03 )
 script = ExtResource( 2 )
+
+[node name="RecolorControllerRight" parent="ControllerTypes" instance=ExtResource( 4 )]
+transform = Transform( 1, 0, 0, 0, 0.82086, 0.571129, 0, -0.571129, 0.82086, 0.019, -0.029, 0.03 )
+script = ExtResource( 7 )
 
 [node name="ControllerGrab" parent="." instance=ExtResource( 1 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01, -0.022, -0.038 )

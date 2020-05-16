@@ -1,7 +1,14 @@
 extends BaseController
 
 
-class_name ControllerDelete
+class_name ControllerRecolor
+
+
+func _process(delta):
+	if not selected:
+		return
+	
+	switch_material(vr.get_controller_axis(vr.AXIS.RIGHT_JOYSTICK_X))
 
 
 # overriding from parent
@@ -14,7 +21,7 @@ func _on_ARVRController_button_pressed(button_number):
 		
 		if overlapping_block_area:
 			# delete block from multi mesh
-			overlapping_block_area.delete_from_multi_mesh()
+			overlapping_block_area.recolor()
 
 
 # overriding from parent

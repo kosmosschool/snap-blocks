@@ -64,6 +64,7 @@ func _exit_tree():
 func add_area(area : Area, check_neighbors = true) -> void:
 	# add block to MultiMeshInstance
 	# update position of new instance
+	area.clear_mm_indices()
 	var area_color = controller_colors.get_color_by_name(area.get_color_name())
 	var new_color = Color(area_color.x, area_color.y, area_color.z, 1.0)
 	
@@ -137,14 +138,14 @@ func add_area(area : Area, check_neighbors = true) -> void:
 		side_transforms.append(trans_6)
 	
 	# increment visibility 
-#	var new_count = multimesh.visible_instance_count + side_transforms.size()
 	var new_count = current_visibility_intance_count + side_transforms.size()
-#	multimesh.set_visible_instance_count(new_count)
 	current_visibility_intance_count = new_count
 	
 	for i in range(side_transforms.size()):
-		multimesh.set_instance_transform(new_count - i - 1, side_transforms[i])
-		multimesh.set_instance_custom_data(new_count - i - 1, new_color)
+		var curr_index = new_count - i - 1
+		multimesh.set_instance_transform(curr_index, side_transforms[i])
+		multimesh.set_instance_custom_data(curr_index, new_color)
+		area.append_mm_index(curr_index)
 
 
 func remove_area(area : Area) -> void:
@@ -168,3 +169,11 @@ func add_recreate(added_area : Area, new_areas : Array = get_node(global_vars.AL
 	# run bg thread
 	areas_to_recreate = new_areas
 	semaphore.post()
+
+
+func recolor_area(area : Area) -> void:
+	var area_color = controller_colors.get_color_by_name(area.get_color_name())
+	var new_color = Color(area_color.x, area_color.y, area_color.z, 1.0)
+	
+	for i in area.mm_indices:
+		multimesh.set_instance_custom_data(i, new_color)
