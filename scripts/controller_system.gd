@@ -37,10 +37,10 @@ func _ready():
 		tablet.visible = false
 
 
-func _process(delta):
-#	if move_mode:
-	if vr.button_pressed(vr.BUTTON.LEFT_GRIP_TRIGGER) and vr.button_pressed(vr.BUTTON.RIGHT_GRIP_TRIGGER):
-		process_move_mode()
+#func _process(delta):
+##	if move_mode:
+#	if vr.button_pressed(vr.BUTTON.LEFT_GRIP_TRIGGER) and vr.button_pressed(vr.BUTTON.RIGHT_GRIP_TRIGGER):
+#		process_move_mode()
 
 
 func _on_right_ARVRController_button_pressed(button_number):
@@ -60,27 +60,27 @@ func _on_left_ARVRController_button_pressed(button_number):
 		toggle_tablet()
 
 
-func process_move_mode() -> void:
+#func process_move_mode() -> void:
 	# check if scale mode buttons still pressed
-	if not vr.button_pressed(vr.BUTTON.LEFT_GRIP_TRIGGER) and not vr.button_pressed(vr.BUTTON.RIGHT_GRIP_TRIGGER):
-		move_mode = false
-		initial_distance = 0.0
+#	if not vr.button_pressed(vr.BUTTON.LEFT_GRIP_TRIGGER) and not vr.button_pressed(vr.BUTTON.RIGHT_GRIP_TRIGGER):
+#		move_mode = false
+#		initial_distance = 0.0
 #		right_contr_initial_y = right_controller.global_transform.origin.y
 #		left_contr_initial_y = right_controller.global_transform.origin.y
-		return
+#		return
 	
 #	var right_contr_origin = right_controller.global_transform.origin
 #	var left_contr_origin = left_controller.global_transform.origin
 #	right_controller.global_transform.origin = Vector3(right_contr_origin.x, right_contr_initial_y, right_contr_origin.z)
 #	left_controller.global_transform.origin = Vector3(left_contr_origin.x, left_contr_initial_y, left_contr_origin.z)
 	
-	# calculate initial distance between the controllers
-	if initial_distance == 0.0:
+#	# calculate initial distance between the controllers
+#	if initial_distance == 0.0:
 #		initial_world_scale = ar_vr_origin.get_world_scale()
-		initial_distance = controller_distance()
+#		initial_distance = controller_distance()
 	
 	
-	var dist_diff = controller_distance() - initial_distance
+#	var dist_diff = controller_distance() - initial_distance
 	# change world scale as controllers move
 #	var new_world_scale = clamp(
 #		initial_world_scale + dist_diff * scale_multiplier / ar_vr_origin.get_world_scale(),
