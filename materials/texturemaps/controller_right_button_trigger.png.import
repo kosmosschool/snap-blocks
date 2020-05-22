@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/icon_trash_open.png-770e1d6e3d20a63557d00c63f5d97212.s3tc.stex"
-path.etc2="res://.import/icon_trash_open.png-770e1d6e3d20a63557d00c63f5d97212.etc2.stex"
+path.s3tc="res://.import/controller_right_button_trigger.png-425c1f5c5d6e4d2c5aa1f55aac961751.s3tc.stex"
+path.etc2="res://.import/controller_right_button_trigger.png-425c1f5c5d6e4d2c5aa1f55aac961751.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://images/icon_trash_open.png"
-dest_files=[ "res://.import/icon_trash_open.png-770e1d6e3d20a63557d00c63f5d97212.s3tc.stex", "res://.import/icon_trash_open.png-770e1d6e3d20a63557d00c63f5d97212.etc2.stex" ]
+source_file="res://materials/texturemaps/controller_right_button_trigger.png"
+dest_files=[ "res://.import/controller_right_button_trigger.png-425c1f5c5d6e4d2c5aa1f55aac961751.s3tc.stex", "res://.import/controller_right_button_trigger.png-425c1f5c5d6e4d2c5aa1f55aac961751.etc2.stex" ]
 
 [params]
 

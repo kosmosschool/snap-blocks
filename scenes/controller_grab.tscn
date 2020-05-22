@@ -1,15 +1,14 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scripts/ks_rigid_body_grab.gd" type="Script" id=1]
-[ext_resource path="res://materials/light_green.tres" type="Material" id=2]
+[ext_resource path="res://meshes/Icosphere.mesh" type="ArrayMesh" id=2]
+[ext_resource path="res://materials/red_primary.tres" type="Material" id=3]
 
 [sub_resource type="SphereShape" id=1]
 margin = 0.001
 radius = 0.0149247
 
-[sub_resource type="SphereMesh" id=2]
-
-[sub_resource type="SphereShape" id=3]
+[sub_resource type="SphereShape" id=2]
 radius = 0.0150348
 
 [node name="ControllerGrab" type="Spatial"]
@@ -23,9 +22,9 @@ collision_mask = 3
 shape = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
-transform = Transform( 0.015, 0, 0, 0, 0.015, 0, 0, 0, 0.015, 0, 0, 0 )
-mesh = SubResource( 2 )
-material/0 = ExtResource( 2 )
+transform = Transform( 0.385299, 0.107447, 0, -0.107447, 0.385299, 0, 0, 0, 0.4, 0, 0, 0 )
+mesh = ExtResource( 2 )
+material/0 = ExtResource( 3 )
 
 [node name="HingeJoint" type="HingeJoint" parent="."]
 nodes/node_a = NodePath("../CollisionKinematicBody")
@@ -39,5 +38,5 @@ angular_limit/relaxation = 0.5
 [node name="CollisionKinematicBody" type="KinematicBody" parent="."]
 
 [node name="CollisionBodyShape" type="CollisionShape" parent="CollisionKinematicBody"]
-shape = SubResource( 3 )
+shape = SubResource( 2 )
 disabled = true

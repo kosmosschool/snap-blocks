@@ -99,7 +99,7 @@ shader_param/color = Vector3( 1, 1, 1 )
 
 [sub_resource type="ShaderMaterial" id=6]
 shader = ExtResource( 17 )
-shader_param/color = Vector3( 0.95, 0.95, 0.95 )
+shader_param/color = Vector3( 0.893, 0.893, 0.893 )
 
 [sub_resource type="MultiMesh" id=7]
 transform_format = 1
@@ -149,11 +149,7 @@ visible = false
 transform = Transform( 21.2217, 0, 0, 0, 8.12099, 0, 0, 0, 1, 0, 0, 0 )
 text = "Welcome to Blöcks, friend.
 Press X to open your tablet."
-margin = 16
-billboard = false
-resize_mode = 1
 font_size_multiplier = 45.0
-font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0.75, 0.45, 0.45, 1 )
 h_align = 1
 v_align = 1

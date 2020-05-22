@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/quest_controller_texture_2.gltf-228e9669d56c84c83124f1759d9442a4.scn"
+path="res://.import/quest_controller_right_button_toggle.gltf-7cd642a68d6197f22ed5a4ba58ca1e2f.scn"
 
 [deps]
 
-source_file="res://imported_meshes/quest_controller_texture_2.gltf"
-dest_files=[ "res://.import/quest_controller_texture_2.gltf-228e9669d56c84c83124f1759d9442a4.scn" ]
+source_file="res://imported_meshes/quest_controller_right_button_toggle.gltf"
+dest_files=[ "res://.import/quest_controller_right_button_toggle.gltf-7cd642a68d6197f22ed5a4ba58ca1e2f.scn" ]
 
 [params]
 

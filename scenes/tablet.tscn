@@ -73,7 +73,7 @@ script = ExtResource( 3 )
 transform = Transform( 2.3, 0, 0, 0, 0.5, -1.49012e-08, 0, 7.45058e-09, 1, -0.032, 0.036, 0.001 )
 text = "Load Creation"
 font_size_multiplier = 5.0
-background_color = Color( 0.1, 0.1, 0.1, 1 )
+background_color = Color( 0.00784314, 0.00784314, 0.00784314, 1 )
 h_align = 1
 v_align = 1
 

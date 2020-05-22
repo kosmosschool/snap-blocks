@@ -26,12 +26,12 @@ transform = Transform( 1, 0, 0, 0, 0.82086, 0.571129, 0, -0.571129, 0.82086, 0.0
 script = ExtResource( 7 )
 
 [node name="ControllerGrab" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01, -0.022, -0.038 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01, -0.0040227, -0.0638786 )
 
 [node name="ControllerColors" type="Spatial" parent="."]
 script = ExtResource( 3 )
 
 [node name="MeshInstance" type="MeshInstance" parent="ControllerColors"]
-transform = Transform( 0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0.00859514, 0.00338955, 0.0456962 )
+transform = Transform( 0.17, 0, 0, 0, 0.168863, -0.0196277, 0, 0.0196277, 0.168863, 0.00958904, 0.00230405, 0.0435418 )
 mesh = ExtResource( 6 )
 material/0 = ExtResource( 19 )
