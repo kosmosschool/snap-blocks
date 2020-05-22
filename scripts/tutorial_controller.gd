@@ -26,11 +26,13 @@ var total_steps : int
 var step_finish_button := -1
 var current_tooltip_instance
 var waiting_for_area_added := false
+var waiting_for_joystick_push := false
 
 onready var tooltip_scene = preload("res://scenes/tooltip.tscn")
 onready var right_controller = get_node(global_vars.CONTR_RIGHT_PATH)
 onready var left_controller = get_node(global_vars.CONTR_LEFT_PATH)
 onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
+onready var controller_system = get_node(global_vars.CONTROLLER_SYSTEM_PATH)
 
 
 func _ready():
@@ -47,14 +49,16 @@ func _ready():
 	
 	all_block_areas.connect("area_added", self, "_on_All_Block_Areas_area_added")
 	
+	controller_system.connect("joystick_x_axis_pushed_right", self, "_on_Controller_System_joystick_x_axis_pushed_right")
+	controller_system.connect("joystick_x_axis_pushed_left", self, "_on_Controller_System_joystick_x_axis_pushed_left")
+	
 	current_tooltip_instance = create_tooltip_instance()
 	
 	next_step()
 
 
 func _process(delta):
-	# check for button that signalized the end of a step
-	pass
+	vr.get_controller_axis(vr.AXIS.RIGHT_JOYSTICK_X)
 
 
 func _on_right_ARVRController_button_pressed(button_number):
@@ -72,6 +76,18 @@ func _on_left_ARVRController_button_pressed(button_number):
 func _on_All_Block_Areas_area_added():
 	if waiting_for_area_added:
 		waiting_for_area_added = false
+		next_step()
+
+
+func _on_Controller_System_joystick_x_axis_pushed_right():
+	if waiting_for_joystick_push:
+		waiting_for_joystick_push = false
+		next_step()
+
+
+func _on_Controller_System_joystick_x_axis_pushed_left():
+	if waiting_for_joystick_push:
+		waiting_for_joystick_push = false
 		next_step()
 
 
@@ -97,6 +113,11 @@ func run_current_step():
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			step_finish_button = -1
 			waiting_for_area_added = true
+		5:
+			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
+			step_finish_button = -1
+			waiting_for_joystick_push = true
 
 
 func next_step():

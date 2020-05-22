@@ -6,6 +6,8 @@ class_name ControllerSystem
 
 
 signal controller_type_changed
+signal joystick_x_axis_pushed_right
+signal joystick_x_axis_pushed_left
 
 var controller_type := 0 setget , get_controller_type
 #var selected_controller
@@ -14,6 +16,7 @@ var move_mode := false
 var initial_distance := 0.0
 var right_contr_initial_y : float
 var left_contr_initial_y : float
+var prev_joystick_x := 0.0
 
 onready var right_controller = get_node(global_vars.CONTR_RIGHT_PATH)
 onready var left_controller = get_node(global_vars.CONTR_LEFT_PATH)
@@ -41,6 +44,9 @@ func _ready():
 ##	if move_mode:
 #	if vr.button_pressed(vr.BUTTON.LEFT_GRIP_TRIGGER) and vr.button_pressed(vr.BUTTON.RIGHT_GRIP_TRIGGER):
 #		process_move_mode()
+
+func _process(delta):
+	update_joystick_x_axis()
 
 
 func _on_right_ARVRController_button_pressed(button_number):
@@ -119,3 +125,16 @@ func set_controller_type(new_ct : int) -> void:
 
 func toggle_tablet():
 	tablet.visible = !tablet.visible
+
+
+func update_joystick_x_axis() -> void:
+	var joystick_x = vr.get_controller_axis(vr.AXIS.RIGHT_JOYSTICK_X)
+	# only switch if joystick x went smaller than 0.5 previously
+	if abs(prev_joystick_x) < 0.5:
+		if joystick_x > 0.5:
+			emit_signal("joystick_x_axis_pushed_right")
+		
+		if joystick_x < -0.5:
+			emit_signal("joystick_x_axis_pushed_left")
+	
+	prev_joystick_x = joystick_x
