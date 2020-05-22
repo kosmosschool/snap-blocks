@@ -1,6 +1,7 @@
 [gd_resource type="SpatialMaterial" load_steps=2 format=2]
 
 [sub_resource type="ViewportTexture" id=1]
+flags = 16
 viewport_path = NodePath("Viewport")
 
 [resource]

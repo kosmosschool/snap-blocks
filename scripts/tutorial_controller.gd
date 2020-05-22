@@ -98,10 +98,12 @@ func run_current_step():
 		1:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
+			current_tooltip_instance.set_secondary_line(true)
 			step_finish_button = vr.BUTTON.RIGHT_INDEX_TRIGGER
 		2:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
+			current_tooltip_instance.set_secondary_line(false)
 			step_finish_button = vr.BUTTON.RIGHT_GRIP_TRIGGER
 		3:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
