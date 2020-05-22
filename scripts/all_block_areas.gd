@@ -39,6 +39,9 @@ func add_block_area(
 	if play_sound:
 		play_snap_sound(new_area.global_transform.origin)
 	
+	
+#	print("total blocks: ", get_child_count())
+	
 	return new_area
 
 

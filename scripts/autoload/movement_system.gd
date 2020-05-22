@@ -23,6 +23,7 @@ onready var ar_vr_origin = get_node(global_vars.AR_VR_ORIGIN_PATH)
 
 
 func _ready():
+	# we'll use the RemoteTransform to rotate properly
 	rotation_parent = Spatial.new()
 	rotation_remote_trans = RemoteTransform.new()
 	rotation_remote_trans.set_remote_node(ar_vr_origin.get_path())

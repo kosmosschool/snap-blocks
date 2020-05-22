@@ -155,9 +155,24 @@ _global_script_classes=[ {
 "path": "res://scripts/screens_controller.gd"
 }, {
 "base": "Spatial",
+"class": "ShaderCache",
+"language": "GDScript",
+"path": "res://scripts/shader_cache.gd"
+}, {
+"base": "Spatial",
 "class": "TextLabel2D",
 "language": "GDScript",
 "path": "res://scripts/text_label_2d.gd"
+}, {
+"base": "Spatial",
+"class": "Tooltip",
+"language": "GDScript",
+"path": "res://scripts/tooltip.gd"
+}, {
+"base": "Spatial",
+"class": "TutorialController",
+"language": "GDScript",
+"path": "res://scripts/tutorial_controller.gd"
 }, {
 "base": "Node",
 "class": "WelcomeController",
@@ -194,7 +209,10 @@ _global_script_class_icons={
 "OQ_UI2DLabel": "",
 "SaveSystem": "",
 "ScreensController": "",
+"ShaderCache": "",
 "TextLabel2D": "",
+"Tooltip": "",
+"TutorialController": "",
 "WelcomeController": ""
 }
 
@@ -1283,8 +1301,6 @@ limits/debugger_stdout/max_messages_per_frame=100
 
 [rendering]
 
-quality/driver/driver_name="GLES2"
-vram_compression/import_etc=true
-vram_compression/import_etc2=false
+quality/depth_prepass/enable=false
 quality/filters/msaa=6
 environment/default_environment="res://default_env.tres"

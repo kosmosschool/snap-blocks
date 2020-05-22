@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_LeftController.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/ks_controller_left.tscn" type="PackedScene" id=2]
@@ -13,9 +13,14 @@
 [ext_resource path="res://sounds/magnetic_click.wav" type="AudioStream" id=11]
 [ext_resource path="res://scripts/all_block_areas.gd" type="Script" id=12]
 [ext_resource path="res://scenes/tablet.tscn" type="PackedScene" id=13]
+[ext_resource path="res://materials/cube_ghost_default_mat.tres" type="Material" id=14]
+[ext_resource path="res://scripts/shader_cache.gd" type="Script" id=15]
+[ext_resource path="res://materials/cube_default_mat.tres" type="Material" id=16]
 [ext_resource path="res://shaders/unshaded_color.shader" type="Shader" id=17]
 [ext_resource path="res://scenes/text_label_2d.tscn" type="PackedScene" id=18]
 [ext_resource path="res://scripts/welcome_controller.gd" type="Script" id=19]
+[ext_resource path="res://scenes/tooltip.tscn" type="PackedScene" id=20]
+[ext_resource path="res://scripts/tutorial_controller.gd" type="Script" id=21]
 [ext_resource path="res://materials/bright_black.tres" type="Material" id=22]
 [ext_resource path="res://scripts/ks_multi_mesh.gd" type="Script" id=25]
 [ext_resource path="res://sounds/Button Click.wav" type="AudioStream" id=26]
@@ -25,6 +30,21 @@
 background_mode = 1
 background_sky = ExtResource( 9 )
 background_color = Color( 0.333333, 0.623529, 0.815686, 1 )
+
+[sub_resource type="QuadMesh" id=8]
+
+[sub_resource type="SpatialMaterial" id=9]
+flags_transparent = true
+flags_unshaded = true
+
+[sub_resource type="MultiMesh" id=10]
+transform_format = 1
+custom_data_format = 2
+instance_count = 1
+visible_instance_count = 1
+mesh = ExtResource( 7 )
+transform_array = PoolVector3Array( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+custom_data_array = PoolColorArray( 0, 0, 0, 0 )
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Spatial
@@ -116,6 +136,9 @@ script = ExtResource( 8 )
 [node name="WelcomeController" type="Node" parent="."]
 script = ExtResource( 19 )
 
+[node name="TutorialController" type="Spatial" parent="."]
+script = ExtResource( 21 )
+
 [node name="ControllerSystem" type="Node" parent="."]
 script = ExtResource( 10 )
 
@@ -126,6 +149,31 @@ stream = ExtResource( 26 )
 
 [node name="OQ_ARVRCamera" parent="OQ_ARVROrigin" instance=ExtResource( 3 )]
 environment = SubResource( 1 )
+
+[node name="ShaderCache" type="Spatial" parent="OQ_ARVROrigin/OQ_ARVRCamera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1 )
+script = ExtResource( 15 )
+
+[node name="GhostBlockShader" type="MeshInstance" parent="OQ_ARVROrigin/OQ_ARVRCamera/ShaderCache"]
+transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0 )
+mesh = SubResource( 8 )
+material/0 = ExtResource( 14 )
+
+[node name="CubeDefault" type="MeshInstance" parent="OQ_ARVROrigin/OQ_ARVRCamera/ShaderCache"]
+transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0.0391647, 0, 0 )
+mesh = SubResource( 8 )
+material/0 = ExtResource( 16 )
+
+[node name="SpatialMatTransUnshaded" type="MeshInstance" parent="OQ_ARVROrigin/OQ_ARVRCamera/ShaderCache"]
+transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, -0.0156054, 0, 0 )
+mesh = SubResource( 8 )
+material/0 = SubResource( 9 )
+
+[node name="MultiMeshInstance" type="MultiMeshInstance" parent="OQ_ARVROrigin/OQ_ARVRCamera/ShaderCache"]
+multimesh = SubResource( 10 )
+
+[node name="2DTextLabel" parent="OQ_ARVROrigin/OQ_ARVRCamera/ShaderCache" instance=ExtResource( 18 )]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.0179582, 0, 0 )
 
 [node name="OQ_LeftController" parent="OQ_ARVROrigin" instance=ExtResource( 1 )]
 
@@ -186,3 +234,5 @@ script = ExtResource( 12 )
 [node name="AudioStreamPlayer3DSnap" type="AudioStreamPlayer3D" parent="MovableWorld"]
 stream = ExtResource( 11 )
 unit_db = -2.0
+
+[node name="Tooltip" parent="." instance=ExtResource( 20 )]

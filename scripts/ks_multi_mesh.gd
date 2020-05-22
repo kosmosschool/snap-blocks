@@ -48,6 +48,7 @@ func _add_area_thread(userdata):
 		
 		multimesh.set_visible_instance_count(current_visibility_intance_count)
 		thread_area_to_ignore = null
+#		print("instance count ", multimesh.get_visible_instance_count())
 		mutex.unlock()
 
 
@@ -157,6 +158,12 @@ func remove_area(area : Area) -> void:
 func recreate(new_areas : Array = get_node(global_vars.ALL_BLOCK_AREAS_PATH).get_children()):
 	areas_to_recreate = new_areas
 	semaphore.post()
+
+
+# called by SaveSystem
+func clear() -> void:
+	current_visibility_intance_count = 0
+	multimesh.set_visible_instance_count(0)
 
 
 func add_recreate(added_area : Area, new_areas : Array = get_node(global_vars.ALL_BLOCK_AREAS_PATH).get_children()):
