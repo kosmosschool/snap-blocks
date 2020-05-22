@@ -2,17 +2,17 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/icon_menu.png-0f60bf6147550810f27f8b345e326772.s3tc.stex"
-path.etc2="res://.import/icon_menu.png-0f60bf6147550810f27f8b345e326772.etc2.stex"
+path.s3tc="res://.import/controller.png-a27858002f1b1998ac4c88ae2934b964.s3tc.stex"
+path.etc="res://.import/controller.png-a27858002f1b1998ac4c88ae2934b964.etc.stex"
 metadata={
-"imported_formats": [ "s3tc", "etc2" ],
+"imported_formats": [ "s3tc", "etc" ],
 "vram_texture": true
 }
 
 [deps]
 
-source_file="res://images/icon_menu.png"
-dest_files=[ "res://.import/icon_menu.png-0f60bf6147550810f27f8b345e326772.s3tc.stex", "res://.import/icon_menu.png-0f60bf6147550810f27f8b345e326772.etc2.stex" ]
+source_file="res://materials/controller.png"
+dest_files=[ "res://.import/controller.png-a27858002f1b1998ac4c88ae2934b964.s3tc.stex", "res://.import/controller.png-a27858002f1b1998ac4c88ae2934b964.etc.stex" ]
 
 [params]
 
@@ -25,7 +25,7 @@ flags/repeat=true
 flags/filter=true
 flags/mipmaps=true
 flags/anisotropic=false
-flags/srgb=1
+flags/srgb=2
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false

@@ -3,16 +3,16 @@
 importer="texture"
 type="StreamTexture"
 path.s3tc="res://.import/line.png-e86270f75d5b95d6fc8473dba8c1eec6.s3tc.stex"
-path.etc="res://.import/line.png-e86270f75d5b95d6fc8473dba8c1eec6.etc.stex"
+path.etc2="res://.import/line.png-e86270f75d5b95d6fc8473dba8c1eec6.etc2.stex"
 metadata={
-"imported_formats": [ "s3tc", "etc" ],
+"imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://line.png"
-dest_files=[ "res://.import/line.png-e86270f75d5b95d6fc8473dba8c1eec6.s3tc.stex", "res://.import/line.png-e86270f75d5b95d6fc8473dba8c1eec6.etc.stex" ]
+dest_files=[ "res://.import/line.png-e86270f75d5b95d6fc8473dba8c1eec6.s3tc.stex", "res://.import/line.png-e86270f75d5b95d6fc8473dba8c1eec6.etc2.stex" ]
 
 [params]
 

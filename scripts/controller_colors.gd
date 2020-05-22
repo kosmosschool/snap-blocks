@@ -7,19 +7,19 @@ class_name ControllerColors
 var current_color_name : String
 
 var ALL_COLORS = {
-	"violet": Vector3(0.6, 0.55, 0.9),
-	"blue": Vector3(0.55, 0.75, 0.9),
-	"blue_dark": Vector3(0.15, 0.4, 0.7),
-	"black": Vector3(0.05, 0.05, 0.05),
-	"grey": Vector3(0.6, 0.6, 0.6),
-	"green": Vector3(0.2, 0.6, 0.5),
-	"green_dark": Vector3(0.1, 0.45, 0.4),
-	"olive": Vector3(0.4, 0.5, 0.4),
-	"brown_dark": Vector3(0.45, 0.25, 0.125),
-	"brown": Vector3(0.71, 0.41, 0.23),
-	"orange": Vector3(1.0, 0.6, 0.25),
-	"red": Vector3(0.85, 0.25, 0.25),
-	"yellow": Vector3(0.95, 0.95, 0.5),
+	"violet": Vector3(0.3250, 0.2684, 0.7931),
+	"blue": Vector3(0.2684, 0.5310, 0.7931),
+	"blue_dark": Vector3(0.0154, 0.1332, 0.4563),
+	"black": Vector3(0.0014, 0.0014, 0.0014),
+	"grey": Vector3(0.3250, 0.3250, 0.3250),
+	"green": Vector3(0.0290, 0.3250, 0.2176),
+	"green_dark": Vector3(0.0063, 0.1726, 0.1332),
+	"olive": Vector3(0.1332, 0.2176, 0.1332),
+	"brown_dark": Vector3(0.1726, 0.0474, 0.0103),
+	"brown": Vector3(0.4707, 0.1406, 0.0394),
+	"orange": Vector3(1.0000, 0.3250, 0.0474),
+	"red": Vector3(0.6994, 0.0474, 0.0474),
+	"yellow": Vector3(0.6994, 0.3250, 0.3250),
 	"white": Vector3(1.0, 1.0, 1.0)
 }
 

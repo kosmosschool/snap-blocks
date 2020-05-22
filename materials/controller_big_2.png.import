@@ -2,17 +2,17 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/icon_trash_open.png-770e1d6e3d20a63557d00c63f5d97212.s3tc.stex"
-path.etc2="res://.import/icon_trash_open.png-770e1d6e3d20a63557d00c63f5d97212.etc2.stex"
+path.s3tc="res://.import/controller_big_2.png-bb66773c088d46514466490db93ac9e4.s3tc.stex"
+path.etc="res://.import/controller_big_2.png-bb66773c088d46514466490db93ac9e4.etc.stex"
 metadata={
-"imported_formats": [ "s3tc", "etc2" ],
+"imported_formats": [ "s3tc", "etc" ],
 "vram_texture": true
 }
 
 [deps]
 
-source_file="res://images/icon_trash_open.png"
-dest_files=[ "res://.import/icon_trash_open.png-770e1d6e3d20a63557d00c63f5d97212.s3tc.stex", "res://.import/icon_trash_open.png-770e1d6e3d20a63557d00c63f5d97212.etc2.stex" ]
+source_file="res://materials/controller_big_2.png"
+dest_files=[ "res://.import/controller_big_2.png-bb66773c088d46514466490db93ac9e4.s3tc.stex", "res://.import/controller_big_2.png-bb66773c088d46514466490db93ac9e4.etc.stex" ]
 
 [params]
 
