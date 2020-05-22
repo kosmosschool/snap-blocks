@@ -118,6 +118,11 @@ func run_current_step():
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			step_finish_button = -1
 			waiting_for_joystick_push = true
+		6:
+			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
+			step_finish_button = -1
+			waiting_for_area_added = true
 
 
 func next_step():
