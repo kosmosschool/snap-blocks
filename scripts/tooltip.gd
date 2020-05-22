@@ -14,7 +14,7 @@ onready var text_label = get_node("Bubble/2DTextLabel")
 onready var camera = get_node(global_vars.AR_VR_CAMERA_PATH)
 
 export(NodePath) var attach_to_path setget set_attach_to_path
-export(Vector3) var bubble_offset = Vector3(-0.1, 0.1, -0.03)
+export(Vector3) var bubble_offset = Vector3(-0.15, 0.1, -0.03)
 export(Vector3) var line_attach_to_offset = Vector3(0, -0.02, -0.03) setget set_line_attach_to_offset
 export(Vector3) var line_bubble_offset = Vector3(0.05, -0.05, 0)
 

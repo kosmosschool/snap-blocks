@@ -4,6 +4,9 @@ extends Spatial
 # logic for collection of all block areas of blocks added to MultiMesh
 class_name AllBlockAreas
 
+
+signal area_added
+
 var all_origins : Array
 
 onready var block_area_script = load(global_vars.BLOCK_AREA_SCRIPT_PATH)
@@ -41,6 +44,8 @@ func add_block_area(
 	
 	
 #	print("total blocks: ", get_child_count())
+	if get_child_count() != 1:
+		emit_signal("area_added")
 	
 	return new_area
 

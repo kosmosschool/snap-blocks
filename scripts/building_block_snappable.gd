@@ -5,8 +5,6 @@ extends KSGrabbableRigidBody
 class_name BuildingBlockSnappable
 
 
-signal block_snapped_updated
-
 enum SnapAxis {X, Y, Z}
 
 var moving_to_snap := false
@@ -221,7 +219,6 @@ func snap_to_cand():
 			snap_cand.color_name,
 			false
 		)
-#		multi_mesh.add_area(snap_cand)
 		multi_mesh.add_recreate(snap_cand)
 		snap_cand_rigid_body.queue_free()
 	
@@ -457,7 +454,6 @@ func update_pos_to_snap(delta: float) -> void:
 			global_transform,
 			color_name
 		)
-#		multi_mesh.add_area(transferred_area)
 		multi_mesh.add_recreate(transferred_area)
 		queue_free()
 		return
