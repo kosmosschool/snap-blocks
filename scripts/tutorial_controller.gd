@@ -32,6 +32,12 @@ var waiting_for_deletion := false
 var waiting_for_distance_moved := false
 var finish_after_step := true
 var distance_delta : float
+var text_fade_in_counter := 0.0
+var text_fade_in_duration := 1.0
+var text_fade_in := false
+var tooltip_text_label : Node
+var initial_text_color : Color
+var transparent_color := Color(0.7, 0.4, 0.4, 1.0)
 
 
 onready var tooltip_scene = preload("res://scenes/tooltip.tscn")
@@ -40,9 +46,13 @@ onready var left_controller = get_node(global_vars.CONTR_LEFT_PATH)
 onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
 onready var controller_system = get_node(global_vars.CONTROLLER_SYSTEM_PATH)
 onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
+onready var audio_player = $AudioStreamPlayer3D
 
 
 func _ready():
+	sound_settings.set_block_snap_sound(false)
+	sound_settings.set_contr_button_sound(false)
+	
 	all_step_texts = [
 		STEP_1_TEXT, STEP_2_TEXT, STEP_3_TEXT, STEP_4_TEXT, STEP_5_TEXT, STEP_6_TEXT,
 		STEP_7_TEXT, STEP_8_TEXT, STEP_9_TEXT, STEP_10_TEXT, STEP_11_TEXT, STEP_12_TEXT,
@@ -63,6 +73,8 @@ func _ready():
 	multi_mesh.connect("area_deleted", self, "_on_Multi_Mesh_area_deleted")
 	
 	current_tooltip_instance = create_tooltip_instance()
+	tooltip_text_label = current_tooltip_instance.get_node("Bubble/2DTextLabel")
+	initial_text_color = tooltip_text_label.get_font_color()
 	
 	next_step()
 
@@ -72,6 +84,19 @@ func _process(delta):
 		if movement_system.get_total_moved_distance() > distance_delta:
 			waiting_for_distance_moved = false
 			next_step()
+	
+	# fade in text
+	if text_fade_in:
+		text_fade_in_counter += delta
+		var new_color = transparent_color.linear_interpolate(
+			initial_text_color,
+			text_fade_in_counter / text_fade_in_duration
+		)
+		tooltip_text_label.set_font_color(new_color)
+		if text_fade_in_counter > text_fade_in_duration:
+			text_fade_in_counter = 0.0
+			text_fade_in = false
+			tooltip_text_label.set_font_color(initial_text_color)
 
 
 func _on_right_ARVRController_button_pressed(button_number):
@@ -119,7 +144,7 @@ func _on_Multi_Mesh_area_deleted():
 
 
 func run_current_step():
-	current_tooltip_instance.set_text(all_step_texts[current_step - 1])
+	change_tooltip_text()
 	
 	match current_step:
 		1:
@@ -188,17 +213,27 @@ func run_current_step():
 
 
 func next_step():
-	# delete old tooltip
-#	if current_tooltip_instance:
-#		current_tooltip_instance.queue_free()
-	
 	if current_step != total_steps:
 		# go to next step
 		current_step += 1
 		run_current_step()
+		if current_tooltip_instance:
+			audio_player.global_transform.origin = current_tooltip_instance.global_transform.origin
+		
+		if current_step != 1:
+			audio_player.play()
+			current_tooltip_instance.play_animation_close_open()
 	else:
 		# end tutorial
+		sound_settings.set_block_snap_sound(true)
+		sound_settings.set_contr_button_sound(true)
 		queue_free()
+
+
+func change_tooltip_text():
+	current_tooltip_instance.set_text(all_step_texts[current_step - 1])
+	tooltip_text_label.set_font_color(transparent_color)
+	text_fade_in = true
 
 
 func create_tooltip_instance():

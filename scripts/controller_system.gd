@@ -53,7 +53,7 @@ func _on_right_ARVRController_button_pressed(button_number):
 	# check for A button press
 	if button_number == vr.CONTROLLER_BUTTON.XA:
 		# play sound on press
-		if button_click_sound:
+		if button_click_sound and sound_settings.get_contr_button_sound():
 			button_click_sound.play()
 		roundrobin()
 
@@ -61,7 +61,7 @@ func _on_right_ARVRController_button_pressed(button_number):
 func _on_left_ARVRController_button_pressed(button_number):
 	# check for A button press
 	if button_number == vr.CONTROLLER_BUTTON.XA:
-		if button_click_sound:
+		if button_click_sound and sound_settings.get_contr_button_sound():
 			button_click_sound.play()
 		toggle_tablet()
 

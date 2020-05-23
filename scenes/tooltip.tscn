@@ -1,10 +1,78 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scripts/tooltip.gd" type="Script" id=1]
 [ext_resource path="res://scenes/text_label_2d.tscn" type="PackedScene" id=2]
 [ext_resource path="res://materials/dark_dark_lax.tres" type="Material" id=5]
 
 [sub_resource type="QuadMesh" id=2]
+
+[sub_resource type="Animation" id=4]
+resource_name = "CloseOpen"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Bubble/MeshInstance:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.151893, 0.452257, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0.13, 0.13, 1 ), Vector3( 0, 0, 1 ), Vector3( 0.14, 0.14, 1 ), Vector3( 0.13, 0.13, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Bubble/2DTextLabel:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Line:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "Open"
+length = 0.35
+tracks/0/type = "value"
+tracks/0/path = NodePath("Bubble/MeshInstance:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.30022, 0.35033 ),
+"transitions": PoolRealArray( 1, 1, 2 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 1 ), Vector3( 0.14, 0.14, 1 ), Vector3( 0.13, 0.13, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Bubble/2DTextLabel:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.133332, 0.35 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
 
 [node name="Tooltip" type="Spatial"]
 script = ExtResource( 1 )
@@ -26,3 +94,7 @@ v_align = 1
 transform = Transform( 0.13, 0, 0, 0, 0.13, 0, 0, 0, 1, 0, 0, 0 )
 mesh = SubResource( 2 )
 material/0 = ExtResource( 5 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/CloseOpen = SubResource( 4 )
+anims/Open = SubResource( 3 )

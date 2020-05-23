@@ -17,6 +17,7 @@ onready var line = $Line
 onready var text_label = get_node("Bubble/2DTextLabel")
 onready var camera = get_node(global_vars.AR_VR_CAMERA_PATH)
 onready var tooltip_sphere_scene = preload("res://scenes/tooltip_sphere.tscn")
+onready var animation_player = $AnimationPlayer
 
 export(NodePath) var attach_to_path setget set_attach_to_path
 export(Vector3) var bubble_offset = Vector3(-0.17, 0.12, -0.03) setget set_bubble_offset
@@ -173,3 +174,7 @@ func create_spheres(line_start_pos, line_end_pos) -> Array:
 		return_array.append(sphere_instance)
 	
 	return return_array
+
+
+func play_animation_close_open():
+	animation_player.play("CloseOpen")

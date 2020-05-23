@@ -51,7 +51,7 @@ func add_block_area(
 
 
 func play_snap_sound(new_pos : Vector3):
-	if audio_stream_player_snap:
+	if audio_stream_player_snap and sound_settings.get_block_snap_sound():
 		audio_stream_player_snap.global_transform.origin = new_pos
 		audio_stream_player_snap.play()
 

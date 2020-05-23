@@ -159,6 +159,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/shader_cache.gd"
 }, {
+"base": "Node",
+"class": "SoundSettings",
+"language": "GDScript",
+"path": "res://scripts/autoload/sound_settings.gd"
+}, {
 "base": "Spatial",
 "class": "TextLabel2D",
 "language": "GDScript",
@@ -210,6 +215,7 @@ _global_script_class_icons={
 "SaveSystem": "",
 "ScreensController": "",
 "ShaderCache": "",
+"SoundSettings": "",
 "TextLabel2D": "",
 "Tooltip": "",
 "TutorialController": "",
@@ -229,6 +235,7 @@ global_functions="*res://scripts/autoload/global_functions.gd"
 global_vars="*res://scripts/autoload/global_vars.gd"
 save_system="*res://scripts/autoload/save_system.gd"
 movement_system="*res://scripts/autoload/movement_system.gd"
+sound_settings="*res://scripts/autoload/sound_settings.gd"
 
 [gdnative]
 
