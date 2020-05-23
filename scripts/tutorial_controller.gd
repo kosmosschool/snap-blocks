@@ -5,7 +5,7 @@ extends Spatial
 class_name TutorialController
 
 
-var STEP_1_TEXT = "Welcome to Snap Blocks! Let's quickly go through the basics. Press index trigger to start."
+var STEP_1_TEXT = "Welcome to Snap Blocks!\n\nLet's quickly go through the basics. Press index trigger to start."
 var STEP_2_TEXT = "Press and hold grip trigger to create a Block."
 var STEP_3_TEXT = "Good, now drop it on the floor. Create a second Block and bring it close to the first one to snap it."
 var STEP_4_TEXT = "That's why it's called Snap Blocks :-) Do one more!"
@@ -17,7 +17,7 @@ var STEP_9_TEXT = "Good job! You can also delete Blocks. Press A again to change
 var STEP_10_TEXT = "To delete a Block, touch it with the tip of your tool and press the index trigger."
 var STEP_11_TEXT = "Cool. Press and hold right and left index triggers to move around and rotate"
 var STEP_12_TEXT = "Great, great! One last thing. Press X to open your tablet."
-var STEP_13_TEXT = "Here you can save and load your Creations. That's it! We wish you a lot of fun with Snap Blocks!"
+var STEP_13_TEXT = "Here you can save and load your Creations. That's it! Now, it's time to build. Have fun!\n\nPress X to  end the tutorial."
 
 var all_step_texts : Array
 
@@ -27,12 +27,19 @@ var step_finish_button := -1
 var current_tooltip_instance
 var waiting_for_area_added := false
 var waiting_for_joystick_push := false
+var waiting_for_recolor := false
+var waiting_for_deletion := false
+var waiting_for_distance_moved := false
+var finish_after_step := true
+var distance_delta : float
+
 
 onready var tooltip_scene = preload("res://scenes/tooltip.tscn")
 onready var right_controller = get_node(global_vars.CONTR_RIGHT_PATH)
 onready var left_controller = get_node(global_vars.CONTR_LEFT_PATH)
 onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
 onready var controller_system = get_node(global_vars.CONTROLLER_SYSTEM_PATH)
+onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
 
 
 func _ready():
@@ -52,24 +59,32 @@ func _ready():
 	controller_system.connect("joystick_x_axis_pushed_right", self, "_on_Controller_System_joystick_x_axis_pushed_right")
 	controller_system.connect("joystick_x_axis_pushed_left", self, "_on_Controller_System_joystick_x_axis_pushed_left")
 	
+	multi_mesh.connect("area_recolored", self, "_on_Multi_Mesh_area_recolored")
+	multi_mesh.connect("area_deleted", self, "_on_Multi_Mesh_area_deleted")
+	
 	current_tooltip_instance = create_tooltip_instance()
 	
 	next_step()
 
 
 func _process(delta):
-	vr.get_controller_axis(vr.AXIS.RIGHT_JOYSTICK_X)
+	if waiting_for_distance_moved:
+		if movement_system.get_total_moved_distance() > distance_delta:
+			waiting_for_distance_moved = false
+			next_step()
 
 
 func _on_right_ARVRController_button_pressed(button_number):
 	# need to add 16 because we're using the button numbers mapped over both controllers
 	# see vr_autoload.gd
 	if button_number + 16 == step_finish_button:
+		step_finish_button = -1
 		next_step()
 
 
 func _on_left_ARVRController_button_pressed(button_number):
 	if button_number == step_finish_button:
+		step_finish_button = -1
 		next_step()
 
 
@@ -91,6 +106,18 @@ func _on_Controller_System_joystick_x_axis_pushed_left():
 		next_step()
 
 
+func _on_Multi_Mesh_area_recolored():
+	if waiting_for_recolor:
+		waiting_for_recolor = false
+		next_step()
+
+
+func _on_Multi_Mesh_area_deleted():
+	if waiting_for_deletion:
+		waiting_for_deletion = false
+		next_step()
+
+
 func run_current_step():
 	current_tooltip_instance.set_text(all_step_texts[current_step - 1])
 	
@@ -98,12 +125,10 @@ func run_current_step():
 		1:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
-			current_tooltip_instance.set_secondary_line(true)
 			step_finish_button = vr.BUTTON.RIGHT_INDEX_TRIGGER
 		2:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
-			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
-			current_tooltip_instance.set_secondary_line(false)
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.025, 0.03))
 			step_finish_button = vr.BUTTON.RIGHT_GRIP_TRIGGER
 		3:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
@@ -125,6 +150,41 @@ func run_current_step():
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			step_finish_button = -1
 			waiting_for_area_added = true
+		7:
+			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
+			step_finish_button = vr.BUTTON.A
+		8:
+			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
+			waiting_for_recolor = true
+		9:
+			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
+			step_finish_button = vr.BUTTON.A
+		10:
+			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
+			waiting_for_deletion = true
+		11:
+			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
+			current_tooltip_instance.set_secondary_attach_to_path(global_vars.CONTR_LEFT_PATH)
+			current_tooltip_instance.set_secondary_line_attach_to_offset(Vector3(0, -0.02, -0.03))
+			current_tooltip_instance.set_secondary_line(true)
+			waiting_for_distance_moved = true
+			distance_delta = movement_system.get_total_moved_distance() + 0.5
+		12:
+			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_LEFT_PATH)
+			current_tooltip_instance.set_bubble_offset(Vector3(0.17, 0.12, -0.03))
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.01, -0.02, 0.03))
+			current_tooltip_instance.set_secondary_line(false)
+			step_finish_button = vr.BUTTON.X
+		13:
+			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_LEFT_PATH)
+			current_tooltip_instance.set_line_bubble_offset(Vector3(-0.065, -0.065, 0))
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.01, -0.02, 0.03))
+			step_finish_button = vr.BUTTON.X
 
 
 func next_step():
@@ -138,7 +198,7 @@ func next_step():
 		run_current_step()
 	else:
 		# end tutorial
-		pass
+		queue_free()
 
 
 func create_tooltip_instance():

@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_LeftController.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/ks_controller_left.tscn" type="PackedScene" id=2]
@@ -44,22 +44,6 @@ visible_instance_count = 1
 mesh = ExtResource( 7 )
 transform_array = PoolVector3Array( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 custom_data_array = PoolColorArray( 0, 0, 0, 0 )
-
-[sub_resource type="GDScript" id=5]
-script/source = "extends Spatial
-
-
-class_name MeasurePointSystem
-
-
-# removes a measure point based on connection id
-func remove_by_connection_id(connection_id : String):
-	var all_measure_points = get_children()
-	for mp in all_measure_points:
-		if mp.connection_id == connection_id:
-			mp.queue_free()
-
-"
 
 [sub_resource type="BoxShape" id=6]
 margin = 0.001
@@ -183,9 +167,6 @@ transform = Transform( 0.819152, -0.196175, 0.538986, 0, 0.939693, 0.34202, -0.5
 [node name="OQ_RightController" parent="OQ_ARVROrigin" instance=ExtResource( 4 )]
 
 [node name="KSControllerRight" parent="OQ_ARVROrigin/OQ_RightController" instance=ExtResource( 6 )]
-
-[node name="AllMeasurePoints" type="Spatial" parent="."]
-script = SubResource( 5 )
 
 [node name="SpaceText" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.79502, -3.22103 )

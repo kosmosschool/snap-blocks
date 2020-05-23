@@ -14,13 +14,15 @@ script = ExtResource( 1 )
 [node name="Bubble" type="Spatial" parent="."]
 
 [node name="2DTextLabel" parent="Bubble" instance=ExtResource( 2 )]
-transform = Transform( 0.8, 0, 0, 0, 0.8, 0, 0, 0, 1, 0, 0, 0.001 )
-text = "Welcome to Snap Blocks! Let's quickly go through the basics."
+transform = Transform( 1.1, 0, 0, 0, 1.1, 0, 0, 0, 1, 0, 0, 0.001 )
+text = "Here you can save and load your Creations. That's it! Now, it's time to build. Have fun!
+
+Press X to  end the tutorial."
 font_size_multiplier = 4.0
 background_color = Color( 0, 0, 0, 0 )
 v_align = 1
 
 [node name="MeshInstance" type="MeshInstance" parent="Bubble"]
-transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 1, 0, 0, 0 )
+transform = Transform( 0.13, 0, 0, 0, 0.13, 0, 0, 0, 1, 0, 0, 0 )
 mesh = SubResource( 2 )
 material/0 = ExtResource( 5 )

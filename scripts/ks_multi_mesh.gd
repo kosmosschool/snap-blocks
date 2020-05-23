@@ -4,6 +4,9 @@ extends MultiMeshInstance
 class_name KSMultiMesh
 
 
+signal area_recolored
+signal area_deleted
+
 var areas_to_recreate : Array
 var current_area_thread : Area
 var thread_area_to_ignore : Area
@@ -153,6 +156,7 @@ func remove_area(area : Area) -> void:
 	# remove block from MultiMeshInstance
 	thread_area_to_ignore = area
 	recreate()
+	emit_signal("area_deleted")
 
 
 func recreate(new_areas : Array = get_node(global_vars.ALL_BLOCK_AREAS_PATH).get_children()):
@@ -184,3 +188,5 @@ func recolor_area(area : Area) -> void:
 	
 	for i in area.mm_indices:
 		multimesh.set_instance_custom_data(i, new_color)
+	
+	emit_signal("area_recolored")
