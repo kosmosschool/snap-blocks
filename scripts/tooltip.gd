@@ -178,3 +178,7 @@ func create_spheres(line_start_pos, line_end_pos) -> Array:
 
 func play_animation_close_open():
 	animation_player.play("CloseOpen")
+
+
+func play_animation_close():
+	animation_player.play("Close")

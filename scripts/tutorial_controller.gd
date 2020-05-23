@@ -13,11 +13,11 @@ var STEP_5_TEXT = "Awesome! You can change the color of the Block by pressing yo
 var STEP_6_TEXT = "Perfect. Now create a new Block and snap it to the others."
 var STEP_7_TEXT = "Great! You can also change the color of a Block that's already snapped. Press A to change to the re-coloring tool."
 var STEP_8_TEXT = "Good. Now touch a Block with the tip of your tool and press index trigger to change its color."
-var STEP_9_TEXT = "Good job! You can also delete Blocks. Press A again to change to the delete tool."
+var STEP_9_TEXT = "Good job! You can also delete Blocks. Press A again to change to the deletion tool."
 var STEP_10_TEXT = "To delete a Block, touch it with the tip of your tool and press the index trigger."
 var STEP_11_TEXT = "Cool. Press and hold right and left index triggers to move around and rotate"
 var STEP_12_TEXT = "Great, great! One last thing. Press X to open your tablet."
-var STEP_13_TEXT = "Here you can save and load your Creations. That's it! Now, it's time to build. Have fun!\n\nPress X to  end the tutorial."
+var STEP_13_TEXT = "Here you can save and load your Creations.\nNow, it's time to build. Have fun!\n\nPress X to end the tutorial."
 
 var all_step_texts : Array
 
@@ -38,6 +38,9 @@ var text_fade_in := false
 var tooltip_text_label : Node
 var initial_text_color : Color
 var transparent_color := Color(0.7, 0.4, 0.4, 1.0)
+var finish_tutorial := false
+var finish_tutorial_duration := 3.0
+var finish_tutorial_counter := 0.0
 
 
 onready var tooltip_scene = preload("res://scenes/tooltip.tscn")
@@ -47,6 +50,7 @@ onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
 onready var controller_system = get_node(global_vars.CONTROLLER_SYSTEM_PATH)
 onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
 onready var audio_player = $AudioStreamPlayer3D
+onready var audio_player_finish = $AudioStreamPlayerFinish
 
 
 func _ready():
@@ -97,6 +101,13 @@ func _process(delta):
 			text_fade_in_counter = 0.0
 			text_fade_in = false
 			tooltip_text_label.set_font_color(initial_text_color)
+	
+	if finish_tutorial:
+		finish_tutorial_counter += delta
+		if finish_tutorial_counter > finish_tutorial_duration:
+			finish_tutorial = false
+			finish_tutorial_counter = 0.0
+			queue_free()
 
 
 func _on_right_ARVRController_button_pressed(button_number):
@@ -201,7 +212,7 @@ func run_current_step():
 			distance_delta = movement_system.get_total_moved_distance() + 0.5
 		12:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_LEFT_PATH)
-			current_tooltip_instance.set_bubble_offset(Vector3(0.17, 0.12, -0.03))
+			current_tooltip_instance.set_bubble_offset(Vector3(0.22, 0.12, -0.03))
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.01, -0.02, 0.03))
 			current_tooltip_instance.set_secondary_line(false)
 			step_finish_button = vr.BUTTON.X
@@ -224,10 +235,7 @@ func next_step():
 			audio_player.play()
 			current_tooltip_instance.play_animation_close_open()
 	else:
-		# end tutorial
-		sound_settings.set_block_snap_sound(true)
-		sound_settings.set_contr_button_sound(true)
-		queue_free()
+		finish_tutorial()
 
 
 func change_tooltip_text():
@@ -240,3 +248,12 @@ func create_tooltip_instance():
 	var tool_tip_instance = tooltip_scene.instance()
 	add_child(tool_tip_instance)
 	return tool_tip_instance
+
+
+func finish_tutorial():
+	finish_tutorial = true
+	sound_settings.set_block_snap_sound(true)
+	sound_settings.set_contr_button_sound(true)
+	save_system.user_prefs_save("seen_tutorial", true)
+	audio_player_finish.play()
+	current_tooltip_instance.play_animation_close()

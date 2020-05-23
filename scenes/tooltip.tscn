@@ -6,6 +6,46 @@
 
 [sub_resource type="QuadMesh" id=2]
 
+[sub_resource type="Animation" id=5]
+resource_name = "Close"
+length = 0.15
+tracks/0/type = "value"
+tracks/0/path = NodePath("Bubble/MeshInstance:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.149562 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0.13, 0.13, 1 ), Vector3( 0, 0, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Bubble/2DTextLabel:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.15 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Line:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.15 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, false ]
+}
+
 [sub_resource type="Animation" id=4]
 resource_name = "CloseOpen"
 length = 0.5
@@ -46,34 +86,6 @@ tracks/2/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=3]
-resource_name = "Open"
-length = 0.35
-tracks/0/type = "value"
-tracks/0/path = NodePath("Bubble/MeshInstance:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.30022, 0.35033 ),
-"transitions": PoolRealArray( 1, 1, 2 ),
-"update": 0,
-"values": [ Vector3( 0, 0, 1 ), Vector3( 0.14, 0.14, 1 ), Vector3( 0.13, 0.13, 1 ) ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("Bubble/2DTextLabel:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0.133332, 0.35 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ false, true ]
-}
-
 [node name="Tooltip" type="Spatial"]
 script = ExtResource( 1 )
 
@@ -96,5 +108,5 @@ mesh = SubResource( 2 )
 material/0 = ExtResource( 5 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Close = SubResource( 5 )
 anims/CloseOpen = SubResource( 4 )
-anims/Open = SubResource( 3 )
