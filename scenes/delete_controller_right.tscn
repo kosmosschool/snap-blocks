@@ -1,0 +1,84 @@
+[gd_scene load_steps=25 format=2]
+
+[ext_resource path="res://meshes/controller_right_button_A_one_material.mesh" type="ArrayMesh" id=1]
+[ext_resource path="res://materials/texturemaps/controller_right_botton_A.jpg" type="Texture" id=2]
+[ext_resource path="res://meshes/controller_right_button_trigger_one_material.mesh" type="ArrayMesh" id=3]
+[ext_resource path="res://scripts/controller_delete.gd" type="Script" id=4]
+[ext_resource path="res://meshes/controller_right_button_home_one_material.mesh" type="ArrayMesh" id=5]
+[ext_resource path="res://materials/texturemaps/controller_right_button_trigger.jpg" type="Texture" id=6]
+[ext_resource path="res://meshes/controller_right_button_toggle_one_material.mesh" type="ArrayMesh" id=7]
+[ext_resource path="res://meshes/controller_right_one_material.mesh" type="ArrayMesh" id=8]
+[ext_resource path="res://materials/texturemaps/trash.jpg" type="Texture" id=9]
+[ext_resource path="res://meshes/controller_right_button_grab_one_material.mesh" type="ArrayMesh" id=10]
+[ext_resource path="res://materials/red_primary.tres" type="Material" id=11]
+[ext_resource path="res://meshes/polyhedron_delete.mesh" type="ArrayMesh" id=12]
+[ext_resource path="res://materials/texturemaps/controller_right_button_home.jpg" type="Texture" id=13]
+[ext_resource path="res://materials/texturemaps/controller_right_button_toggle.jpg" type="Texture" id=14]
+[ext_resource path="res://materials/texturemaps/controller_right.jpg" type="Texture" id=15]
+[ext_resource path="res://materials/texturemaps/controller_right_botton_grab.jpg" type="Texture" id=16]
+[ext_resource path="res://meshes/trash_one_material.mesh" type="ArrayMesh" id=17]
+
+[sub_resource type="SpatialMaterial" id=1]
+flags_unshaded = true
+albedo_texture = ExtResource( 15 )
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_unshaded = true
+albedo_texture = ExtResource( 2 )
+
+[sub_resource type="SpatialMaterial" id=3]
+flags_unshaded = true
+albedo_texture = ExtResource( 16 )
+
+[sub_resource type="SpatialMaterial" id=4]
+flags_unshaded = true
+albedo_texture = ExtResource( 13 )
+
+[sub_resource type="SpatialMaterial" id=5]
+flags_unshaded = true
+albedo_texture = ExtResource( 14 )
+
+[sub_resource type="SpatialMaterial" id=6]
+flags_unshaded = true
+albedo_texture = ExtResource( 6 )
+
+[sub_resource type="SpatialMaterial" id=7]
+flags_unshaded = true
+albedo_texture = ExtResource( 9 )
+
+[node name="DeleteControllerRight" type="Spatial"]
+script = ExtResource( 4 )
+
+[node name="ControllerRightMesh" type="MeshInstance" parent="."]
+mesh = ExtResource( 8 )
+material/0 = SubResource( 1 )
+
+[node name="ControllerRightButtonA" type="MeshInstance" parent="."]
+mesh = ExtResource( 1 )
+material/0 = SubResource( 2 )
+
+[node name="ControllerRightButtonGrab" type="MeshInstance" parent="."]
+mesh = ExtResource( 10 )
+material/0 = SubResource( 3 )
+
+[node name="ControllerRightButtonHome" type="MeshInstance" parent="."]
+mesh = ExtResource( 5 )
+material/0 = SubResource( 4 )
+
+[node name="ControllerRightButtonToggle" type="MeshInstance" parent="."]
+mesh = ExtResource( 7 )
+material/0 = SubResource( 5 )
+
+[node name="ControllerRightButtonTrigger" type="MeshInstance" parent="."]
+mesh = ExtResource( 3 )
+material/0 = SubResource( 6 )
+
+[node name="TrashBin" type="MeshInstance" parent="."]
+transform = Transform( -8.07538e-08, 8.07429e-08, 0.7, 0.468845, 0.519792, -5.86925e-09, -0.519792, 0.468845, -1.14044e-07, -0.0093339, 0.0168844, 0.0281921 )
+mesh = ExtResource( 17 )
+material/0 = SubResource( 7 )
+
+[node name="DeletePolyhedron" type="MeshInstance" parent="."]
+transform = Transform( -0.450451, 0.563324, -0.692647, -0.890937, -0.333728, 0.307988, -0.0576587, 0.755838, 0.652215, -0.009, 0.0727787, -0.0604825 )
+mesh = ExtResource( 12 )
+material/0 = ExtResource( 11 )

@@ -1,9 +1,9 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://meshes/controller_right_button_A_one_material.mesh" type="ArrayMesh" id=1]
 [ext_resource path="res://materials/texturemaps/controller_right.png" type="Texture" id=2]
 [ext_resource path="res://meshes/controller_right_button_trigger_one_material.mesh" type="ArrayMesh" id=3]
-[ext_resource path="res://scripts/base_controller.gd" type="Script" id=4]
+[ext_resource path="res://scripts/controller_recolor.gd" type="Script" id=4]
 [ext_resource path="res://meshes/controller_right_button_home_one_material.mesh" type="ArrayMesh" id=5]
 [ext_resource path="res://materials/texturemaps/controller_right_button_trigger.png" type="Texture" id=6]
 [ext_resource path="res://meshes/controller_right_button_toggle_one_material.mesh" type="ArrayMesh" id=7]
@@ -13,10 +13,9 @@
 [ext_resource path="res://materials/texturemaps/controller_right_button_toggle.png" type="Texture" id=11]
 [ext_resource path="res://materials/texturemaps/controller_right_button_home.png" type="Texture" id=12]
 [ext_resource path="res://materials/texturemaps/controller_right_botton_A.png" type="Texture" id=13]
-[ext_resource path="res://meshes/cube.tres" type="CubeMesh" id=14]
 [ext_resource path="res://meshes/polyhedron_grab_repaint.mesh" type="ArrayMesh" id=15]
 
-[sub_resource type="SpatialMaterial" id=7]
+[sub_resource type="SpatialMaterial" id=1]
 flags_unshaded = true
 albedo_texture = ExtResource( 2 )
 
@@ -40,12 +39,12 @@ albedo_texture = ExtResource( 11 )
 flags_unshaded = true
 albedo_texture = ExtResource( 6 )
 
-[node name="DefaultControllerRight" type="Spatial"]
+[node name="RecolorControllerRight" type="Spatial"]
 script = ExtResource( 4 )
 
 [node name="ControllerRightMesh" type="MeshInstance" parent="."]
 mesh = ExtResource( 8 )
-material/0 = SubResource( 7 )
+material/0 = SubResource( 1 )
 
 [node name="ControllerRightButtonA" type="MeshInstance" parent="."]
 mesh = ExtResource( 1 )
@@ -67,12 +66,12 @@ material/0 = SubResource( 5 )
 mesh = ExtResource( 3 )
 material/0 = SubResource( 6 )
 
-[node name="Cube" type="MeshInstance" parent="."]
-transform = Transform( 0.17, 0, 0, 0, 0.112412, 0.127529, 0, -0.127529, 0.112412, -0.009, 0.018, 0.029 )
-mesh = ExtResource( 14 )
+[node name="RecolorPolyhedron" type="MeshInstance" parent="."]
+transform = Transform( 0.5, 0, 0, 0, 0.330623, 0.375084, 0, -0.375084, 0.330623, -0.00915513, 0.0184215, 0.0294045 )
+mesh = ExtResource( 15 )
 material/0 = null
 
 [node name="TogglePolyhedron" type="MeshInstance" parent="."]
-transform = Transform( -0.450451, 0.563324, -0.692647, -0.890937, -0.333728, 0.307988, -0.0576587, 0.755838, 0.652215, -0.009, 0.073, -0.06 )
+transform = Transform( -0.450451, 0.563324, -0.692646, -0.890937, -0.333728, 0.307988, -0.0576587, 0.755838, 0.652215, -0.009, 0.073, -0.06 )
 mesh = ExtResource( 15 )
 material/0 = null
