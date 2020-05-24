@@ -6,6 +6,8 @@ class_name SaveSystem
 
 # saves and reads from saved file
 var save_dir = "user://saved_creations/"
+var base_dir = "user://"
+var user_prefs_file_name = "user_prefs.json"
 var open_file_name : String
 
 onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
@@ -19,6 +21,8 @@ func _ready():
 		dir.make_dir(save_dir)
 	
 	open_new_file()
+	
+	init_user_prefs()
 
 
 func open_new_file() -> void:
@@ -149,32 +153,47 @@ class SortByFileNumber:
 		return false
 
 
-#func read_from_file() -> Dictionary:
-#	# get file content
-#	var save_file = File.new()
-#	save_file.open(file_path, File.READ)
-#	var content = parse_json(save_file.get_as_text())
-#	save_file.close()
-#	return content
-#
-#
-#func write_to_file(new_content : Dictionary) -> void:
-#	var save_file = File.new()
-#	var empty_json = to_json(new_content)
-#	save_file.open(file_path, File.WRITE)
-#	save_file.store_string(empty_json)
-#	save_file.close()
-#
-#
-#func save(key : String, value):
-#	var content = read_from_file()
-#	content[key] = value
-#	write_to_file(content)
-#
-#
-#func get(key : String):
-#	var content = read_from_file()
-#	if content.has(key):
-#		return content[key]
-#	else:
-#		return null
+# stuff related to user prefs below
+
+func read_from_user_prefs_file() -> Dictionary:
+	var dir = Directory.new()
+	
+	var curr_file = File.new()
+	if not dir.file_exists(base_dir + user_prefs_file_name):
+		curr_file.open(base_dir + user_prefs_file_name, File.WRITE_READ)
+	else:
+		curr_file.open(base_dir + user_prefs_file_name, File.READ)
+
+	var file_text = curr_file.get_as_text()
+	var content : Dictionary
+	if file_text != "":
+		content = parse_json(file_text)
+	curr_file.close()
+
+	return content
+
+
+func write_to_user_prefs_file(new_content : Dictionary) -> void:
+	var curr_file = File.new()
+	var empty_json = to_json(new_content)
+	curr_file.open(base_dir + user_prefs_file_name, File.WRITE)
+	curr_file.store_string(empty_json)
+	curr_file.close()
+
+
+func user_prefs_save(key : String, value):
+	var content = read_from_user_prefs_file()
+	content[key] = value
+	write_to_user_prefs_file(content)
+
+
+func user_prefs_get(key : String):
+	var content = read_from_user_prefs_file()
+	if content.has(key):
+		return content[key]
+	else:
+		return null
+
+
+func init_user_prefs():
+	user_prefs_save("app_version", global_functions.get_current_version())

@@ -4,6 +4,9 @@ extends Spatial
 # logic for collection of all block areas of blocks added to MultiMesh
 class_name AllBlockAreas
 
+
+signal area_added
+
 var all_origins : Array
 
 onready var block_area_script = load(global_vars.BLOCK_AREA_SCRIPT_PATH)
@@ -39,11 +42,16 @@ func add_block_area(
 	if play_sound:
 		play_snap_sound(new_area.global_transform.origin)
 	
+	
+#	print("total blocks: ", get_child_count())
+	if get_child_count() != 1:
+		emit_signal("area_added")
+	
 	return new_area
 
 
 func play_snap_sound(new_pos : Vector3):
-	if audio_stream_player_snap:
+	if audio_stream_player_snap and sound_settings.get_block_snap_sound():
 		audio_stream_player_snap.global_transform.origin = new_pos
 		audio_stream_player_snap.play()
 

@@ -13,6 +13,8 @@ var triggers_synced := false
 var rot_vec_prev : Vector3
 var rotate_around_name_prev : String
 var movement_speed := 1.5
+var ar_vr_origin_prev_origin : Vector3
+var total_moved_distance := 0.0 setget , get_total_moved_distance
 
 var rotation_parent
 var rotation_remote_trans
@@ -22,7 +24,12 @@ onready var left_controller = get_node(global_vars.CONTR_LEFT_PATH)
 onready var ar_vr_origin = get_node(global_vars.AR_VR_ORIGIN_PATH)
 
 
+func get_total_moved_distance():
+	return total_moved_distance
+
+
 func _ready():
+	# we'll use the RemoteTransform to rotate properly
 	rotation_parent = Spatial.new()
 	rotation_remote_trans = RemoteTransform.new()
 	rotation_remote_trans.set_remote_node(ar_vr_origin.get_path())
@@ -99,6 +106,9 @@ func process_move_mode() -> void:
 		
 		rotation_parent.rotate_y(final_angle  * -1)
 		
+		total_moved_distance += ar_vr_origin.transform.origin.distance_to(ar_vr_origin_prev_origin)
+		
+		ar_vr_origin_prev_origin = ar_vr_origin.transform.origin
 		right_contr_origin_prev = right_contr_origin
 		left_contr_origin_prev = left_contr_origin
 		rot_vec_prev = rot_vec
