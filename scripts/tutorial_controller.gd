@@ -5,17 +5,17 @@ extends Spatial
 class_name TutorialController
 
 
-var STEP_1_TEXT = "Welcome to Snap Blocks!\n\nLet's quickly go through the basics. Press index trigger to start."
-var STEP_2_TEXT = "Press and hold grip trigger to create a Block."
+var STEP_1_TEXT = "Welcome to Snap Blocks!\n\nLet's quickly go through the basics. Press the index trigger to start."
+var STEP_2_TEXT = "Press and hold the grip trigger to create a Block."
 var STEP_3_TEXT = "Good, now drop it on the floor. Create a second Block and bring it close to the first one to snap it."
 var STEP_4_TEXT = "That's why it's called Snap Blocks :-) Do one more!"
-var STEP_5_TEXT = "Awesome! You can change the color of the Block by pressing your joystick to the left or right. Try it."
+var STEP_5_TEXT = "Awesome! You can change the color of the Block by pushing your joystick to the left or right. Try it."
 var STEP_6_TEXT = "Perfect. Now create a new Block and snap it to the others."
 var STEP_7_TEXT = "Great! You can also change the color of a Block that's already snapped. Press A to change to the re-coloring tool."
-var STEP_8_TEXT = "Good. Now touch a Block with the tip of your tool and press index trigger to change its color."
+var STEP_8_TEXT = "Good. Now touch a Block with the tip of your tool and press the index trigger to change its color."
 var STEP_9_TEXT = "Good job! You can also delete Blocks. Press A again to change to the deletion tool."
 var STEP_10_TEXT = "To delete a Block, touch it with the tip of your tool and press the index trigger."
-var STEP_11_TEXT = "Cool. Press and hold right and left index triggers to move around and rotate"
+var STEP_11_TEXT = "Cool. Press and hold the right and left index triggers to move around and rotate."
 var STEP_12_TEXT = "Great, great! One last thing. Press X to open your tablet."
 var STEP_13_TEXT = "Here you can save and load your Creations.\nNow, it's time to build. Have fun!\n\nPress X to end the tutorial."
 
@@ -212,7 +212,8 @@ func run_current_step():
 			distance_delta = movement_system.get_total_moved_distance() + 0.5
 		12:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_LEFT_PATH)
-			current_tooltip_instance.set_bubble_offset(Vector3(0.22, 0.12, -0.03))
+			current_tooltip_instance.set_bubble_offset(Vector3(0.24, 0.12, -0.03))
+			current_tooltip_instance.set_line_bubble_offset(Vector3(-0.065, -0.065, 0))
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.01, -0.02, 0.03))
 			current_tooltip_instance.set_secondary_line(false)
 			step_finish_button = vr.BUTTON.X
