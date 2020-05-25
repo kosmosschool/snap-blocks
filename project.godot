@@ -1308,7 +1308,6 @@ limits/debugger_stdout/max_messages_per_frame=100
 
 [rendering]
 
-
 quality/depth_prepass/enable=false
-quality/filters/msaa=4
+quality/filters/msaa=6
 environment/default_environment="res://default_env.tres"

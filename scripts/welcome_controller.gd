@@ -12,7 +12,7 @@ func _ready():
 	if save_system.user_prefs_get("seen_tutorial") != true:
 		show_tutorial()
 	
-	show_tutorial()
+#	show_tutorial()
 
 
 func show_tutorial() -> void:

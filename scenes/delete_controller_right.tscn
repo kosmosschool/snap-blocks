@@ -1,7 +1,7 @@
 [gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://meshes/controller_right_button_A_one_material.mesh" type="ArrayMesh" id=1]
-[ext_resource path="res://materials/texturemaps/controller_right_botton_A.jpg" type="Texture" id=2]
+[ext_resource path="res://materials/texturemaps/controller_right_button_A.jpg" type="Texture" id=2]
 [ext_resource path="res://meshes/controller_right_button_trigger_one_material.mesh" type="ArrayMesh" id=3]
 [ext_resource path="res://scripts/controller_delete.gd" type="Script" id=4]
 [ext_resource path="res://meshes/controller_right_button_home_one_material.mesh" type="ArrayMesh" id=5]
@@ -15,7 +15,7 @@
 [ext_resource path="res://materials/texturemaps/controller_right_button_home.jpg" type="Texture" id=13]
 [ext_resource path="res://materials/texturemaps/controller_right_button_toggle.jpg" type="Texture" id=14]
 [ext_resource path="res://materials/texturemaps/controller_right.jpg" type="Texture" id=15]
-[ext_resource path="res://materials/texturemaps/controller_right_botton_grab.jpg" type="Texture" id=16]
+[ext_resource path="res://materials/texturemaps/controller_right_button_grab.jpg" type="Texture" id=16]
 [ext_resource path="res://meshes/trash_one_material.mesh" type="ArrayMesh" id=17]
 
 [sub_resource type="SpatialMaterial" id=1]
