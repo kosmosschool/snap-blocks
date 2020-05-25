@@ -5,7 +5,6 @@
 [ext_resource path="res://meshes/controller_right_button_trigger_one_material.mesh" type="ArrayMesh" id=3]
 [ext_resource path="res://scripts/base_controller.gd" type="Script" id=4]
 [ext_resource path="res://meshes/controller_right_button_home_one_material.mesh" type="ArrayMesh" id=5]
-[ext_resource path="res://materials/texturemaps/controller_right_button_trigger.jpg" type="Texture" id=6]
 [ext_resource path="res://meshes/controller_right_button_toggle_one_material.mesh" type="ArrayMesh" id=7]
 [ext_resource path="res://meshes/controller_right_one_material.mesh" type="ArrayMesh" id=8]
 [ext_resource path="res://materials/texturemaps/controller_right_button_grab.jpg" type="Texture" id=9]
@@ -36,9 +35,13 @@ albedo_texture = ExtResource( 12 )
 flags_unshaded = true
 albedo_texture = ExtResource( 11 )
 
+[sub_resource type="StreamTexture" id=7]
+flags = 23
+load_path = "res://.import/controller_right_button_trigger128.jpg-ca4f206fb55bf19f92fcd247edd9ff75.s3tc.stex"
+
 [sub_resource type="SpatialMaterial" id=6]
 flags_unshaded = true
-albedo_texture = ExtResource( 6 )
+albedo_texture = SubResource( 7 )
 
 [node name="DefaultControllerRight" type="Spatial"]
 script = ExtResource( 4 )

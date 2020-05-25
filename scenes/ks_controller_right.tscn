@@ -19,9 +19,11 @@ script = ExtResource( 5 )
 
 [node name="RecolorControllerRight" parent="ControllerTypes" instance=ExtResource( 7 )]
 transform = Transform( 1, 0, 0, 0, 0.820894, 0.571153, 0, -0.571153, 0.820894, 0.019, -0.029, 0.03 )
+visible = false
 
 [node name="DeleteControllerRight" parent="ControllerTypes" instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 0.820894, 0.571153, 0, -0.571153, 0.820894, 0.019, -0.029, 0.03 )
+visible = false
 
 [node name="ControllerGrab" parent="." instance=ExtResource( 1 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01, -0.0040227, -0.0638786 )
