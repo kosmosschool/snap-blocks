@@ -11,7 +11,6 @@ var all_origins : Array
 
 onready var block_area_script = load(global_vars.BLOCK_AREA_SCRIPT_PATH)
 onready var cube_col_shape = load(global_vars.CUBE_COLLISION_SHAPE_PATH)
-onready var controller_colors = get_node(global_vars.CONTROLLER_COLORS_PATH)
 onready var audio_stream_player_snap := get_node("../AudioStreamPlayer3DSnap")
 
 

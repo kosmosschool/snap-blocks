@@ -6,7 +6,7 @@
 
 [sub_resource type="SphereShape" id=1]
 margin = 0.001
-radius = 0.0149247
+radius = 0.02
 
 [sub_resource type="SphereShape" id=2]
 radius = 0.0150348

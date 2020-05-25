@@ -3,7 +3,19 @@ extends Feature_RigidBodyGrab
 class_name KSRigidBodyGrab
 
 
+var controller_side_string : String
+
 onready var controller_system = get_node(global_vars.CONTROLLER_SYSTEM_PATH)
+
+enum ControllerSide {RIGHT, LEFT}
+export(ControllerSide) var controller_side
+
+
+func _ready():
+	if controller_side == ControllerSide.RIGHT:
+		controller_side_string = "right"
+	else:
+		controller_side_string = "left"
 
 # overriding from parent
 func _on_ARVRController_button_pressed(button_number):
@@ -13,7 +25,7 @@ func _on_ARVRController_button_pressed(button_number):
 	if vr.button_pressed(vr.BUTTON.B):
 		return
 	
-	if controller_system.get_controller_type() != 0:
+	if controller_system.get_controller_type(controller_side_string) != 0:
 		return
 	
 	# if grab button, grab

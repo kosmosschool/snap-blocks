@@ -69,10 +69,10 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/challenge_screen.gd"
 }, {
-"base": "Spatial",
-"class": "ControllerColors",
+"base": "Node",
+"class": "ColorSystem",
 "language": "GDScript",
-"path": "res://scripts/controller_colors.gd"
+"path": "res://scripts/autoload/color_system.gd"
 }, {
 "base": "BaseController",
 "class": "ControllerDefault",
@@ -197,7 +197,7 @@ _global_script_class_icons={
 "ButtonSave": "",
 "ButtonScreenNav": "",
 "ChallengeScreen": "",
-"ControllerColors": "",
+"ColorSystem": "",
 "ControllerDefault": "",
 "ControllerDelete": "",
 "ControllerRecolor": "",
@@ -236,6 +236,7 @@ global_vars="*res://scripts/autoload/global_vars.gd"
 save_system="*res://scripts/autoload/save_system.gd"
 movement_system="*res://scripts/autoload/movement_system.gd"
 sound_settings="*res://scripts/autoload/sound_settings.gd"
+color_system="*res://scripts/autoload/color_system.gd"
 
 [gdnative]
 

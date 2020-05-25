@@ -60,10 +60,9 @@ func delete_from_multi_mesh() -> void:
 	queue_free()
 
 
-func recolor() -> void:
+func recolor(controller_side_string : String) -> void:
 	# changes color to currently selected color
-	var controller_colors := get_node(global_vars.CONTR_RIGHT_PATH + "/KSControllerRight/ControllerColors")
-	color_name = controller_colors.get_current_color_name()
+	color_name = color_system.get_current_color_name(controller_side_string)
 	multi_mesh.recolor_area(self)
 
 

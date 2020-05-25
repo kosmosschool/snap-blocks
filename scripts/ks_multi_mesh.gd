@@ -18,7 +18,6 @@ var semaphore
 var exit_thread
 
 
-onready var controller_colors := get_node(global_vars.CONTR_RIGHT_PATH + "/KSControllerRight/ControllerColors")
 onready var all_block_areas := get_node(global_vars.ALL_BLOCK_AREAS_PATH)
 
 
@@ -69,7 +68,7 @@ func add_area(area : Area, check_neighbors = true) -> void:
 	# add block to MultiMeshInstance
 	# update position of new instance
 	area.clear_mm_indices()
-	var area_color = controller_colors.get_color_by_name(area.get_color_name())
+	var area_color = color_system.get_color_by_name(area.get_color_name())
 	var new_color = Color(area_color.x, area_color.y, area_color.z, 1.0)
 	
 	# we need to add 6 sides for the cube
@@ -183,7 +182,7 @@ func add_recreate(added_area : Area, new_areas : Array = get_node(global_vars.AL
 
 
 func recolor_area(area : Area) -> void:
-	var area_color = controller_colors.get_color_by_name(area.get_color_name())
+	var area_color = color_system.get_color_by_name(area.get_color_name())
 	var new_color = Color(area_color.x, area_color.y, area_color.z, 1.0)
 	
 	for i in area.mm_indices:

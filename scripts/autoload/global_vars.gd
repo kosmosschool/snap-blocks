@@ -20,7 +20,6 @@ var AR_VR_ORIGIN_PATH = "/root/Main/OQ_ARVROrigin"
 var AR_VR_CAMERA_PATH = AR_VR_ORIGIN_PATH + "/OQ_ARVRCamera"
 var TABLET_PATH = CONTR_LEFT_PATH + "/Tablet"
 var ALL_SCREENS_PATH = TABLET_PATH + "/Screens"
-var CONTROLLER_COLORS_PATH = CONTR_RIGHT_PATH + "/KSControllerRight/ControllerColors"
 
 # resource paths
 var BASIC_BUILDING_BLOCK_PATH = "res://scenes/building_blocks/block_base_cube.tscn"

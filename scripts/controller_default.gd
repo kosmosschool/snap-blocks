@@ -5,14 +5,13 @@ class_name ControllerDefault
 
 
 onready var building_block_base = preload("res://scenes/building_blocks/block_base_cube.tscn")
+onready var mini_cube_mesh = $Cube
 #onready var ghost_building_block_base = preload("res://scenes/building_blocks/ghost_block_base.tscn")
 
 
 func _process(delta):
 	if not selected:
 		return
-	
-	switch_material(vr.get_controller_axis(vr.AXIS.RIGHT_JOYSTICK_X))
 
 
 # overriding from parent
@@ -34,7 +33,7 @@ func _on_ARVRController_button_pressed(button_number):
 
 # overriding from parent
 func _on_Base_Controller_controller_selected():
-	pass
+	mini_cube_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
 
 
 # overriding from parent
@@ -59,8 +58,31 @@ func create_block() -> void:
 	
 	block_instance.global_transform.origin = new_origin
 	block_instance.global_transform.basis = controller_grab.global_transform.basis
+	block_instance.set_color(color_system.get_current_color_name(controller_side_string))
 	
 	controller_grab.start_grab_hinge_joint(block_instance)
+
+
+func _on_Controller_System_joystick_x_axis_pushed_right(side : String):
+	if side != controller_side_string:
+		return
+	
+	if not selected:
+		return
+	
+	color_system.rotate_material(0, controller_side_string)
+	mini_cube_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
+
+
+func _on_Controller_System_joystick_x_axis_pushed_left(side : String):
+	if side != controller_side_string:
+		return
+	
+	if not selected:
+		return
+		
+	color_system.rotate_material(1, controller_side_string)
+	mini_cube_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
 
 
 #func create_ghost_block() -> void:

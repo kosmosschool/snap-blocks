@@ -28,7 +28,6 @@ onready var ghost_block_scene = preload("res://scenes/building_blocks/ghost_bloc
 onready var multi_mesh := get_node(global_vars.MULTI_MESH_PATH)
 onready var all_block_areas := get_node(global_vars.ALL_BLOCK_AREAS_PATH)
 onready var movable_world := get_node(global_vars.MOVABLE_WORLD_PATH)
-onready var controller_colors := get_node(global_vars.CONTR_RIGHT_PATH + "/KSControllerRight/ControllerColors")
 
 
 # this is a hacky workaround because of this issue: https://github.com/godotengine/godot/issues/25252
@@ -38,7 +37,7 @@ func is_class(type):
 
 func _ready():
 	connect("grab_ended", self, "_on_Building_Block_Snappable_grab_ended")
-	set_color(controller_colors.get_current_color_name())
+#	set_color(color_system.get_current_color_name())
 	
 #	var mdt = MeshDataTool.new()
 #	mdt.create_from_surface(mesh_instance.mesh, 0)
@@ -161,7 +160,7 @@ func _on_Building_Block_Snappable_grab_ended():
 
 func set_color(new_color_name : String) -> void:
 	color_name = new_color_name
-	mesh_instance.get_surface_material(0).set_shader_param("color", controller_colors.get_color_by_name(new_color_name))
+	mesh_instance.get_surface_material(0).set_shader_param("color", color_system.get_color_by_name(new_color_name))
 
 
 func create_ghost():

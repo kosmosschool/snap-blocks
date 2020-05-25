@@ -1,10 +1,10 @@
-extends Spatial
+extends Node
 
 
-class_name ControllerColors
+class_name ColorSystem
 
 
-var current_color_name : String
+var current_color_names : Dictionary
 
 var ALL_COLORS = {
 	"violet": Vector3(0.3250, 0.2684, 0.7931),
@@ -25,18 +25,21 @@ var ALL_COLORS = {
 }
 
 
-onready var mesh_instance = $MeshInstance
-
-
 func _ready():
-	current_color_name = ALL_COLORS.keys()[0]
-	update_mini_block()
+	current_color_names = {
+		"right": ALL_COLORS.keys()[0],
+		"left":  ALL_COLORS.keys()[0]
+	}
 
 
-# called by ControllerDefault
-func rotate_material(dir : int) -> void:
+# called by BaseController
+func rotate_material(dir : int, side : String) -> void:
+	if not current_color_names.has(side):
+		print("rotate_material error: side must be right or left")
+		return
+	
 	var keys = ALL_COLORS.keys()
-	var i = keys.find(current_color_name)
+	var i = keys.find(current_color_names[side])
 	var new_i
 	
 	if dir == 0:
@@ -52,21 +55,23 @@ func rotate_material(dir : int) -> void:
 		else:
 			new_i = i - 1
 		
-	current_color_name = keys[new_i]
+	current_color_names[side] = keys[new_i]
+
+
+func get_current_color(side : String) -> Vector3:
+	if not current_color_names.has(side):
+		print("get_current_color error: side must be right or left")
+		return Vector3()
+		
+	return ALL_COLORS[current_color_names[side]]
+
+
+func get_current_color_name(side : String) -> String:
+	if not current_color_names.has(side):
+		print("get_current_color_name error: side must be right or left")
+		return ""
 	
-	update_mini_block()
-
-
-func update_mini_block() -> void:
-	mesh_instance.get_surface_material(0).set_shader_param("color", get_current_color())
-
-
-func get_current_color() -> Vector3:
-	return ALL_COLORS[current_color_name]
-
-
-func get_current_color_name() -> String:
-	return current_color_name
+	return current_color_names[side]
 
 
 func get_color_by_name(c_name) -> Vector3:

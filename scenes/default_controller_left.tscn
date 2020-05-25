@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://scripts/controller_default.gd" type="Script" id=1]
 [ext_resource path="res://meshes/controller_left_button_A_one_material.mesh" type="ArrayMesh" id=2]
@@ -14,7 +14,9 @@
 [ext_resource path="res://materials/texturemaps/controller_left_button_toggle.jpg" type="Texture" id=12]
 [ext_resource path="res://meshes/controller_left_one_material.mesh" type="ArrayMesh" id=13]
 [ext_resource path="res://meshes/cube.tres" type="CubeMesh" id=14]
-[ext_resource path="res://meshes/polyhedron_grab_repaint.mesh" type="ArrayMesh" id=15]
+[ext_resource path="res://shaders/unshaded_color.shader" type="Shader" id=15]
+[ext_resource path="res://shaders/unshaded_cube_color.shader" type="Shader" id=16]
+[ext_resource path="res://meshes/polyhedron_delete.mesh" type="ArrayMesh" id=17]
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_unshaded = true
@@ -39,6 +41,14 @@ albedo_texture = ExtResource( 12 )
 [sub_resource type="SpatialMaterial" id=6]
 flags_unshaded = true
 albedo_texture = ExtResource( 4 )
+
+[sub_resource type="ShaderMaterial" id=8]
+shader = ExtResource( 16 )
+shader_param/color = Vector3( 0.5, 0.5, 0.5 )
+
+[sub_resource type="ShaderMaterial" id=7]
+shader = ExtResource( 15 )
+shader_param/color = Vector3( 0.325, 0.325, 0.325 )
 
 [node name="DefaultControllerLeft" type="Spatial"]
 script = ExtResource( 1 )
@@ -70,9 +80,9 @@ material/0 = SubResource( 6 )
 [node name="Cube" type="MeshInstance" parent="."]
 transform = Transform( 0.17, 0, 0, 0, 0.112412, 0.127529, 0, -0.127529, 0.112412, 0.009, 0.018, 0.029 )
 mesh = ExtResource( 14 )
-material/0 = null
+material/0 = SubResource( 8 )
 
 [node name="TogglePolyhedron" type="MeshInstance" parent="."]
 transform = Transform( -0.0304946, -0.720632, 0.692647, 0.890937, -0.333728, -0.307988, 0.453102, 0.607713, 0.652215, 0.009, 0.073, -0.06 )
-mesh = ExtResource( 15 )
-material/0 = null
+mesh = ExtResource( 17 )
+material/0 = SubResource( 7 )
