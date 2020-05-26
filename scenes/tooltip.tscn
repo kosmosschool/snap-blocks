@@ -2,11 +2,10 @@
 
 [ext_resource path="res://scripts/tooltip.gd" type="Script" id=1]
 [ext_resource path="res://scenes/text_label_2d.tscn" type="PackedScene" id=2]
+[ext_resource path="res://meshes/bubble_screen.mesh" type="ArrayMesh" id=3]
 [ext_resource path="res://materials/dark_dark_lax.tres" type="Material" id=5]
 
-[sub_resource type="QuadMesh" id=2]
-
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=1]
 resource_name = "Close"
 length = 0.15
 tracks/0/type = "value"
@@ -19,7 +18,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.149562 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector3( 0.13, 0.13, 1 ), Vector3( 0, 0, 1 ) ]
+"values": [ Vector3( 1, 1, 1 ), Vector3( 0, 0, 1 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Bubble/2DTextLabel:visible")
@@ -46,7 +45,7 @@ tracks/2/keys = {
 "values": [ false, false ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=2]
 resource_name = "CloseOpen"
 length = 0.5
 tracks/0/type = "value"
@@ -59,7 +58,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.151893, 0.452257, 0.5 ),
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Vector3( 0.13, 0.13, 1 ), Vector3( 0, 0, 1 ), Vector3( 0.14, 0.14, 1 ), Vector3( 0.13, 0.13, 1 ) ]
+"values": [ Vector3( 0.13, 0.13, 1 ), Vector3( 0, 0, 1 ), Vector3( 1.1, 1.1, 1 ), Vector3( 1, 1, 1 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Bubble/2DTextLabel:visible")
@@ -103,10 +102,10 @@ background_color = Color( 0, 0, 0, 0 )
 v_align = 1
 
 [node name="MeshInstance" type="MeshInstance" parent="Bubble"]
-transform = Transform( 0.13, 0, 0, 0, 0.13, 0, 0, 0, 1, 0, 0, 0 )
-mesh = SubResource( 2 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00258506 )
+mesh = ExtResource( 3 )
 material/0 = ExtResource( 5 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Close = SubResource( 5 )
-anims/CloseOpen = SubResource( 4 )
+anims/Close = SubResource( 1 )
+anims/CloseOpen = SubResource( 2 )

@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/controller_right_button_trigger.gltf-e3ba2a98b60f1a39be3cc795f5eccb2f.scn"
+path="res://.import/tutorial_bubble_screen_2.gltf-d49887a19c149605ca3e512dcae2b602.scn"
 
 [deps]
 
-source_file="res://imported_meshes/controller_right_button_trigger.gltf"
-dest_files=[ "res://.import/controller_right_button_trigger.gltf-e3ba2a98b60f1a39be3cc795f5eccb2f.scn" ]
+source_file="res://imported_meshes/tutorial_bubble_screen_2.gltf"
+dest_files=[ "res://.import/tutorial_bubble_screen_2.gltf-d49887a19c149605ca3e512dcae2b602.scn" ]
 
 [params]
 

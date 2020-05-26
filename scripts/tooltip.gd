@@ -76,6 +76,7 @@ func set_secondary_line_attach_to_offset(new_value):
 
 func _ready():	
 	# get attach_to_node and calculate line length
+	print("ready tooltip")
 	if attach_to_path != "":
 		attach_to_node = get_node(attach_to_path)
 		update_position()
@@ -177,8 +178,12 @@ func create_spheres(line_start_pos, line_end_pos) -> Array:
 
 
 func play_animation_close_open():
+	print("play close open")
 	animation_player.play("CloseOpen")
+	print("done amimation")
 
 
 func play_animation_close():
+	print("play close")
 	animation_player.play("Close")
+	print("done close")

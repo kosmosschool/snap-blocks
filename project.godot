@@ -127,7 +127,7 @@ _global_script_classes=[ {
 "base": "Spatial",
 "class": "LoadScreen",
 "language": "GDScript",
-"path": "res://scenes/load_screen.gd"
+"path": "res://scripts/load_screen.gd"
 }, {
 "base": "Node",
 "class": "MovementSystem",
