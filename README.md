@@ -2,9 +2,17 @@
 
 Snap Blocks lets you build whatever you desire with colorful blocks in VR.
 
-It's time to build! Create literally anything you want by snapping blocks to each other. You love Game of Thrones? Amazing! Build Winterfell. You're a space geek? Awesome! Create your own Starship. You adore nature? Splendid! Raise your own forest with Giant Sequoias.
-
-Or create something new based on your own imagination that has not existed before. In Snap Blocks, not even the sky is the limit.
+You don’t need to be Picasso to be creative. Snapping blocks together is fun and easy, and the only limit is your imagination.
 
 ## Download
 You can download the most recent APK file [here](https://kosmosschool.itch.io/snap-blocks).
+
+## Changelog
+
+### v3 (May 27, 2020):
+- Added tutorial
+- Added re-coloring of snapped blocks
+- Added deleting of snapped blocks
+- Added dual-wielding (you can build with both controllers now)
+- Improved performance
+- Improved controller visuals

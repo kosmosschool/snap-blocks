@@ -54,6 +54,7 @@ func _on_right_ARVRController_button_pressed(button_number):
 	if button_number == vr.CONTROLLER_BUTTON.XA:
 		# play sound on press
 		if button_click_sound and sound_settings.get_contr_button_sound():
+			button_click_sound.global_transform.origin = right_controller.global_transform.origin
 			button_click_sound.play()
 		roundrobin("right")
 
@@ -63,11 +64,13 @@ func _on_left_ARVRController_button_pressed(button_number):
 	if button_number == vr.CONTROLLER_BUTTON.XA:
 		# play sound on press
 		if button_click_sound and sound_settings.get_contr_button_sound():
+			button_click_sound.global_transform.origin = left_controller.global_transform.origin
 			button_click_sound.play()
 		roundrobin("left")
 	
 	if button_number == vr.CONTROLLER_BUTTON.YB:
 		if button_click_sound and sound_settings.get_contr_button_sound():
+			button_click_sound.global_transform.origin = left_controller.global_transform.origin
 			button_click_sound.play()
 		toggle_tablet()
 
@@ -99,8 +102,7 @@ func set_controller_type(new_ct : int, side : String) -> void:
 		# hide all
 		for child in all_controllers[side]:
 			child.set_selected(false)
-		# show the new one. this assumes meshes are in the same order as the enum ControllerType
-		#selected_controller = right_controller_models.get_child(new_ct)
+			
 		all_controllers[side][new_ct].set_selected(true)
 
 

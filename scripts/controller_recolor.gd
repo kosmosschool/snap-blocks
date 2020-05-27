@@ -7,6 +7,11 @@ class_name ControllerRecolor
 onready var big_polyhedron_mesh = $TogglePolyhedron
 onready var mini_polyhedron_mesh = $RecolorPolyhedron
 
+
+func _ready():
+	update_mesh_colors()
+
+
 # overriding from parent
 func _on_ARVRController_button_pressed(button_number):
 	if not selected:

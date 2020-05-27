@@ -14,7 +14,7 @@ func set_block_snap_sound(new_value):
 
 
 func get_block_snap_sound():
-	block_snap_sound
+	return block_snap_sound
 
 
 func set_contr_button_sound(new_value):

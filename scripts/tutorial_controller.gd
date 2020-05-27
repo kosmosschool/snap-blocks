@@ -16,8 +16,8 @@ var STEP_8_TEXT = "Good. Now touch a Block with the tip of your tool and press t
 var STEP_9_TEXT = "Good job! You can also delete Blocks. Press A again to change to the deletion tool."
 var STEP_10_TEXT = "To delete a Block, touch it with the tip of your tool and press the index trigger."
 var STEP_11_TEXT = "Cool. Press and hold the right and left index triggers to move around and rotate."
-var STEP_12_TEXT = "Great, great! One last thing. Press X to open your tablet."
-var STEP_13_TEXT = "Here you can save and load your Creations.\nNow, it's time to build. Have fun!\n\nPress X to end the tutorial."
+var STEP_12_TEXT = "Great, great! One last thing. Press Y to open your tablet."
+var STEP_13_TEXT = "Here you can save and load your Creations.\nNow, it's time to build. Have fun!\n\nPress Y to end the tutorial."
 
 var all_step_texts : Array
 
@@ -38,7 +38,7 @@ var text_fade_in := false
 var tooltip_text_label : Node
 var initial_text_color : Color
 var transparent_color := Color(0.7, 0.4, 0.4, 1.0)
-var finish_tutorial := false
+var tutorial_finished := false
 var finish_tutorial_duration := 3.0
 var finish_tutorial_counter := 0.0
 
@@ -101,10 +101,10 @@ func _process(delta):
 			text_fade_in = false
 			tooltip_text_label.set_font_color(initial_text_color)
 	
-	if finish_tutorial:
+	if tutorial_finished:
 		finish_tutorial_counter += delta
 		if finish_tutorial_counter > finish_tutorial_duration:
-			finish_tutorial = false
+			tutorial_finished = false
 			finish_tutorial_counter = 0.0
 			queue_free()
 
@@ -129,13 +129,13 @@ func _on_All_Block_Areas_area_added():
 		next_step()
 
 
-func _on_Controller_System_joystick_x_axis_pushed_right():
+func _on_Controller_System_joystick_x_axis_pushed_right(_side):
 	if waiting_for_joystick_push:
 		waiting_for_joystick_push = false
 		next_step()
 
 
-func _on_Controller_System_joystick_x_axis_pushed_left():
+func _on_Controller_System_joystick_x_axis_pushed_left(_side):
 	if waiting_for_joystick_push:
 		waiting_for_joystick_push = false
 		next_step()
@@ -165,42 +165,54 @@ func run_current_step():
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.025, 0.03))
 			step_finish_button = vr.BUTTON.RIGHT_GRIP_TRIGGER
+			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		3:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			step_finish_button = -1
 			waiting_for_area_added = true
+			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		4:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			step_finish_button = -1
 			waiting_for_area_added = true
+			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		5:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
-			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.019, 0.006, -0.014))
 			step_finish_button = -1
 			waiting_for_joystick_push = true
+			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		6:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			step_finish_button = -1
 			waiting_for_area_added = true
+			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		7:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
-			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.009, -0.006, 0.021))
 			step_finish_button = vr.BUTTON.A
+			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		8:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
-			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
 			waiting_for_recolor = true
+			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
+			# switch back to different color so that player is not confused with re-coloring
+			color_system.rotate_material(1, "right")
+			right_controller.get_node("KSControllerRight/ControllerTypes/RecolorControllerRight").update_mesh_colors()
 		9:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
-			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.009, -0.006, 0.021))
 			step_finish_button = vr.BUTTON.A
+			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		10:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
-			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
 			waiting_for_deletion = true
+			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		11:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
@@ -209,18 +221,23 @@ func run_current_step():
 			current_tooltip_instance.set_secondary_line(true)
 			waiting_for_distance_moved = true
 			distance_delta = movement_system.get_total_moved_distance() + 0.5
+			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
+			global_functions.vibrate_controller_timed(0.3, left_controller, 0.3)
+			# set controller back to default controller
+			controller_system.set_controller_type(0, "right")
 		12:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_LEFT_PATH)
-			current_tooltip_instance.set_bubble_offset(Vector3(0.24, 0.12, -0.03))
+			current_tooltip_instance.set_bubble_offset(Vector3(0.17, 0.12, -0.03))
 			current_tooltip_instance.set_line_bubble_offset(Vector3(-0.065, -0.065, 0))
-			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.01, -0.02, 0.03))
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.001, -0.002, 0.002))
 			current_tooltip_instance.set_secondary_line(false)
-			step_finish_button = vr.BUTTON.X
+			step_finish_button = vr.BUTTON.Y
+			global_functions.vibrate_controller_timed(0.3, left_controller, 0.3)
 		13:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_LEFT_PATH)
-			current_tooltip_instance.set_line_bubble_offset(Vector3(-0.065, -0.065, 0))
-			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.01, -0.02, 0.03))
-			step_finish_button = vr.BUTTON.X
+			current_tooltip_instance.set_bubble_offset(Vector3(0.3, 0.12, -0.03))
+			step_finish_button = vr.BUTTON.Y
+			global_functions.vibrate_controller_timed(0.3, left_controller, 0.3)
 
 
 func next_step():
@@ -250,8 +267,9 @@ func create_tooltip_instance():
 	return tool_tip_instance
 
 
+# warning-ignore:function_conflicts_variable
 func finish_tutorial():
-	finish_tutorial = true
+	tutorial_finished = true
 	sound_settings.set_block_snap_sound(true)
 	sound_settings.set_contr_button_sound(true)
 	save_system.user_prefs_save("seen_tutorial", true)
