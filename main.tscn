@@ -24,11 +24,6 @@
 [ext_resource path="res://sounds/Button Click.wav" type="AudioStream" id=26]
 [ext_resource path="res://materials/black.tres" type="Material" id=29]
 
-[sub_resource type="Environment" id=1]
-background_mode = 1
-background_sky = ExtResource( 9 )
-background_color = Color( 0.333333, 0.623529, 0.815686, 1 )
-
 [sub_resource type="QuadMesh" id=2]
 
 [sub_resource type="SpatialMaterial" id=3]
@@ -43,6 +38,11 @@ visible_instance_count = 1
 mesh = ExtResource( 7 )
 transform_array = PoolVector3Array( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 custom_data_array = PoolColorArray( 0, 0, 0, 0 )
+
+[sub_resource type="Environment" id=1]
+background_mode = 1
+background_sky = ExtResource( 9 )
+background_color = Color( 0.333333, 0.623529, 0.815686, 1 )
 
 [sub_resource type="BoxShape" id=5]
 margin = 0.001
@@ -125,33 +125,43 @@ stream = ExtResource( 26 )
 
 [node name="OQ_ARVROrigin" parent="." instance=ExtResource( 5 )]
 
-[node name="OQ_ARVRCamera" parent="OQ_ARVROrigin" instance=ExtResource( 3 )]
-environment = SubResource( 1 )
-
-[node name="ShaderCache" type="Spatial" parent="OQ_ARVROrigin/OQ_ARVRCamera"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1 )
+[node name="ShaderCache" type="Spatial" parent="OQ_ARVROrigin"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, -1 )
 script = ExtResource( 15 )
 
-[node name="GhostBlockShader" type="MeshInstance" parent="OQ_ARVROrigin/OQ_ARVRCamera/ShaderCache"]
+[node name="GhostBlockShader" type="MeshInstance" parent="OQ_ARVROrigin/ShaderCache"]
 transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0 )
 mesh = SubResource( 2 )
 material/0 = ExtResource( 14 )
 
-[node name="CubeDefault" type="MeshInstance" parent="OQ_ARVROrigin/OQ_ARVRCamera/ShaderCache"]
+[node name="CubeDefault" type="MeshInstance" parent="OQ_ARVROrigin/ShaderCache"]
 transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0.0391647, 0, 0 )
 mesh = SubResource( 2 )
 material/0 = ExtResource( 16 )
 
-[node name="SpatialMatTransUnshaded" type="MeshInstance" parent="OQ_ARVROrigin/OQ_ARVRCamera/ShaderCache"]
+[node name="SpatialMatTransUnshaded" type="MeshInstance" parent="OQ_ARVROrigin/ShaderCache"]
 transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, -0.0156054, 0, 0 )
 mesh = SubResource( 2 )
 material/0 = SubResource( 3 )
 
-[node name="MultiMeshInstance" type="MultiMeshInstance" parent="OQ_ARVROrigin/OQ_ARVRCamera/ShaderCache"]
+[node name="MultiMeshInstance" type="MultiMeshInstance" parent="OQ_ARVROrigin/ShaderCache"]
 multimesh = SubResource( 4 )
 
-[node name="2DTextLabel" parent="OQ_ARVROrigin/OQ_ARVRCamera/ShaderCache" instance=ExtResource( 18 )]
+[node name="2DTextLabel" parent="OQ_ARVROrigin/ShaderCache" instance=ExtResource( 18 )]
 transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.0179582, 0, 0 )
+text = "I am a Label
+With a new line"
+margin = 16
+billboard = false
+resize_mode = 1
+font_size_multiplier = 1.0
+font_color = Color( 1, 1, 1, 1 )
+background_color = Color( 0, 0, 0, 1 )
+h_align = 0
+v_align = 0
+
+[node name="OQ_ARVRCamera" parent="OQ_ARVROrigin" instance=ExtResource( 3 )]
+environment = SubResource( 1 )
 
 [node name="OQ_LeftController" parent="OQ_ARVROrigin" instance=ExtResource( 1 )]
 

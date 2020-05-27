@@ -17,4 +17,4 @@ func _ready():
 
 func show_tutorial() -> void:
 	var tutorial_instance = tutorial_scene.instance()
-	add_child(tutorial_instance)
+	get_node("/root/Main").call_deferred("add_child", tutorial_instance)

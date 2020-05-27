@@ -56,7 +56,6 @@ onready var audio_player_finish = $AudioStreamPlayerFinish
 func _ready():
 	sound_settings.set_block_snap_sound(false)
 	sound_settings.set_contr_button_sound(false)
-	print("ready tutorial controller")
 	all_step_texts = [
 		STEP_1_TEXT, STEP_2_TEXT, STEP_3_TEXT, STEP_4_TEXT, STEP_5_TEXT, STEP_6_TEXT,
 		STEP_7_TEXT, STEP_8_TEXT, STEP_9_TEXT, STEP_10_TEXT, STEP_11_TEXT, STEP_12_TEXT,
@@ -155,15 +154,11 @@ func _on_Multi_Mesh_area_deleted():
 
 
 func run_current_step():
-	print("sitart")
 	change_tooltip_text()
 	
 	match current_step:
 		1:
-			print("bubu")
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
-			print("büsi")
-			print(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
 			step_finish_button = vr.BUTTON.RIGHT_INDEX_TRIGGER
 		2:

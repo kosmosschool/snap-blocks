@@ -15,9 +15,9 @@ var prev_secondary_dist : float
 onready var bubble = $Bubble
 onready var line = $Line
 onready var text_label = get_node("Bubble/2DTextLabel")
-onready var camera = get_node(global_vars.AR_VR_CAMERA_PATH)
 onready var tooltip_sphere_scene = preload("res://scenes/tooltip_sphere.tscn")
 onready var animation_player = $AnimationPlayer
+onready var camera = get_node(global_vars.AR_VR_CAMERA_PATH)
 
 export(NodePath) var attach_to_path setget set_attach_to_path
 export(Vector3) var bubble_offset = Vector3(-0.17, 0.12, -0.03) setget set_bubble_offset
@@ -117,6 +117,13 @@ func _process(delta):
 
 
 func update_position():
+	if not camera:
+		camera = get_node(global_vars.AR_VR_CAMERA_PATH)
+		return
+	
+	if is_nan(camera.transform.basis.x.x):
+		return
+	
 	var new_pos = attach_to_node.global_transform.origin + camera.transform.basis * bubble_offset
 	global_transform.origin = new_pos
 	
