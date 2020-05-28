@@ -158,12 +158,15 @@ func run_current_step():
 	
 	match current_step:
 		1:
+			controller_system.button_blink(vr.BUTTON.RIGHT_INDEX_TRIGGER, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
 			step_finish_button = vr.BUTTON.RIGHT_INDEX_TRIGGER
 		2:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.025, 0.03))
+#			animation_player_right_controller_default.play("button_grab")
+			controller_system.button_blink(vr.BUTTON.RIGHT_GRIP_TRIGGER, true)
 			step_finish_button = vr.BUTTON.RIGHT_GRIP_TRIGGER
 		3:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
@@ -176,32 +179,40 @@ func run_current_step():
 			step_finish_button = -1
 			waiting_for_area_added = true
 		5:
+			controller_system.button_blink(vr.BUTTON.RIGHT_THUMBSTICK, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			step_finish_button = -1
 			waiting_for_joystick_push = true
 		6:
+			controller_system.button_blink(vr.BUTTON.RIGHT_GRIP_TRIGGER, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			step_finish_button = -1
 			waiting_for_area_added = true
 		7:
+			controller_system.button_blink(vr.BUTTON.A, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			step_finish_button = vr.BUTTON.A
 		8:
+			controller_system.button_blink(vr.BUTTON.RIGHT_INDEX_TRIGGER, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			waiting_for_recolor = true
 		9:
+			controller_system.button_blink(vr.BUTTON.A, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			step_finish_button = vr.BUTTON.A
 		10:
+			controller_system.button_blink(vr.BUTTON.RIGHT_INDEX_TRIGGER, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			waiting_for_deletion = true
 		11:
+			controller_system.button_blink(vr.BUTTON.RIGHT_INDEX_TRIGGER, true)
+			controller_system.button_blink(vr.BUTTON.LEFT_INDEX_TRIGGER, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
 			current_tooltip_instance.set_secondary_attach_to_path(global_vars.CONTR_LEFT_PATH)
@@ -210,6 +221,8 @@ func run_current_step():
 			waiting_for_distance_moved = true
 			distance_delta = movement_system.get_total_moved_distance() + 0.5
 		12:
+			controller_system.button_blink(vr.BUTTON.RIGHT_INDEX_TRIGGER, false)
+			controller_system.button_blink(vr.BUTTON.X, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_LEFT_PATH)
 			current_tooltip_instance.set_bubble_offset(Vector3(0.24, 0.12, -0.03))
 			current_tooltip_instance.set_line_bubble_offset(Vector3(-0.065, -0.065, 0))
@@ -217,6 +230,7 @@ func run_current_step():
 			current_tooltip_instance.set_secondary_line(false)
 			step_finish_button = vr.BUTTON.X
 		13:
+			controller_system.button_blink(vr.BUTTON.X, false)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_LEFT_PATH)
 			current_tooltip_instance.set_line_bubble_offset(Vector3(-0.065, -0.065, 0))
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.01, -0.02, 0.03))
