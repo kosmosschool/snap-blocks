@@ -158,12 +158,15 @@ func run_current_step():
 	
 	match current_step:
 		1:
+			controller_system.button_blink(vr.BUTTON.RIGHT_INDEX_TRIGGER, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
 			step_finish_button = vr.BUTTON.RIGHT_INDEX_TRIGGER
 		2:
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.025, 0.03))
+#			animation_player_right_controller_default.play("button_grab")
+			controller_system.button_blink(vr.BUTTON.RIGHT_GRIP_TRIGGER, true)
 			step_finish_button = vr.BUTTON.RIGHT_GRIP_TRIGGER
 			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		3:
@@ -179,23 +182,27 @@ func run_current_step():
 			waiting_for_area_added = true
 			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		5:
+			controller_system.button_blink(vr.BUTTON.RIGHT_THUMBSTICK, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.019, 0.006, -0.014))
 			step_finish_button = -1
 			waiting_for_joystick_push = true
 			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		6:
+			controller_system.button_blink(vr.BUTTON.RIGHT_GRIP_TRIGGER, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			step_finish_button = -1
 			waiting_for_area_added = true
 			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		7:
+			controller_system.button_blink(vr.BUTTON.A, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.009, -0.006, 0.021))
 			step_finish_button = vr.BUTTON.A
 			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		8:
+			controller_system.button_blink(vr.BUTTON.RIGHT_INDEX_TRIGGER, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
 			waiting_for_recolor = true
@@ -204,16 +211,20 @@ func run_current_step():
 			color_system.rotate_material(1, "right")
 			right_controller.get_node("KSControllerRight/ControllerTypes/RecolorControllerRight").update_mesh_colors()
 		9:
+			controller_system.button_blink(vr.BUTTON.A, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.009, -0.006, 0.021))
 			step_finish_button = vr.BUTTON.A
 			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		10:
+			controller_system.button_blink(vr.BUTTON.RIGHT_INDEX_TRIGGER, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
 			waiting_for_deletion = true
 			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		11:
+			controller_system.button_blink(vr.BUTTON.RIGHT_INDEX_TRIGGER, true)
+			controller_system.button_blink(vr.BUTTON.LEFT_INDEX_TRIGGER, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
 			current_tooltip_instance.set_secondary_attach_to_path(global_vars.CONTR_LEFT_PATH)
@@ -226,6 +237,8 @@ func run_current_step():
 			# set controller back to default controller
 			controller_system.set_controller_type(0, "right")
 		12:
+			controller_system.button_blink(vr.BUTTON.RIGHT_INDEX_TRIGGER, false)
+			controller_system.button_blink(vr.BUTTON.X, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_LEFT_PATH)
 			current_tooltip_instance.set_bubble_offset(Vector3(0.17, 0.12, -0.03))
 			current_tooltip_instance.set_line_bubble_offset(Vector3(-0.065, -0.065, 0))
@@ -234,6 +247,7 @@ func run_current_step():
 			step_finish_button = vr.BUTTON.Y
 			global_functions.vibrate_controller_timed(0.3, left_controller, 0.3)
 		13:
+			controller_system.button_blink(vr.BUTTON.X, false)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_LEFT_PATH)
 			current_tooltip_instance.set_bubble_offset(Vector3(0.3, 0.12, -0.03))
 			step_finish_button = vr.BUTTON.Y

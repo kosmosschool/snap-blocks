@@ -25,6 +25,18 @@ onready var left_controller = get_node(global_vars.CONTR_LEFT_PATH)
 onready var tablet = get_node(global_vars.TABLET_PATH)
 onready var ar_vr_origin = get_node(global_vars.AR_VR_ORIGIN_PATH)
 onready var button_click_sound = $AudioStreamPlayer3DClick
+onready var BUTTON_TO_ANIMATION = {
+		vr.BUTTON.LEFT_INDEX_TRIGGER: "button_trigger",
+		vr.BUTTON.LEFT_THUMBSTICK: "button_toggle",
+		vr.BUTTON.X: "button_A",
+		vr.BUTTON.ENTER: "button_home",
+		vr.BUTTON.LEFT_GRIP_TRIGGER: "button_grab",
+		vr.BUTTON.RIGHT_INDEX_TRIGGER: "button_trigger",
+		vr.BUTTON.RIGHT_THUMBSTICK: "button_toggle",
+		vr.BUTTON.A: "button_A",
+#		vr.BUTTON.ENTER: "button_home", oculus button has blink animation, but no use now
+		vr.BUTTON.RIGHT_GRIP_TRIGGER: "button_grab",
+	}
 
 
 func _ready():
@@ -79,7 +91,7 @@ func get_controller_type(side : String):
 	if not controller_types.has(side):
 		return null
 	
-	return controller_types[side]
+	return controller_types[side] 
 
 
 func controller_distance() -> float:
@@ -130,3 +142,21 @@ func update_joystick_x_axis() -> void:
 	
 	prev_joystick_x_right = joystick_x_right
 	prev_joystick_x_left = joystick_x_left
+
+
+func button_blink(button : int, state : bool):
+	# make a specific button blink or stop blinking on active controller
+	var side: String
+	
+	if button > 15:
+		side = "right"
+	else:
+		side = "left"
+
+	var type_index = controller_types[side]
+	var animation_player = all_controllers[side][type_index].get_node("AnimationPlayer")
+	
+	if state:
+		animation_player.play(BUTTON_TO_ANIMATION[button])
+	else:
+		animation_player.stop(true)

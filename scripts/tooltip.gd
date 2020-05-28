@@ -192,3 +192,4 @@ func play_animation_close_open():
 
 func play_animation_close():
 	animation_player.play("Close")
+
