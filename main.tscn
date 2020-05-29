@@ -36,10 +36,9 @@ mesh = ExtResource( 7 )
 transform_array = PoolVector3Array( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 custom_data_array = PoolColorArray( 0, 0, 0, 0 )
 
-[sub_resource type="Environment" id=4]
-background_mode = 1
+[sub_resource type="Environment" id=10]
+background_mode = 2
 background_sky = ExtResource( 9 )
-background_color = Color( 0.490196, 0.631373, 0.72549, 1 )
 
 [sub_resource type="MultiMesh" id=9]
 transform_format = 1
@@ -97,7 +96,7 @@ stream = ExtResource( 26 )
 [node name="OQ_ARVROrigin" parent="." instance=ExtResource( 5 )]
 
 [node name="OQ_ARVRCamera" parent="OQ_ARVROrigin" instance=ExtResource( 3 )]
-environment = SubResource( 4 )
+environment = SubResource( 10 )
 
 [node name="OQ_LeftController" parent="OQ_ARVROrigin" instance=ExtResource( 1 )]
 

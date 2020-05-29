@@ -7,7 +7,7 @@ class_name TutorialController
 
 var STEP_1_TEXT = "Welcome to Snap Blocks!\n\nLet's quickly go through the basics. Press the index trigger to start."
 var STEP_2_TEXT = "Press and hold the grip trigger to create a Block."
-var STEP_3_TEXT = "Good, now drop it on the floor. Create a second Block and bring it close to the first one to snap it."
+var STEP_3_TEXT = "Good, now bring it close to the Block in front of you to snap it."
 var STEP_4_TEXT = "That's why it's called Snap Blocks :-) Do one more!"
 var STEP_5_TEXT = "Awesome! You can change the color of the Block by pushing your joystick to the left or right. Try it."
 var STEP_6_TEXT = "Perfect. Now create a new Block and snap it to the others."
@@ -163,19 +163,20 @@ func run_current_step():
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
 			step_finish_button = vr.BUTTON.RIGHT_INDEX_TRIGGER
 		2:
+			controller_system.button_blink(vr.BUTTON.RIGHT_GRIP_TRIGGER, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.025, 0.03))
-#			animation_player_right_controller_default.play("button_grab")
-			controller_system.button_blink(vr.BUTTON.RIGHT_GRIP_TRIGGER, true)
 			step_finish_button = vr.BUTTON.RIGHT_GRIP_TRIGGER
 			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		3:
+			controller_system.button_blink(vr.BUTTON.RIGHT_GRIP_TRIGGER, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			step_finish_button = -1
 			waiting_for_area_added = true
 			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		4:
+			controller_system.button_blink(vr.BUTTON.RIGHT_GRIP_TRIGGER, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.01, -0.02, 0.03))
 			step_finish_button = -1
@@ -198,7 +199,7 @@ func run_current_step():
 		7:
 			controller_system.button_blink(vr.BUTTON.A, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
-			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.009, -0.006, 0.021))
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.001, -0.002, 0.002))
 			step_finish_button = vr.BUTTON.A
 			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		8:
@@ -213,7 +214,7 @@ func run_current_step():
 		9:
 			controller_system.button_blink(vr.BUTTON.A, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
-			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.009, -0.006, 0.021))
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.001, -0.002, 0.002))
 			step_finish_button = vr.BUTTON.A
 			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
 		10:
@@ -238,16 +239,16 @@ func run_current_step():
 			controller_system.set_controller_type(0, "right")
 		12:
 			controller_system.button_blink(vr.BUTTON.RIGHT_INDEX_TRIGGER, false)
-			controller_system.button_blink(vr.BUTTON.X, true)
+			controller_system.button_blink(vr.BUTTON.Y, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_LEFT_PATH)
 			current_tooltip_instance.set_bubble_offset(Vector3(0.17, 0.12, -0.03))
 			current_tooltip_instance.set_line_bubble_offset(Vector3(-0.065, -0.065, 0))
-			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.001, -0.002, 0.002))
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.003, -0.001, -0.014))
 			current_tooltip_instance.set_secondary_line(false)
 			step_finish_button = vr.BUTTON.Y
 			global_functions.vibrate_controller_timed(0.3, left_controller, 0.3)
 		13:
-			controller_system.button_blink(vr.BUTTON.X, false)
+			controller_system.button_blink(vr.BUTTON.Y, false)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_LEFT_PATH)
 			current_tooltip_instance.set_bubble_offset(Vector3(0.3, 0.12, -0.03))
 			step_finish_button = vr.BUTTON.Y
@@ -255,6 +256,7 @@ func run_current_step():
 
 
 func next_step():
+	controller_system.stop_all_button_blink()
 	if current_step != total_steps:
 		# go to next step
 		current_step += 1

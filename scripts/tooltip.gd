@@ -21,7 +21,7 @@ onready var camera = get_node(global_vars.AR_VR_CAMERA_PATH)
 onready var ar_vr_origin = get_node(global_vars.AR_VR_ORIGIN_PATH)
 
 export(NodePath) var attach_to_path setget set_attach_to_path
-export(Vector3) var bubble_offset = Vector3(-0.17, 0.12, -0.03) setget set_bubble_offset
+export(Vector3) var bubble_offset = Vector3(-0.20, 0.12, -0.03) setget set_bubble_offset
 export(Vector3) var line_attach_to_offset = Vector3(0, -0.02, -0.03) setget set_line_attach_to_offset
 export(Vector3) var line_bubble_offset = Vector3(0.065, -0.065, 0) setget set_line_bubble_offset
 export(bool) var secondary_line = false setget set_secondary_line

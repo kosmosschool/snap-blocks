@@ -21,6 +21,7 @@ albedo_texture = ExtResource( 2 )
 
 [sub_resource type="SpatialMaterial" id=2]
 flags_unshaded = true
+albedo_color = Color( 0.552017, 0.781752, 1, 1 )
 albedo_texture = ExtResource( 13 )
 
 [sub_resource type="SpatialMaterial" id=3]
@@ -43,7 +44,7 @@ albedo_texture = ExtResource( 17 )
 shader = ExtResource( 16 )
 shader_param/color = Vector3( 0.325, 0.325, 0.325 )
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=8]
 resource_name = "button_A"
 length = 0.6
 loop = true
@@ -78,8 +79,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.4, 0.6 )
 }
 
-[sub_resource type="Animation" id=8]
-resource_name = "button_grab"
+[sub_resource type="Animation" id=9]
 length = 0.6
 loop = true
 tracks/0/type = "bezier"
@@ -113,7 +113,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.4, 0.6 )
 }
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="Animation" id=10]
 resource_name = "button_home"
 length = 0.6
 loop = true
@@ -148,7 +148,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.4, 0.6 )
 }
 
-[sub_resource type="Animation" id=12]
+[sub_resource type="Animation" id=11]
 resource_name = "button_toggle"
 length = 0.6
 loop = true
@@ -183,8 +183,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.4, 0.6 )
 }
 
-[sub_resource type="Animation" id=9]
-resource_name = "button_trigger"
+[sub_resource type="Animation" id=12]
 length = 0.6
 loop = true
 tracks/0/type = "bezier"
@@ -250,8 +249,8 @@ mesh = ExtResource( 15 )
 material/0 = SubResource( 7 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/button_A = SubResource( 10 )
-anims/button_grab = SubResource( 8 )
-anims/button_home = SubResource( 11 )
-anims/button_toggle = SubResource( 12 )
-anims/button_trigger = SubResource( 9 )
+anims/button_A = SubResource( 8 )
+anims/button_grab = SubResource( 9 )
+anims/button_home = SubResource( 10 )
+anims/button_toggle = SubResource( 11 )
+anims/button_trigger = SubResource( 12 )

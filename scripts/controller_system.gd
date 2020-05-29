@@ -160,3 +160,16 @@ func button_blink(button : int, state : bool):
 		animation_player.play(BUTTON_TO_ANIMATION[button])
 	else:
 		animation_player.stop(true)
+
+
+func stop_all_button_blink() -> void:
+	# stops all button blink animations animations
+	for c in all_controllers["right"]:
+		var curr_anim = c.get_node("AnimationPlayer")
+		if curr_anim:
+			curr_anim.stop()
+	
+	for c in all_controllers["left"]:
+		var curr_anim = c.get_node("AnimationPlayer")
+		if curr_anim:
+			curr_anim.stop()
