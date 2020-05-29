@@ -189,3 +189,4 @@ func recolor_area(area : Area) -> void:
 		multimesh.set_instance_custom_data(i, new_color)
 	
 	emit_signal("area_recolored")
+	

@@ -4,7 +4,6 @@ extends Area
 # this is attached to Areas in AllBlockAreas
 class_name BlockArea
 
-var collision_shape
 var building_block_scene
 var mm_indices : Array
 
@@ -75,19 +74,6 @@ func append_mm_index(new_index : int) -> void:
 	# keeps track of which indices on multi mesh are currently assigned to this one
 	# e.g., useful for recoloring
 	mm_indices.append(new_index)
-
-
-func calc_snap_vec(intersection_point : Vector3, normal : Vector3) -> Vector3:
-	# calculates snap vector based on intersection point and normal
-	# this is vector goes from the block's origin through the mid-point of the area where the intersection
-	# point lies
-	# returned snap vec is normalized
-	var col_shape_extents = collision_shape.shape.extents
-	
-#	var return_vec = intersection_point + ( -1 * normal * col_shape_extents / 2 - global_transform.origin)
-	var return_vec = global_transform.origin + normal
-	
-	return return_vec.normalized()
 
 
 func serialize_for_save() -> Dictionary:

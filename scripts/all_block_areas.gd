@@ -32,7 +32,6 @@ func add_block_area(
 	new_area.monitoring = false
 	new_area.set_script(block_area_script)
 	new_area.set_collision_layer(2)
-	new_area.collision_shape = col_shape_node
 	new_area.set_color_name(color_name)
 	
 	all_origins.append(round_origin(new_area.global_transform.origin))
