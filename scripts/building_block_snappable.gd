@@ -21,9 +21,16 @@ var snap_vec : Vector3
 var snap_ghost_spatial
 var ray_dir : Vector3
 var color_name : String
+var set_to_free := false
+var set_to_free_staged := false
+var free_timer := 0.0
+var free_time := 2.0
+var free_time_staging := 1.0
 
 onready var collision_shape := $CollisionShape
 onready var mesh_instance := $MeshInstance
+onready var audio_player := $AudioStreamPlayer3D
+onready var particles := $Particles
 onready var ghost_block_scene = preload("res://scenes/building_blocks/ghost_block_base.tscn")
 onready var multi_mesh := get_node(global_vars.MULTI_MESH_PATH)
 onready var all_block_areas := get_node(global_vars.ALL_BLOCK_AREAS_PATH)
@@ -37,6 +44,7 @@ func is_class(type):
 
 func _ready():
 	connect("grab_ended", self, "_on_Building_Block_Snappable_grab_ended")
+	
 #	set_color(color_system.get_current_color_name())
 	
 #	var mdt = MeshDataTool.new()
@@ -49,6 +57,22 @@ func _ready():
 func _process(delta):
 	if moving_to_snap:
 		update_pos_to_snap(delta)
+	
+	if set_to_free:
+		# we have to free in two stages, else the audio will be cut off
+		if not set_to_free_staged and free_timer > free_time_staging:
+			audio_player.global_transform.origin = global_transform.origin
+			audio_player.play()
+			particles.set_emitting(true)
+			mesh_instance.visible = false
+			set_to_free_staged = true
+			
+			
+		if free_timer > free_time:
+			set_to_free = false
+			queue_free() 
+		
+		free_timer += delta
 
 
 func _physics_process(delta):
@@ -156,11 +180,18 @@ func _physics_process(delta):
 func _on_Building_Block_Snappable_grab_ended():
 	if snap_cand:
 		snap_to_cand()
+	else:
+		# free after x seconds
+		set_to_free = true
 
 
 func set_color(new_color_name : String) -> void:
 	color_name = new_color_name
-	mesh_instance.get_surface_material(0).set_shader_param("color", color_system.get_color_by_name(new_color_name))
+	var color_vec3 = color_system.get_color_by_name(new_color_name)
+	mesh_instance.get_surface_material(0).set_shader_param("color", color_vec3)
+	
+	# set particle system color
+	particles.draw_pass_1.get_material().set_shader_param("color", color_vec3)
 
 
 func create_ghost():
