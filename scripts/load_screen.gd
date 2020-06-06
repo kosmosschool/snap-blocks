@@ -7,6 +7,9 @@ class_name LoadScreen
 signal delete_mode_selected
 signal load_mode_selected
 
+enum ButtonType {TEXT, IMAGE}
+
+var file_button_scene
 var first_button_origin = Vector3(-0.105, 0, 0.003)
 var offset_x = 0.05
 var offset_y = -0.05
@@ -23,13 +26,13 @@ onready var load_buttons_node = $LoadButtons
 onready var button_prev = $ButtonPrevious
 onready var button_next = $ButtonNext
 onready var title_label = $TitleLabel
-onready var file_button_scene = preload("res://scenes/ks_button_pressable_text.tscn")
 onready var button_load_script = preload("res://scripts/button_load.gd")
 
 export var saved_files_path : String
 export var LOAD_MODE_TITLE : String
 export var DELETE_MODE_TITLE : String
 export var EMPTY_TITLE : String
+export(ButtonType) var button_type
 
 
 func get_all_files_paginated():
@@ -41,6 +44,11 @@ func get_delete_mode():
 
 
 func _ready():
+	if button_type == ButtonType.TEXT:
+		file_button_scene = preload("res://scenes/ks_button_pressable_text.tscn")
+	elif button_type == ButtonType.IMAGE:
+		file_button_scene = preload("res://scenes/ks_button_pressable_image.tscn")
+	
 	create_load_buttons()
 	refresh_files()
 
@@ -56,15 +64,16 @@ func create_load_buttons() -> void:
 		var offset_x_mod = i - (offset_y_mod * row_size)
 		var new_origin = first_button_origin + Vector3(offset_x_mod * offset_x, offset_y_mod * offset_y, 0)
 		file_button.set_local_origin(new_origin)
-		# update text and font size
-		var text_label = file_button.get_node("2DTextLabel")
-		text_label.set_font_size_multiplier(4)
+		
+		if button_type == ButtonType.TEXT:
+			# update text and font size
+			var text_label = file_button.get_node("2DTextLabel")
+			text_label.set_font_size_multiplier(4)
 	
 	load_buttons = load_buttons_node.get_children()
 
 
 func refresh_files():
-	
 	var all_files : Array = save_system.get_all_saved_files(saved_files_path)
 	
 	all_files_paginated = paginate(all_files)
@@ -96,10 +105,24 @@ func display_load_buttons() -> void:
 		current_button.visible = true
 		current_button.set_file_path(saved_files_path + current_page_files[i])
 		
-		# update text
-		var current_file_number = save_system.get_file_number(current_page_files[i])
-		var text_label = current_button.get_node("2DTextLabel")
-		text_label.set_text(str(current_file_number))
+		if button_type == ButtonType.TEXT:
+			# update text
+			var current_file_number = save_system.get_file_number(current_page_files[i])
+			var text_label = current_button.get_node("2DTextLabel")
+			text_label.set_text(str(current_file_number))
+		elif button_type == ButtonType.IMAGE:
+			# update image
+			var image_mesh = current_button.get_node("MeshInstanceImage")
+			var image_path = save_system.get_button_pic_path(saved_files_path + current_page_files[i])
+			var image_tex
+			
+			if image_path != "":
+				image_tex = load(image_path)
+			else:
+				# set placeholder image
+				image_tex = load("res://images/gallery_images/button_pic_tree.jpg")
+			
+			image_mesh.get_surface_material(0).set_texture(SpatialMaterial.TEXTURE_ALBEDO, image_tex)
 
 
 func paginate(input_array : Array) -> Dictionary:

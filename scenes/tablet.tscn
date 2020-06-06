@@ -78,7 +78,7 @@ EMPTY_TITLE = "Save your Creations to see them here"
 transform = Transform( 2.3, 0, 0, 0, 0.5, -1.49012e-08, 0, 7.45058e-09, 1, -0.032, 0.036, 0.001 )
 text = "Load Creation"
 font_size_multiplier = 5.0
-background_color = Color( 0.00784314, 0.00784314, 0.00784314, 1 )
+background_color = Color( 0.00784314, 0.00784314, 0.00784314, 0 )
 h_align = 1
 v_align = 1
 
@@ -139,6 +139,7 @@ saved_files_path = "res://gallery_fixed/"
 LOAD_MODE_TITLE = "Gallery"
 DELETE_MODE_TITLE = "Gallery"
 EMPTY_TITLE = "Gallery"
+button_type = 1
 
 [node name="LoadButtons" type="Spatial" parent="Screens/GalleryScreen"]
 
@@ -146,7 +147,7 @@ EMPTY_TITLE = "Gallery"
 transform = Transform( 2.3, 0, 0, 0, 0.5, -1.49012e-08, 0, 7.45058e-09, 1, -0.032, 0.0820324, 0.001 )
 text = "Gallery"
 font_size_multiplier = 5.0
-background_color = Color( 0.00784314, 0.00784314, 0.00784314, 1 )
+background_color = Color( 0.00784314, 0.00784314, 0.00784314, 0 )
 h_align = 1
 v_align = 1
 

@@ -137,6 +137,28 @@ func clear_and_new() -> void:
 	open_new_file()
 
 
+func get_button_pic_path(file_path : String):
+	# returns button_pic_path based on file_path if it exists
+	var curr_file = File.new()
+	var err = curr_file.open(file_path, File.READ)
+	
+	if err != 0:
+		return ""
+	
+	var file_text = curr_file.get_as_text()
+	var content : Dictionary
+	if file_text != "":
+		content = parse_json(file_text)
+	else:
+		return ""
+	curr_file.close()
+	
+	if content.has("button_pic_path"):
+		return content["button_pic_path"]
+	else:
+		return ""
+
+
 class SortByFileNumber:
 	# we have to re-implement this function here again
 	# because the inner class doesn't have access to the outer class
@@ -157,7 +179,7 @@ class SortByFileNumber:
 		return false
 
 
-# stuff related to user prefs below
+### *** stuff related to user prefs below ***
 
 func read_from_user_prefs_file() -> Dictionary:
 	var dir = Directory.new()

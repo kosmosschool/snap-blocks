@@ -99,11 +99,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://OQ_Toolkit/OQ_ARVRController/scripts/Feature_RigidBodyGrab.gd"
 }, {
-"base": "Spatial",
-"class": "GalleryScreen",
-"language": "GDScript",
-"path": "res://scripts/gallery_screen.gd"
-}, {
 "base": "KSGrabbableRigidBody",
 "class": "GhostBlock",
 "language": "GDScript",
@@ -208,7 +203,6 @@ _global_script_class_icons={
 "ControllerRecolor": "",
 "ControllerSystem": "",
 "Feature_RigidBodyGrab": "",
-"GalleryScreen": "",
 "GhostBlock": "",
 "KSButtonPressable": "",
 "KSGrabbableRigidBody": "",
