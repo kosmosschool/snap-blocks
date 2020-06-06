@@ -14,10 +14,12 @@ shader = ExtResource( 4 )
 shader_param/color = Vector3( 0.325, 0.325, 0.325 )
 
 [sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
 shader = ExtResource( 7 )
 shader_param/color = null
 
 [sub_resource type="QuadMesh" id=3]
+resource_local_to_scene = true
 material = SubResource( 2 )
 size = Vector2( 0.02, 0.02 )
 
