@@ -1,11 +1,8 @@
 extends Spatial
 
 
-class_name LoadScreen
+class_name GalleryScreen
 
-
-signal delete_mode_selected
-signal load_mode_selected
 
 var first_button_origin = Vector3(-0.105, 0, 0.003)
 var offset_x = 0.05
@@ -16,28 +13,17 @@ var current_page := 1
 var total_pages := 1
 var all_files_paginated : Dictionary setget , get_all_files_paginated
 var load_buttons : Array
-var delete_mode := false setget , get_delete_mode
 
 
 onready var load_buttons_node = $LoadButtons
 onready var button_prev = $ButtonPrevious
 onready var button_next = $ButtonNext
-onready var title_label = $TitleLabel
 onready var file_button_scene = preload("res://scenes/ks_button_pressable_text.tscn")
 onready var button_load_script = preload("res://scripts/button_load.gd")
-
-export var saved_files_path : String
-export var LOAD_MODE_TITLE : String
-export var DELETE_MODE_TITLE : String
-export var EMPTY_TITLE : String
 
 
 func get_all_files_paginated():
 	return all_files_paginated
-
-
-func get_delete_mode():
-	return delete_mode
 
 
 func _ready():
@@ -65,15 +51,9 @@ func create_load_buttons() -> void:
 
 func refresh_files():
 	
-	var all_files : Array = save_system.get_all_saved_files(saved_files_path)
+	var all_files : Array = save_system.get_all_saved_files("res://gallery_fixed/")
 	
 	all_files_paginated = paginate(all_files)
-	
-	if title_label:
-		if all_files_paginated.empty():
-			title_label.set_text(EMPTY_TITLE)
-		else:
-			title_label.set_text(LOAD_MODE_TITLE)
 	
 	# calculate how many pages we have
 	total_pages = ceil(all_files.size() / float(page_size))
@@ -94,7 +74,7 @@ func display_load_buttons() -> void:
 	for i in range(current_page_files.size()):
 		var current_button = load_buttons[i]
 		current_button.visible = true
-		current_button.set_file_path(saved_files_path + current_page_files[i])
+		current_button.set_file_path("res://gallery_fixed/" + current_page_files[i])
 		
 		# update text
 		var current_file_number = save_system.get_file_number(current_page_files[i])
@@ -150,17 +130,3 @@ func update_change_page_buttons() -> void:
 	elif current_page == total_pages:
 		button_next.visible = false
 
-
-func toggle_delete_mode():
-	delete_mode = !delete_mode
-	
-	if delete_mode:
-		if title_label:
-			title_label.set_text(DELETE_MODE_TITLE)
-		emit_signal("delete_mode_selected")
-	else:
-		if title_label:
-			title_label.set_text(LOAD_MODE_TITLE)
-		emit_signal("load_mode_selected")
-	
-	

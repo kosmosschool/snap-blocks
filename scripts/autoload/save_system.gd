@@ -8,10 +8,11 @@ class_name SaveSystem
 var save_dir = "user://saved_creations/"
 var base_dir = "user://"
 var user_prefs_file_name = "user_prefs.json"
-var open_file_name : String
+var open_file_path : String
 
 onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
 onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
+onready var welcome_controller = get_node(global_vars.WELCOME_CONTROLLER_PATH)
 
 
 func _ready():
@@ -26,7 +27,7 @@ func _ready():
 
 
 func open_new_file() -> void:
-	var all_files = get_all_saved_files()
+	var all_files = get_all_saved_files(save_dir)
 	var newest_number
 	if all_files.empty():
 		newest_number = 1
@@ -38,7 +39,7 @@ func open_new_file() -> void:
 			return
 		
 		newest_number += 1
-	open_file_name = str("creation_", newest_number, ".json")
+	open_file_path = str("user://saved_creations/creation_", newest_number, ".json")
 
 
 func get_file_number(input_file_name : String) -> int:
@@ -72,14 +73,14 @@ func save_creation():
 	# save to file
 	var save_file = File.new()
 	var unsaved_json = to_json(new_data_dict)
-	save_file.open(save_dir + open_file_name, File.WRITE)
+	save_file.open(open_file_path, File.WRITE)
 	save_file.store_string(unsaved_json)
 	save_file.close()
 
 
-func load_creation(saved_file_name : String):
+func load_creation(saved_file_path : String):
 	var save_file = File.new()
-	save_file.open(save_dir + saved_file_name, File.READ)
+	save_file.open(saved_file_path, File.READ)
 	var content = parse_json(save_file.get_as_text())
 	
 	if not content:
@@ -87,27 +88,29 @@ func load_creation(saved_file_name : String):
 	
 #	print("file app_version ", content["app_version"])
 	# create all block areas
+	print("file yolo")
+	print(content)
 	var added_areas = all_block_areas.recreate_from_save(content["all_block_areas"])
 	
 	# createa multi mesh
 	multi_mesh.recreate(added_areas)
 	
 	# update open file name
-	open_file_name = saved_file_name
+	open_file_path = saved_file_path
 
 
-func delete_creation(saved_file_name : String):
+func delete_creation(saved_file_path : String):
 	# delete file
 	var dir = Directory.new()
-	dir.remove(save_dir + saved_file_name)
+	dir.remove(saved_file_path)
 	
 	open_new_file()
 
 
-func get_all_saved_files():
+func get_all_saved_files(dir_path : String):
 	var all_file_paths : Array
 	var dir = Directory.new()
-	if dir.open(save_dir) == OK:
+	if dir.open(dir_path) == OK:
 		dir.list_dir_begin()
 		var file_name = dir.get_next()
 		while file_name != "":
@@ -129,6 +132,7 @@ func clear_and_new() -> void:
 	# deletes current creation, creates new file
 	all_block_areas.clear()
 	multi_mesh.clear()
+	welcome_controller.starting_cube_set = false
 	
 	open_new_file()
 

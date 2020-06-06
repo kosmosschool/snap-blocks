@@ -28,6 +28,8 @@ func _process(delta):
 		if starting_cube_timer > 0.2:
 			create_starting_cube()
 			starting_cube_set = true
+			starting_cube_timer = 0.0
+			return
 		
 		starting_cube_timer += delta
 

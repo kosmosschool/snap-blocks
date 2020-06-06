@@ -13,12 +13,12 @@ resource_local_to_scene = true
 shader = ExtResource( 4 )
 shader_param/color = Vector3( 0.325, 0.325, 0.325 )
 
-[sub_resource type="ShaderMaterial" id=6]
+[sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 7 )
 shader_param/color = null
 
-[sub_resource type="QuadMesh" id=4]
-material = SubResource( 6 )
+[sub_resource type="QuadMesh" id=3]
+material = SubResource( 2 )
 size = Vector2( 0.02, 0.02 )
 
 [node name="BlockBaseCube" type="RigidBody"]
@@ -46,4 +46,4 @@ lifetime = 0.5
 one_shot = true
 explosiveness = 0.8
 process_material = ExtResource( 6 )
-draw_pass_1 = SubResource( 4 )
+draw_pass_1 = SubResource( 3 )

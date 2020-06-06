@@ -25,7 +25,6 @@
 [ext_resource path="res://images/icon_arrow_right.png" type="Texture" id=30]
 [ext_resource path="res://images/icon_arrow_left.png" type="Texture" id=32]
 
-
 [sub_resource type="QuadMesh" id=1]
 
 [sub_resource type="SpatialMaterial" id=2]
@@ -68,7 +67,12 @@ script = ExtResource( 11 )
 initial_screen = "LoadScreen"
 
 [node name="LoadScreen" type="Spatial" parent="Screens"]
+visible = false
 script = ExtResource( 3 )
+saved_files_path = "user://saved_creations/"
+LOAD_MODE_TITLE = "Load Creation"
+DELETE_MODE_TITLE = "Delete Creation"
+EMPTY_TITLE = "Save your Creations to see them here"
 
 [node name="TitleLabel" parent="Screens/LoadScreen" instance=ExtResource( 9 )]
 transform = Transform( 2.3, 0, 0, 0, 0.5, -1.49012e-08, 0, 7.45058e-09, 1, -0.032, 0.036, 0.001 )
@@ -129,37 +133,38 @@ transform = Transform( 0.035, 0, 1.32349e-23, 0, 0.035, 0, 0, 0, 0.035, 0, 0, 0.
 mesh = SubResource( 1 )
 material/0 = SubResource( 5 )
 
-[node name="Hints" type="Spatial" parent="Screens"]
-visible = false
+[node name="GalleryScreen" type="Spatial" parent="Screens"]
+script = ExtResource( 3 )
+saved_files_path = "res://gallery_fixed/"
+LOAD_MODE_TITLE = "Gallery"
+DELETE_MODE_TITLE = "Gallery"
+EMPTY_TITLE = "Gallery"
 
-[node name="TitleLabel" parent="Screens/Hints" instance=ExtResource( 9 )]
-transform = Transform( 1, 0, 0, 0, 0.5, -5.96046e-08, 0, 7.45058e-09, 1, -0.031, 0.091, 0.001 )
-text = "Hints"
+[node name="LoadButtons" type="Spatial" parent="Screens/GalleryScreen"]
+
+[node name="TitleLabel" parent="Screens/GalleryScreen" instance=ExtResource( 9 )]
+transform = Transform( 2.3, 0, 0, 0, 0.5, -1.49012e-08, 0, 7.45058e-09, 1, -0.032, 0.0820324, 0.001 )
+text = "Gallery"
 font_size_multiplier = 5.0
-background_color = Color( 0.1, 0.1, 0.1, 1 )
+background_color = Color( 0.00784314, 0.00784314, 0.00784314, 1 )
 h_align = 1
 v_align = 1
 
-[node name="DescriptionLabel" parent="Screens/Hints" instance=ExtResource( 9 )]
-transform = Transform( 2.5, 5.72203e-08, 4.76836e-08, -1.19209e-07, 1.2, -1.19209e-07, -1.19209e-07, 1.43051e-07, 1, -0.031, 0.00214136, 0.001 )
-text = "Hintihints"
-font_size_multiplier = 4.0
-background_color = Color( 0.1, 0.1, 0.1, 1 )
+[node name="ButtonPrevious" parent="Screens/GalleryScreen" instance=ExtResource( 23 )]
+transform = Transform( 1, 2.98024e-08, -8.8818e-16, 0, 1, -1.19209e-07, 0, 0, 1, -0.139, -0.0927344, 0.003 )
+script = ExtResource( 4 )
+page_direction = 1
 
-[node name="BlocksButtonPrevious" parent="Screens/Hints" instance=ExtResource( 23 )]
-transform = Transform( 1, 2.98024e-08, -8.8818e-16, 0, 1, -1.19209e-07, 0, 0, 1, -0.139, -0.085, 0.003 )
-script = null
-
-[node name="MeshInstance3" type="MeshInstance" parent="Screens/Hints/BlocksButtonPrevious"]
+[node name="MeshInstance3" type="MeshInstance" parent="Screens/GalleryScreen/ButtonPrevious"]
 transform = Transform( 0.035, 0, 0, 0, 0.035, 0, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 4 )
 
-[node name="BlocksButtonNext" parent="Screens/Hints" instance=ExtResource( 23 )]
-transform = Transform( 1, 2.98024e-08, -8.8818e-16, 0, 1, -1.19209e-07, 0, 0, 1, 0.0768719, -0.085, 0.003 )
-script = null
+[node name="ButtonNext" parent="Screens/GalleryScreen" instance=ExtResource( 23 )]
+transform = Transform( 1, 2.98024e-08, -8.8818e-16, 0, 1, -1.19209e-07, 0, 0, 1, 0.0768719, -0.0927344, 0.003 )
+script = ExtResource( 4 )
 
-[node name="MeshInstance3" type="MeshInstance" parent="Screens/Hints/BlocksButtonNext"]
+[node name="MeshInstance3" type="MeshInstance" parent="Screens/GalleryScreen/ButtonNext"]
 transform = Transform( 0.035, 0, 1.32349e-23, 0, 0.035, 0, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 5 )
@@ -172,6 +177,16 @@ script = ExtResource( 10 )
 navigate_to = "LoadScreen"
 
 [node name="MeshInstanceIcon" type="MeshInstance" parent="Navigation/LoadSaveButton"]
+transform = Transform( 0.035, 5.21542e-10, -7.27919e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 6 )
+
+[node name="GalleryButton" parent="Navigation" instance=ExtResource( 12 )]
+transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.14, 0.0319756, 0.003 )
+script = ExtResource( 10 )
+navigate_to = "GalleryScreen"
+
+[node name="MeshInstanceIcon" type="MeshInstance" parent="Navigation/GalleryButton"]
 transform = Transform( 0.035, 5.21542e-10, -7.27919e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 6 )
