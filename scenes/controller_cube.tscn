@@ -1,0 +1,224 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://meshes/cube.tres" type="CubeMesh" id=1]
+[ext_resource path="res://shaders/unshaded_cube_ghost_color.shader" type="Shader" id=2]
+[ext_resource path="res://shaders/unshaded_cube_color.shader" type="Shader" id=3]
+[ext_resource path="res://scripts/controller_cube.gd" type="Script" id=4]
+
+[sub_resource type="ShaderMaterial" id=1]
+resource_local_to_scene = true
+shader = ExtResource( 3 )
+shader_param/color = Vector3( 0.5, 0.5, 0.5 )
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = ExtResource( 2 )
+shader_param/color = null
+shader_param/alpha = 1.0
+
+[sub_resource type="ShaderMaterial" id=7]
+resource_local_to_scene = true
+shader = ExtResource( 2 )
+shader_param/color = null
+shader_param/alpha = 1.0
+
+[sub_resource type="Animation" id=4]
+resource_name = "cube_left"
+length = 0.25
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("CubeLeft:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( -0.009, 0.018, 0.029 ), Vector3( -0.04, 0.01, 0.037 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CubeLeft:material/0:shader_param/alpha")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 1.0, 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("CubeRight:translation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0.022, 0.01, 0.037 ), Vector3( -0.009, 0.018, 0.029 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("CubeRight:material/0:shader_param/alpha")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Cube:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.001, 0.249, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, false, true ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("CubeLeft:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0, 0.001, 0.249, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, true, false ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("CubeRight:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0, 0.001, 0.249, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, true, false ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "cube_right"
+length = 0.25
+step = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("CubeLeft:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( -0.04, 0.01, 0.037 ), Vector3( -0.009, 0.018, 0.029 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CubeLeft:material/0:shader_param/alpha")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Cube:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.001, 0.249, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, false, true ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("CubeLeft:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.001, 0.249, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, true, false ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("CubeRight:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.001, 0.249, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, true, false ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("CubeRight:translation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( -0.009, 0.018, 0.029 ), Vector3( 0.022, 0.01, 0.037 ) ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("CubeRight:material/0:shader_param/alpha")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 1.0, 0.0 ]
+}
+
+[node name="ControllerCube" type="Spatial"]
+script = ExtResource( 4 )
+
+[node name="Cube" type="MeshInstance" parent="."]
+transform = Transform( 0.17, 0, 0, 0, 0.112412, 0.127529, 0, -0.127529, 0.112412, -0.009, 0.018, 0.029 )
+mesh = ExtResource( 1 )
+material/0 = SubResource( 1 )
+
+[node name="CubeLeft" type="MeshInstance" parent="."]
+transform = Transform( 0.17, 0, 0, 0, 0.112412, 0.127529, 0, -0.127529, 0.112412, -0.04, 0.01, 0.037 )
+visible = false
+mesh = ExtResource( 1 )
+material/0 = SubResource( 6 )
+
+[node name="CubeRight" type="MeshInstance" parent="."]
+transform = Transform( 0.17, 0, 0, 0, 0.112412, 0.127529, 0, -0.127529, 0.112412, -0.009, 0.018, 0.029 )
+visible = false
+mesh = ExtResource( 1 )
+material/0 = SubResource( 7 )
+
+[node name="AnimationPlayerCubes" type="AnimationPlayer" parent="."]
+anims/cube_left = SubResource( 4 )
+anims/cube_right = SubResource( 5 )

@@ -5,11 +5,14 @@ class_name ControllerRecolor
 
 
 onready var big_polyhedron_mesh = $TogglePolyhedron
-onready var mini_polyhedron_mesh = $RecolorPolyhedron
+#onready var mini_polyhedron_mesh = $RecolorPolyhedron
+onready var controller_polyhedron = get_node("ControllerPolyhedron")
 
 
 func _ready():
-	update_mesh_colors()
+#	update_mesh_colors()
+	controller_polyhedron.set_cube_color(-1, controller_side_string)
+	big_polyhedron_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
 
 
 # overriding from parent
@@ -27,7 +30,9 @@ func _on_ARVRController_button_pressed(button_number):
 
 # overriding from parent
 func _on_Base_Controller_controller_selected():
-	update_mesh_colors()
+#	update_mesh_colors()
+	controller_polyhedron.set_cube_color(-1, controller_side_string)
+	big_polyhedron_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
 
 
 # overriding from parent
@@ -35,9 +40,9 @@ func _on_Base_Controller_controller_unselected():
 	pass
 
 
-func update_mesh_colors() -> void:
-	big_polyhedron_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
-	mini_polyhedron_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
+#func update_mesh_colors() -> void:
+#	big_polyhedron_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
+#	mini_polyhedron_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
 
 
 func _on_Controller_System_joystick_x_axis_pushed_right(side : String):
@@ -47,8 +52,10 @@ func _on_Controller_System_joystick_x_axis_pushed_right(side : String):
 	if not selected:
 		return
 	
-	color_system.rotate_material(0, controller_side_string)
-	update_mesh_colors()
+#	color_system.rotate_material(0, controller_side_string)
+#	update_mesh_colors()
+	controller_polyhedron.set_cube_color(0, controller_side_string)
+	big_polyhedron_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
 
 
 func _on_Controller_System_joystick_x_axis_pushed_left(side : String):
@@ -58,5 +65,8 @@ func _on_Controller_System_joystick_x_axis_pushed_left(side : String):
 	if not selected:
 		return
 	
-	color_system.rotate_material(1, controller_side_string)
-	update_mesh_colors()
+#	color_system.rotate_material(1, controller_side_string)
+#	update_mesh_colors()
+	controller_polyhedron.set_cube_color(1, controller_side_string)
+	big_polyhedron_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
+

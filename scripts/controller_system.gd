@@ -29,11 +29,13 @@ onready var BUTTON_TO_ANIMATION = {
 		vr.BUTTON.LEFT_INDEX_TRIGGER: "button_trigger",
 		vr.BUTTON.LEFT_THUMBSTICK: "button_toggle",
 		vr.BUTTON.X: "button_A",
+		vr.BUTTON.Y: "button_B",
 		vr.BUTTON.ENTER: "button_home",
 		vr.BUTTON.LEFT_GRIP_TRIGGER: "button_grab",
 		vr.BUTTON.RIGHT_INDEX_TRIGGER: "button_trigger",
 		vr.BUTTON.RIGHT_THUMBSTICK: "button_toggle",
 		vr.BUTTON.A: "button_A",
+		vr.BUTTON.B: "button_B",
 #		vr.BUTTON.ENTER: "button_home", oculus button has blink animation, but no use now
 		vr.BUTTON.RIGHT_GRIP_TRIGGER: "button_grab",
 	}

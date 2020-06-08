@@ -1,0 +1,40 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://scenes/controller_cube.tscn" type="PackedScene" id=1]
+[ext_resource path="res://meshes/polyhedron_delete.mesh" type="ArrayMesh" id=2]
+[ext_resource path="res://shaders/unshaded_cube_ghost_color.shader" type="Shader" id=3]
+[ext_resource path="res://shaders/unshaded_color.shader" type="Shader" id=4]
+
+[sub_resource type="ShaderMaterial" id=7]
+resource_local_to_scene = true
+shader = ExtResource( 4 )
+shader_param/color = Vector3( 0.5, 0.5, 0.5 )
+
+[sub_resource type="ShaderMaterial" id=8]
+resource_local_to_scene = true
+shader = ExtResource( 3 )
+shader_param/color = null
+shader_param/alpha = 1.0
+
+[sub_resource type="ShaderMaterial" id=9]
+resource_local_to_scene = true
+shader = ExtResource( 3 )
+shader_param/color = null
+shader_param/alpha = 1.0
+
+[node name="ControllerPolyhedron" instance=ExtResource( 1 )]
+
+[node name="Cube" parent="." index="0"]
+transform = Transform( 0.5, 0, 0, 0, 0.330623, 0.375085, 0, -0.375085, 0.330623, -0.009, 0.018, 0.029 )
+mesh = ExtResource( 2 )
+material/0 = SubResource( 7 )
+
+[node name="CubeLeft" parent="." index="1"]
+transform = Transform( 0.5, 0, 0, 0, 0.330623, 0.375085, 0, -0.375085, 0.330623, -0.04, 0.01, 0.037 )
+mesh = ExtResource( 2 )
+material/0 = SubResource( 8 )
+
+[node name="CubeRight" parent="." index="2"]
+transform = Transform( 0.5, 0, 0, 0, 0.330623, 0.375085, 0, -0.375085, 0.330623, -0.009, 0.018, 0.029 )
+mesh = ExtResource( 2 )
+material/0 = SubResource( 9 )
