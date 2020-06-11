@@ -38,19 +38,19 @@ mesh = ExtResource( 7 )
 transform_array = PoolVector3Array( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 custom_data_array = PoolColorArray( 0, 0, 0, 0 )
 
-[sub_resource type="ShaderMaterial" id=6]
+[sub_resource type="ShaderMaterial" id=4]
 shader = ExtResource( 20 )
 shader_param/color = null
 
-[sub_resource type="QuadMesh" id=4]
-material = SubResource( 6 )
+[sub_resource type="QuadMesh" id=5]
+material = SubResource( 4 )
 size = Vector2( 0.02, 0.02 )
 
-[sub_resource type="Environment" id=7]
+[sub_resource type="Environment" id=6]
 background_mode = 2
 background_sky = ExtResource( 9 )
 
-[sub_resource type="MultiMesh" id=8]
+[sub_resource type="MultiMesh" id=7]
 transform_format = 1
 custom_data_format = 2
 instance_count = 10000
@@ -104,7 +104,7 @@ lifetime = 0.5
 one_shot = true
 explosiveness = 0.8
 process_material = ExtResource( 17 )
-draw_pass_1 = SubResource( 4 )
+draw_pass_1 = SubResource( 5 )
 
 [node name="ControllerSystem" type="Node" parent="."]
 script = ExtResource( 10 )
@@ -115,7 +115,7 @@ stream = ExtResource( 26 )
 [node name="OQ_ARVROrigin" parent="." instance=ExtResource( 5 )]
 
 [node name="OQ_ARVRCamera" parent="OQ_ARVROrigin" instance=ExtResource( 3 )]
-environment = SubResource( 7 )
+environment = SubResource( 6 )
 
 [node name="OQ_LeftController" parent="OQ_ARVROrigin" instance=ExtResource( 1 )]
 
@@ -133,7 +133,7 @@ transform = Transform( 0.819152, -0.196175, 0.538986, 0, 0.939693, 0.34202, -0.5
 [node name="AllMultiMeshes" type="Spatial" parent="MovableWorld"]
 
 [node name="MultiMeshInstance" type="MultiMeshInstance" parent="MovableWorld/AllMultiMeshes"]
-multimesh = SubResource( 8 )
+multimesh = SubResource( 7 )
 script = ExtResource( 25 )
 
 [node name="AllBuildingBlocks" type="Spatial" parent="MovableWorld"]

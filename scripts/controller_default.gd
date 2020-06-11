@@ -5,12 +5,15 @@ class_name ControllerDefault
 
 
 onready var building_block_base = preload("res://scenes/building_blocks/block_base_cube.tscn")
-onready var mini_cube_mesh = $Cube
+onready var controller_cube = get_node("ControllerCube")
+#onready var mini_cube_mesh = $Cube
 #onready var ghost_building_block_base = preload("res://scenes/building_blocks/ghost_block_base.tscn")
 
 
 func _ready():
-	mini_cube_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
+#	mini_cube_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
+	controller_cube.set_cube_color(-1, controller_side_string)
+
 
 # overriding from parent
 func _on_ARVRController_button_pressed(button_number):
@@ -31,7 +34,8 @@ func _on_ARVRController_button_pressed(button_number):
 
 # overriding from parent
 func _on_Base_Controller_controller_selected():
-	update_mesh_color()
+#	update_mesh_color()
+	controller_cube.set_cube_color(-1, controller_side_string)
 
 
 # overriding from parent
@@ -68,8 +72,9 @@ func _on_Controller_System_joystick_x_axis_pushed_right(side : String):
 	if not selected:
 		return
 	
-	color_system.rotate_material(0, controller_side_string)
-	update_mesh_color()
+	controller_cube.set_cube_color(0, controller_side_string)
+#	color_system.rotate_material(0, controller_side_string)
+#	update_mesh_color()
 
 
 func _on_Controller_System_joystick_x_axis_pushed_left(side : String):
@@ -79,12 +84,14 @@ func _on_Controller_System_joystick_x_axis_pushed_left(side : String):
 	if not selected:
 		return
 		
-	color_system.rotate_material(1, controller_side_string)
-	update_mesh_color()
+	controller_cube.set_cube_color(1, controller_side_string)
+#	color_system.rotate_material(1, controller_side_string)
+#	update_mesh_color()
 
 
-func update_mesh_color():
-	mini_cube_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
+#func update_mesh_color():
+#
+#	mini_cube_mesh.get_surface_material(0).set_shader_param("color", color_system.get_current_color(controller_side_string))
 
 #func create_ghost_block() -> void:
 #	var overlapping_block = get_overlapping_block()

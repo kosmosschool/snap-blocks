@@ -1,5 +1,6 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=31 format=2]
 
+[ext_resource path="res://meshes/controller_left_button_B_one_material.mesh" type="ArrayMesh" id=1]
 [ext_resource path="res://meshes/controller_left_button_A_one_material.mesh" type="ArrayMesh" id=2]
 [ext_resource path="res://meshes/controller_left_button_toggle_one_material.mesh" type="ArrayMesh" id=3]
 [ext_resource path="res://materials/texturemaps/controller_left_button_trigger.jpg" type="Texture" id=4]
@@ -12,6 +13,7 @@
 [ext_resource path="res://meshes/controller_left_button_grab_one_material.mesh" type="ArrayMesh" id=11]
 [ext_resource path="res://materials/texturemaps/controller_left_button_toggle.jpg" type="Texture" id=12]
 [ext_resource path="res://meshes/controller_left_one_material.mesh" type="ArrayMesh" id=13]
+[ext_resource path="res://materials/texturemaps/controller_left_button_B.jpg" type="Texture" id=14]
 [ext_resource path="res://shaders/unshaded_color.shader" type="Shader" id=15]
 [ext_resource path="res://meshes/polyhedron_delete.mesh" type="ArrayMesh" id=17]
 
@@ -21,25 +23,30 @@ albedo_texture = ExtResource( 5 )
 
 [sub_resource type="SpatialMaterial" id=2]
 flags_unshaded = true
-albedo_texture = ExtResource( 9 )
+albedo_texture = ExtResource( 14 )
 
 [sub_resource type="SpatialMaterial" id=3]
 flags_unshaded = true
-albedo_texture = ExtResource( 10 )
+albedo_color = Color( 0.965234, 0.983063, 1, 1 )
+albedo_texture = ExtResource( 9 )
 
 [sub_resource type="SpatialMaterial" id=4]
 flags_unshaded = true
-albedo_texture = ExtResource( 7 )
+albedo_texture = ExtResource( 10 )
 
 [sub_resource type="SpatialMaterial" id=5]
 flags_unshaded = true
-albedo_texture = ExtResource( 12 )
+albedo_texture = ExtResource( 7 )
 
 [sub_resource type="SpatialMaterial" id=6]
 flags_unshaded = true
+albedo_texture = ExtResource( 12 )
+
+[sub_resource type="SpatialMaterial" id=7]
+flags_unshaded = true
 albedo_texture = ExtResource( 4 )
 
-[sub_resource type="ShaderMaterial" id=7]
+[sub_resource type="ShaderMaterial" id=8]
 shader = ExtResource( 15 )
 shader_param/color = Vector3( 0.325, 0.325, 0.325 )
 
@@ -78,8 +85,41 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.4, 0.6 )
 }
 
-[sub_resource type="Animation" id=8]
-resource_name = "button_grab"
+[sub_resource type="Animation" id=14]
+resource_name = "button_B"
+length = 0.6
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("ControllerLeftButtonB:material/0:albedo_color:r")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 1, -0.25, 0, 0.25, 0, 0.458824, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.4, 0.6 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("ControllerLeftButtonB:material/0:albedo_color:g")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 1, -0.25, 0, 0.25, 0, 0.686275, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.4, 0.6 )
+}
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("ControllerLeftButtonB:material/0:albedo_color:b")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PoolRealArray( 1, -0.25, 0, 0.25, 0, 0.980392, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.4, 0.6 )
+}
+
+[sub_resource type="Animation" id=10]
 length = 0.6
 loop = true
 tracks/0/type = "bezier"
@@ -113,8 +153,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.4, 0.6 )
 }
 
-[sub_resource type="Animation" id=10]
-resource_name = "button_home"
+[sub_resource type="Animation" id=11]
 length = 0.6
 loop = true
 tracks/0/type = "bezier"
@@ -148,8 +187,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.4, 0.6 )
 }
 
-[sub_resource type="Animation" id=11]
-resource_name = "button_toggle"
+[sub_resource type="Animation" id=12]
 length = 0.6
 loop = true
 tracks/0/type = "bezier"
@@ -183,8 +221,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.4, 0.6 )
 }
 
-[sub_resource type="Animation" id=12]
-resource_name = "button_trigger"
+[sub_resource type="Animation" id=13]
 length = 0.6
 loop = true
 tracks/0/type = "bezier"
@@ -224,34 +261,39 @@ tracks/2/keys = {
 mesh = ExtResource( 13 )
 material/0 = SubResource( 1 )
 
+[node name="ControllerLeftButtonB" type="MeshInstance" parent="."]
+mesh = ExtResource( 1 )
+material/0 = SubResource( 2 )
+
 [node name="ControllerLeftButtonA" type="MeshInstance" parent="."]
 mesh = ExtResource( 2 )
-material/0 = SubResource( 2 )
+material/0 = SubResource( 3 )
 
 [node name="ControllerLeftButtonGrab" type="MeshInstance" parent="."]
 mesh = ExtResource( 11 )
-material/0 = SubResource( 3 )
+material/0 = SubResource( 4 )
 
 [node name="ControllerLeftButtonHome" type="MeshInstance" parent="."]
 mesh = ExtResource( 6 )
-material/0 = SubResource( 4 )
+material/0 = SubResource( 5 )
 
 [node name="ControllerLeftButtonToggle" type="MeshInstance" parent="."]
 mesh = ExtResource( 3 )
-material/0 = SubResource( 5 )
+material/0 = SubResource( 6 )
 
 [node name="ControllerLeftButtonTrigger" type="MeshInstance" parent="."]
 mesh = ExtResource( 8 )
-material/0 = SubResource( 6 )
+material/0 = SubResource( 7 )
 
 [node name="TogglePolyhedron" type="MeshInstance" parent="."]
 transform = Transform( -0.0304946, -0.720632, 0.692647, 0.890937, -0.333728, -0.307988, 0.453102, 0.607713, 0.652215, 0.009, 0.073, -0.06 )
 mesh = ExtResource( 17 )
-material/0 = SubResource( 7 )
+material/0 = SubResource( 8 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/button_A = SubResource( 9 )
-anims/button_grab = SubResource( 8 )
-anims/button_home = SubResource( 10 )
-anims/button_toggle = SubResource( 11 )
-anims/button_trigger = SubResource( 12 )
+anims/button_B = SubResource( 14 )
+anims/button_grab = SubResource( 10 )
+anims/button_home = SubResource( 11 )
+anims/button_toggle = SubResource( 12 )
+anims/button_trigger = SubResource( 13 )
