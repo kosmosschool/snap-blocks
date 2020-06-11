@@ -16,14 +16,68 @@ onready var welcome_controller = get_node(global_vars.WELCOME_CONTROLLER_PATH)
 
 
 func _ready():
+#	get_tree().connect("on_request_permissions_result", self, "_on_Main_Loop_on_request_permissions_result")
+#	copy_files_to_ext()
+	
 	var dir = Directory.new()
 	# create dir if it doesn't exist
 	if not dir.dir_exists(save_dir):
-		dir.make_dir(save_dir)
+		dir.make_dir_recursive(save_dir)
 	
 	open_new_file()
 	
 	init_user_prefs()
+
+
+# we don't use this yet, but leaving it in here for future reference
+#func _on_Main_Loop_on_request_permissions_result(permission, granted):
+#	print ("permission granted ", permission)
+
+
+func has_permission(permission : String) -> bool:
+	var granted_perms = OS.get_granted_permissions()
+	
+	for perm in granted_perms:
+		if perm == permission:
+			return true
+
+	return false
+
+
+func copy_files_to_ext() -> void:
+	# copies all files to external storage (useful for debugging)
+	# make sure you have read and write access to external storage in the export settings
+
+	if (not has_permission("android.permission.READ_EXTERNAL_STORAGE") or
+		not has_permission("android.permission.WRITE_EXTERNAL_STORAGE")):
+		
+		print("requesting permissions")
+		OS.request_permissions()
+		return
+	
+	var dest_path = "/sdcard/Snap Blocks Debug/"
+	var dir = Directory.new()
+	
+	# make sur dest path exists
+	if not dir.dir_exists(dest_path):
+		var err = dir.make_dir_recursive(dest_path)
+		if err != OK:
+			print("Could not create directory: ", dest_path)
+
+
+	if dir.open(save_dir) == OK:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if not dir.current_is_dir():
+				# make sure it's not a directory for some reason
+				dir.copy(str(save_dir, file_name), str(dest_path, file_name))
+			
+			file_name = dir.get_next()
+		
+		dir.list_dir_end()
+	else:
+		print("An error occurred when trying to access the save dir path")
 
 
 func open_new_file() -> void:
@@ -86,10 +140,7 @@ func load_creation(saved_file_path : String):
 	if not content:
 		return
 	
-#	print("file app_version ", content["app_version"])
 	# create all block areas
-	print("file yolo")
-	print(content)
 	var added_areas = all_block_areas.recreate_from_save(content["all_block_areas"])
 	
 	# createa multi mesh
@@ -119,6 +170,8 @@ func get_all_saved_files(dir_path : String):
 				all_file_paths.append(file_name)
 			
 			file_name = dir.get_next()
+		
+		dir.list_dir_end()
 	else:
 		print("An error occurred when trying to access the path.")
 	

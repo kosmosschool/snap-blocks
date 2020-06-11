@@ -10,7 +10,6 @@ signal load_mode_selected
 enum ButtonType {TEXT, IMAGE}
 
 var file_button_scene
-var first_button_origin = Vector3(-0.105, 0, 0.003)
 var offset_x = 0.05
 var offset_y = -0.05
 var page_size := 8
@@ -33,6 +32,7 @@ export var LOAD_MODE_TITLE : String
 export var DELETE_MODE_TITLE : String
 export var EMPTY_TITLE : String
 export(ButtonType) var button_type
+export var first_button_origin = Vector3(-0.105, 0, 0.003)
 
 
 func get_all_files_paginated():
