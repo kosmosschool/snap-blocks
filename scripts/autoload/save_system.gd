@@ -8,25 +8,80 @@ class_name SaveSystem
 var save_dir = "user://saved_creations/"
 var base_dir = "user://"
 var user_prefs_file_name = "user_prefs.json"
-var open_file_name : String
+var open_file_path : String
 
 onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
 onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
+onready var welcome_controller = get_node(global_vars.WELCOME_CONTROLLER_PATH)
 
 
 func _ready():
+#	get_tree().connect("on_request_permissions_result", self, "_on_Main_Loop_on_request_permissions_result")
+#	copy_files_to_ext()
+	
 	var dir = Directory.new()
 	# create dir if it doesn't exist
 	if not dir.dir_exists(save_dir):
-		dir.make_dir(save_dir)
+		dir.make_dir_recursive(save_dir)
 	
 	open_new_file()
 	
 	init_user_prefs()
 
 
+# we don't use this yet, but leaving it in here for future reference
+#func _on_Main_Loop_on_request_permissions_result(permission, granted):
+#	print ("permission granted ", permission)
+
+
+func has_permission(permission : String) -> bool:
+	var granted_perms = OS.get_granted_permissions()
+	
+	for perm in granted_perms:
+		if perm == permission:
+			return true
+
+	return false
+
+
+func copy_files_to_ext() -> void:
+	# copies all files to external storage (useful for debugging)
+	# make sure you have read and write access to external storage in the export settings
+
+	if (not has_permission("android.permission.READ_EXTERNAL_STORAGE") or
+		not has_permission("android.permission.WRITE_EXTERNAL_STORAGE")):
+		
+		print("requesting permissions")
+		OS.request_permissions()
+		return
+	
+	var dest_path = "/sdcard/Snap Blocks Debug/"
+	var dir = Directory.new()
+	
+	# make sur dest path exists
+	if not dir.dir_exists(dest_path):
+		var err = dir.make_dir_recursive(dest_path)
+		if err != OK:
+			print("Could not create directory: ", dest_path)
+
+
+	if dir.open(save_dir) == OK:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if not dir.current_is_dir():
+				# make sure it's not a directory for some reason
+				dir.copy(str(save_dir, file_name), str(dest_path, file_name))
+			
+			file_name = dir.get_next()
+		
+		dir.list_dir_end()
+	else:
+		print("An error occurred when trying to access the save dir path")
+
+
 func open_new_file() -> void:
-	var all_files = get_all_saved_files()
+	var all_files = get_all_saved_files(save_dir)
 	var newest_number
 	if all_files.empty():
 		newest_number = 1
@@ -38,7 +93,7 @@ func open_new_file() -> void:
 			return
 		
 		newest_number += 1
-	open_file_name = str("creation_", newest_number, ".json")
+	open_file_path = str("user://saved_creations/creation_", newest_number, ".json")
 
 
 func get_file_number(input_file_name : String) -> int:
@@ -72,20 +127,19 @@ func save_creation():
 	# save to file
 	var save_file = File.new()
 	var unsaved_json = to_json(new_data_dict)
-	save_file.open(save_dir + open_file_name, File.WRITE)
+	save_file.open(open_file_path, File.WRITE)
 	save_file.store_string(unsaved_json)
 	save_file.close()
 
 
-func load_creation(saved_file_name : String):
+func load_creation(saved_file_path : String):
 	var save_file = File.new()
-	save_file.open(save_dir + saved_file_name, File.READ)
+	save_file.open(saved_file_path, File.READ)
 	var content = parse_json(save_file.get_as_text())
 	
 	if not content:
 		return
 	
-#	print("file app_version ", content["app_version"])
 	# create all block areas
 	var added_areas = all_block_areas.recreate_from_save(content["all_block_areas"])
 	
@@ -93,21 +147,21 @@ func load_creation(saved_file_name : String):
 	multi_mesh.recreate(added_areas)
 	
 	# update open file name
-	open_file_name = saved_file_name
+	open_file_path = saved_file_path
 
 
-func delete_creation(saved_file_name : String):
+func delete_creation(saved_file_path : String):
 	# delete file
 	var dir = Directory.new()
-	dir.remove(save_dir + saved_file_name)
+	dir.remove(saved_file_path)
 	
 	open_new_file()
 
 
-func get_all_saved_files():
+func get_all_saved_files(dir_path : String):
 	var all_file_paths : Array
 	var dir = Directory.new()
-	if dir.open(save_dir) == OK:
+	if dir.open(dir_path) == OK:
 		dir.list_dir_begin()
 		var file_name = dir.get_next()
 		while file_name != "":
@@ -116,6 +170,8 @@ func get_all_saved_files():
 				all_file_paths.append(file_name)
 			
 			file_name = dir.get_next()
+		
+		dir.list_dir_end()
 	else:
 		print("An error occurred when trying to access the path.")
 	
@@ -129,8 +185,31 @@ func clear_and_new() -> void:
 	# deletes current creation, creates new file
 	all_block_areas.clear()
 	multi_mesh.clear()
+	welcome_controller.starting_cube_set = false
 	
 	open_new_file()
+
+
+func get_button_pic_path(file_path : String):
+	# returns button_pic_path based on file_path if it exists
+	var curr_file = File.new()
+	var err = curr_file.open(file_path, File.READ)
+	
+	if err != 0:
+		return ""
+	
+	var file_text = curr_file.get_as_text()
+	var content : Dictionary
+	if file_text != "":
+		content = parse_json(file_text)
+	else:
+		return ""
+	curr_file.close()
+	
+	if content.has("button_pic_path"):
+		return content["button_pic_path"]
+	else:
+		return ""
 
 
 class SortByFileNumber:
@@ -153,7 +232,7 @@ class SortByFileNumber:
 		return false
 
 
-# stuff related to user prefs below
+### *** stuff related to user prefs below ***
 
 func read_from_user_prefs_file() -> Dictionary:
 	var dir = Directory.new()

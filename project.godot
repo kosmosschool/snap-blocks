@@ -1324,7 +1324,7 @@ texture={
 
 [network]
 
-limits/debugger_stdout/max_chars_per_second=10000
+limits/debugger_stdout/max_chars_per_second=100000
 limits/debugger_stdout/max_messages_per_frame=100
 
 [rendering]

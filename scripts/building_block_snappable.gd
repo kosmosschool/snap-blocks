@@ -94,12 +94,12 @@ func _physics_process(delta):
 	var ray_dest_ym = global_transform.origin - transform.basis.y * ray_length
 	
 	# set collision mask to 4 (i.e. second bit only so that it only collides with other blocks)
-	var result_z = space_state.intersect_ray(global_transform.origin, ray_dest_z, [self], 2, true, true)
-	var result_zm = space_state.intersect_ray(global_transform.origin, ray_dest_zm, [self], 2, true, true)
-	var result_x = space_state.intersect_ray(global_transform.origin, ray_dest_x, [self], 2, true, true)
-	var result_xm = space_state.intersect_ray(global_transform.origin, ray_dest_xm, [self], 2, true, true)
-	var result_y = space_state.intersect_ray(global_transform.origin, ray_dest_y, [self], 2, true, true)
-	var result_ym = space_state.intersect_ray(global_transform.origin, ray_dest_ym, [self], 2, true, true)
+	var result_z = space_state.intersect_ray(global_transform.origin, ray_dest_z, [self], 2, false, true)
+	var result_zm = space_state.intersect_ray(global_transform.origin, ray_dest_zm, [self], 2, false, true)
+	var result_x = space_state.intersect_ray(global_transform.origin, ray_dest_x, [self], 2, false, true)
+	var result_xm = space_state.intersect_ray(global_transform.origin, ray_dest_xm, [self], 2, false, true)
+	var result_y = space_state.intersect_ray(global_transform.origin, ray_dest_y, [self], 2, false, true)
+	var result_ym = space_state.intersect_ray(global_transform.origin, ray_dest_ym, [self], 2, false, true)
 	
 	if not result_z.empty():
 		distances_array[0] = global_transform.origin.distance_to(result_z["position"])
@@ -152,9 +152,9 @@ func _physics_process(delta):
 		ray_dir = results_array[min_index]["ray_dir"]
 		
 		# prevent snapping to block which is held on other hand
-		if snap_cand as BuildingBlockSnappable and snap_cand.is_grabbed:
-			snap_cand = null
-			return
+#		if snap_cand as BuildingBlockSnappable and snap_cand.is_grabbed:
+#			snap_cand = null
+#			return
 		
 		# check angle between normal and ray
 		var angle = ray_dir.angle_to(snap_cand_normal)
