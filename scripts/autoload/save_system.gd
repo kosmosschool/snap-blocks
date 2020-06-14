@@ -4,7 +4,8 @@ extends Node
 class_name SaveSystem
 
 
-# saves and reads from saved file
+signal file_loaded
+
 var save_dir = "user://saved_creations/"
 var base_dir = "user://"
 var user_prefs_file_name = "user_prefs.json"
@@ -146,8 +147,15 @@ func load_creation(saved_file_path : String):
 	# createa multi mesh
 	multi_mesh.recreate(added_areas)
 	
-	# update open file name
-	open_file_path = saved_file_path
+	# if we loaded a fixed gallery file, create a new file to save to
+	if "gallery_fixed" in saved_file_path:
+		open_new_file()
+	else:
+		# update open file name
+		open_file_path = saved_file_path
+	
+	
+	emit_signal("file_loaded")
 
 
 func delete_creation(saved_file_path : String):
@@ -167,7 +175,8 @@ func get_all_saved_files(dir_path : String):
 		while file_name != "":
 			if not dir.current_is_dir():
 				# make sure it's not a directory for some reason
-				all_file_paths.append(file_name)
+				if ".json" in file_name:
+					all_file_paths.append(file_name)
 			
 			file_name = dir.get_next()
 		
@@ -201,7 +210,11 @@ func get_button_pic_path(file_path : String):
 	var file_text = curr_file.get_as_text()
 	var content : Dictionary
 	if file_text != "":
-		content = parse_json(file_text)
+		var json_parsed = parse_json(file_text)
+		if json_parsed is Dictionary:
+			content = json_parsed
+		else:
+			return ""
 	else:
 		return ""
 	curr_file.close()

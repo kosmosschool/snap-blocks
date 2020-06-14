@@ -120,7 +120,7 @@ func display_load_buttons() -> void:
 				image_tex = load(image_path)
 			else:
 				# set placeholder image
-				image_tex = load("res://images/gallery_images/button_pic_tree.jpg")
+				image_tex = load("res://images/gallery_images/tree.jpg")
 			
 			image_mesh.get_surface_material(0).set_texture(SpatialMaterial.TEXTURE_ALBEDO, image_tex)
 

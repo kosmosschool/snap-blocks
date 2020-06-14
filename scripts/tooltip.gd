@@ -94,7 +94,7 @@ func _process(delta):
 	
 	# update mesh instance line position, size and rotation
 	var attach_to_position = attach_to_node.global_transform.origin
-	var line_start_pos = attach_to_position + attach_to_node.transform.basis * line_attach_to_offset
+	var line_start_pos = attach_to_node.to_global(line_attach_to_offset)
 	var line_end_pos = bubble.global_transform.origin + bubble.transform.basis * line_bubble_offset
 	
 	update_spheres_pos(spheres_array, line_start_pos, line_end_pos)
@@ -103,9 +103,7 @@ func _process(delta):
 	# the secondary line has a variable length
 	if secondary_line and secondary_attach_to_node:
 		var secondary_attach_to_position = secondary_attach_to_node.global_transform.origin
-		var secondary_line_start_pos = (secondary_attach_to_position +
-			secondary_attach_to_node.transform.basis *
-			secondary_line_attach_to_offset)
+		var secondary_line_start_pos = secondary_attach_to_node.to_global(secondary_line_attach_to_offset)
 		
 		var secondary_line_end_pos = bubble.global_transform.origin + bubble.transform.basis * secondary_line_bubble_offset
 		# check if distance changed (because it's not fixed)
@@ -154,7 +152,7 @@ func create_primary_spheres(recreate = false):
 			
 	# calculate line length and spawn spheres
 	var attach_to_position = attach_to_node.global_transform.origin
-	var line_start_pos = attach_to_position + attach_to_node.transform.basis * line_attach_to_offset
+	var line_start_pos = attach_to_node.to_global(line_attach_to_offset)
 	var line_end_pos = bubble.global_transform.origin + bubble.transform.basis * line_bubble_offset
 	spheres_array = create_spheres(line_start_pos, line_end_pos)
 
@@ -166,9 +164,7 @@ func create_secondary_spheres(recreate = false):
 			s.queue_free()
 	
 	var secondary_attach_to_position = secondary_attach_to_node.global_transform.origin
-	var secondary_line_start_pos = (secondary_attach_to_position +
-		secondary_attach_to_node.transform.basis *
-		secondary_line_attach_to_offset)
+	var secondary_line_start_pos = secondary_attach_to_node.to_global(secondary_line_attach_to_offset)
 	var secondary_line_end_pos = bubble.global_transform.origin + bubble.transform.basis * secondary_line_bubble_offset
 	secondary_spheres_array = create_spheres(secondary_line_start_pos, secondary_line_end_pos)
 

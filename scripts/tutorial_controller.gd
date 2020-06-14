@@ -16,8 +16,10 @@ var STEP_8_TEXT = "Good. Now touch a Block with the tip of your tool and press t
 var STEP_9_TEXT = "Good job! You can also delete Blocks. Press A again to change to the deletion tool."
 var STEP_10_TEXT = "To delete a Block, touch it with the tip of your tool and press the index trigger."
 var STEP_11_TEXT = "Cool. Press and hold the right and left index triggers to move around and rotate."
-var STEP_12_TEXT = "Great, great! One last thing. Press Y to open your tablet."
-var STEP_13_TEXT = "Here you can save and load your Creations.\nNow, it's time to build. Have fun!\n\nPress Y to end the tutorial."
+var STEP_12_TEXT = "Great, great! Press Y to open your tablet."
+var STEP_13_TEXT = "You can load premade Creations from the Gallery. Give it a try."
+var STEP_14_TEXT = "Yay! You can look around, keep working on it or even save it as your own. Press the Files menu button."
+var STEP_15_TEXT = "Here you can save and load your Creations.\nNow, it's time to build. Have fun!\n\nPress Y to end the tutorial."
 
 var all_step_texts : Array
 
@@ -41,6 +43,8 @@ var transparent_color := Color(0.7, 0.4, 0.4, 1.0)
 var tutorial_finished := false
 var finish_tutorial_duration := 3.0
 var finish_tutorial_counter := 0.0
+var waiting_for_screen_change_name : String
+var waiting_for_file_load := false
 
 
 onready var tooltip_scene = preload("res://scenes/tooltip.tscn")
@@ -48,6 +52,8 @@ onready var right_controller = get_node(global_vars.CONTR_RIGHT_PATH)
 onready var left_controller = get_node(global_vars.CONTR_LEFT_PATH)
 onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
 onready var controller_system = get_node(global_vars.CONTROLLER_SYSTEM_PATH)
+onready var tablet = get_node(global_vars.TABLET_PATH)
+onready var screens_controller = tablet.get_node("Screens")
 onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
 onready var audio_player = $AudioStreamPlayer3D
 onready var audio_player_finish = $AudioStreamPlayerFinish
@@ -59,7 +65,7 @@ func _ready():
 	all_step_texts = [
 		STEP_1_TEXT, STEP_2_TEXT, STEP_3_TEXT, STEP_4_TEXT, STEP_5_TEXT, STEP_6_TEXT,
 		STEP_7_TEXT, STEP_8_TEXT, STEP_9_TEXT, STEP_10_TEXT, STEP_11_TEXT, STEP_12_TEXT,
-		STEP_13_TEXT
+		STEP_13_TEXT, STEP_14_TEXT, STEP_15_TEXT
 	]
 	
 	total_steps = all_step_texts.size()
@@ -74,6 +80,10 @@ func _ready():
 	
 	multi_mesh.connect("area_recolored", self, "_on_Multi_Mesh_area_recolored")
 	multi_mesh.connect("area_deleted", self, "_on_Multi_Mesh_area_deleted")
+	
+	screens_controller.connect("screen_changed", self, "_on_Screens_Controller_screen_changed")
+	
+	save_system.connect("file_loaded", self, "_on_Save_System_file_loaded")
 	
 	current_tooltip_instance = create_tooltip_instance()
 	tooltip_text_label = current_tooltip_instance.get_node("Bubble/2DTextLabel")
@@ -153,6 +163,18 @@ func _on_Multi_Mesh_area_deleted():
 		next_step()
 
 
+func _on_Screens_Controller_screen_changed(screen_name):
+	if waiting_for_screen_change_name == "LoadScreen":
+		waiting_for_screen_change_name = ""
+		next_step()
+
+
+func _on_Save_System_file_loaded():
+	if waiting_for_file_load:
+		waiting_for_file_load = false
+		next_step()
+
+
 func run_current_step():
 	change_tooltip_text()
 	
@@ -208,9 +230,6 @@ func run_current_step():
 			current_tooltip_instance.set_line_attach_to_offset(Vector3(0, -0.02, -0.03))
 			waiting_for_recolor = true
 			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
-			# switch back to different color so that player is not confused with re-coloring
-			color_system.rotate_material(1, "right")
-			right_controller.get_node("KSControllerRight/ControllerTypes/RecolorControllerRight").update_mesh_colors()
 		9:
 			controller_system.button_blink(vr.BUTTON.A, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_RIGHT_PATH)
@@ -249,8 +268,25 @@ func run_current_step():
 			global_functions.vibrate_controller_timed(0.3, left_controller, 0.3)
 		13:
 			controller_system.button_blink(vr.BUTTON.Y, false)
+			current_tooltip_instance.set_attach_to_path(global_vars.TABLET_PATH)
+			current_tooltip_instance.set_bubble_offset(Vector3(0.3, 0.18, -0.02))
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(-0.105, 0.03, 0.003))
+			# load gallery view
+			screens_controller.change_screen("GalleryScreen")
+			waiting_for_file_load = true
+			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
+		14:
+			current_tooltip_instance.set_attach_to_path(global_vars.TABLET_PATH)
+			current_tooltip_instance.set_bubble_offset(Vector3(0.3, 0.18, -0.02))
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.14, 0.081, 0.003))
+			waiting_for_screen_change_name = "LoadScreen"
+			global_functions.vibrate_controller_timed(0.3, right_controller, 0.3)
+		15:
+			controller_system.button_blink(vr.BUTTON.Y, true)
 			current_tooltip_instance.set_attach_to_path(global_vars.CONTR_LEFT_PATH)
-			current_tooltip_instance.set_bubble_offset(Vector3(0.3, 0.12, -0.03))
+			current_tooltip_instance.set_bubble_offset(Vector3(0.3, 0.15, -0.02))
+			current_tooltip_instance.set_line_bubble_offset(Vector3(-0.065, -0.065, 0))
+			current_tooltip_instance.set_line_attach_to_offset(Vector3(0.003, -0.001, -0.014))
 			step_finish_button = vr.BUTTON.Y
 			global_functions.vibrate_controller_timed(0.3, left_controller, 0.3)
 

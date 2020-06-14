@@ -5,6 +5,8 @@ extends Spatial
 class_name ScreensController
 
 
+signal screen_changed(screen_name)
+
 export var initial_screen : String
 
 onready var all_screens = get_children()
@@ -35,3 +37,5 @@ func change_screen(new_screen_name : String):
 		
 		# show new screen
 		current_screen_node.visible = true
+		
+		emit_signal("screen_changed", current_screen_name)

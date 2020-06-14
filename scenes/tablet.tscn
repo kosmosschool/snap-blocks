@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://scripts/button_save.gd" type="Script" id=1]
 [ext_resource path="res://scripts/button_new.gd" type="Script" id=2]
@@ -21,6 +21,7 @@
 [ext_resource path="res://materials/red_primary.tres" type="Material" id=19]
 [ext_resource path="res://materials/red_secondary.tres" type="Material" id=20]
 [ext_resource path="res://materials/trash_open.tres" type="Material" id=21]
+[ext_resource path="res://images/icon_gallery.png" type="Texture" id=22]
 [ext_resource path="res://scenes/ks_button_pressable_small.tscn" type="PackedScene" id=23]
 [ext_resource path="res://images/icon_arrow_right.png" type="Texture" id=30]
 [ext_resource path="res://images/icon_arrow_left.png" type="Texture" id=32]
@@ -52,6 +53,11 @@ flags_transparent = true
 flags_unshaded = true
 albedo_texture = ExtResource( 14 )
 
+[sub_resource type="SpatialMaterial" id=7]
+flags_transparent = true
+flags_unshaded = true
+albedo_texture = ExtResource( 22 )
+
 [node name="Tablet" type="Spatial"]
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
@@ -77,7 +83,11 @@ EMPTY_TITLE = "Save your Creations to see them here"
 [node name="TitleLabel" parent="Screens/LoadScreen" instance=ExtResource( 9 )]
 transform = Transform( 2.3, 0, 0, 0, 0.5, -1.49012e-08, 0, 7.45058e-09, 1, -0.032, 0.036, 0.001 )
 text = "Load Creation"
+margin = 16
+billboard = false
+resize_mode = 1
 font_size_multiplier = 5.0
+font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0.00784314, 0.00784314, 0.00784314, 0 )
 h_align = 1
 v_align = 1
@@ -147,7 +157,11 @@ first_button_origin = Vector3( -0.105, 0.03, 0.003 )
 [node name="TitleLabel" parent="Screens/GalleryScreen" instance=ExtResource( 9 )]
 transform = Transform( 2.3, 0, 0, 0, 0.5, -1.49012e-08, 0, 7.45058e-09, 1, -0.032, 0.0820324, 0.001 )
 text = "Gallery"
+margin = 16
+billboard = false
+resize_mode = 1
 font_size_multiplier = 5.0
+font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0.00784314, 0.00784314, 0.00784314, 0 )
 h_align = 1
 v_align = 1
@@ -191,4 +205,4 @@ navigate_to = "GalleryScreen"
 [node name="MeshInstanceIcon" type="MeshInstance" parent="Navigation/GalleryButton"]
 transform = Transform( 0.035, 5.21542e-10, -7.27919e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
-material/0 = SubResource( 6 )
+material/0 = SubResource( 7 )

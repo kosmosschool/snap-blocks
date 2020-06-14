@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/button_pic.jpeg-f332ed3120d44d9acc20b31f20719468.s3tc.stex"
-path.etc2="res://.import/button_pic.jpeg-f332ed3120d44d9acc20b31f20719468.etc2.stex"
+path.s3tc="res://.import/island.jpg-66a505a380184ae5a06581ce6ff78dfb.s3tc.stex"
+path.etc2="res://.import/island.jpg-66a505a380184ae5a06581ce6ff78dfb.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://images/gallery_images/button_pic.jpeg"
-dest_files=[ "res://.import/button_pic.jpeg-f332ed3120d44d9acc20b31f20719468.s3tc.stex", "res://.import/button_pic.jpeg-f332ed3120d44d9acc20b31f20719468.etc2.stex" ]
+source_file="res://images/gallery_images/island.jpg"
+dest_files=[ "res://.import/island.jpg-66a505a380184ae5a06581ce6ff78dfb.s3tc.stex", "res://.import/island.jpg-66a505a380184ae5a06581ce6ff78dfb.etc2.stex" ]
 
 [params]
 

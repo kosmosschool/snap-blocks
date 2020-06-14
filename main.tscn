@@ -124,6 +124,10 @@ environment = SubResource( 6 )
 [node name="Tablet" parent="OQ_ARVROrigin/OQ_LeftController" instance=ExtResource( 13 )]
 transform = Transform( 0.819152, -0.196175, 0.538986, 0, 0.939693, 0.34202, -0.573577, -0.280167, 0.769751, -0.0485239, 0.192734, -0.0687792 )
 
+[node name="Spatial" type="Spatial" parent="OQ_ARVROrigin/OQ_LeftController"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0538189, 0.288249, -0.167324 )
+visible = false
+
 [node name="OQ_RightController" parent="OQ_ARVROrigin" instance=ExtResource( 4 )]
 
 [node name="KSControllerRight" parent="OQ_ARVROrigin/OQ_RightController" instance=ExtResource( 6 )]
