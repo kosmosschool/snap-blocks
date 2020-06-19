@@ -1,0 +1,75 @@
+extends Spatial
+
+
+class_name BlockChunk
+
+
+var all_origins : Array
+
+onready var multi_mesh = $MultiMeshInstance
+onready var block_area_script = load(global_vars.BLOCK_AREA_SCRIPT_PATH)
+onready var cube_col_shape = load(global_vars.CUBE_COLLISION_SHAPE_PATH)
+
+
+func clear():
+	var all_block_areas = $BlockAreas.get_children()
+	
+	for b in all_block_areas:
+		b.queue_free()
+	
+	multi_mesh.clear()
+
+
+func add_block(cube_transform : Transform, color_name : String) -> Area:
+	# create area
+	var new_area = Area.new()
+	add_child(new_area)
+	new_area.global_transform = cube_transform
+	
+	# create CollisionShape
+	var col_shape_node = CollisionShape.new()
+	col_shape_node.set_shape(cube_col_shape)
+	col_shape_node.set_name("CollisionShape")
+	new_area.add_child(col_shape_node)
+	new_area.monitoring = false
+	new_area.set_script(block_area_script)
+	new_area.set_collision_layer(2)
+	new_area.set_color_name(color_name)
+	
+	all_origins.append(round_origin(new_area.global_transform.origin))
+	
+	# update multi mesh instance
+	multi_mesh.add_recreate(new_area)
+	
+	return new_area
+
+
+func remove_origin(block_orig : Vector3) -> void:
+	all_origins.erase(round_origin(block_orig))
+
+
+func block_exists(block_orig : Vector3) -> bool:
+	return all_origins.has(round_origin(block_orig))
+
+
+func block_count() -> int:
+	var all_block_areas = $BlockAreas
+	return all_block_areas.get_child_count()
+
+
+func round_origin(vec : Vector3) -> Vector3:
+	# rounds so that we can compare origins better
+	var rs = 0.01
+	return Vector3(stepify(vec.x, rs), stepify(vec.y, rs), stepify(vec.z, rs))
+
+
+func serialize() -> Array:
+	var serialized_block_areas : Array
+	var all_block_areas = $BlockAreas.get_children()
+	
+	for b in all_block_areas:
+		serialized_block_areas.append(b.serialize_for_save())
+	
+	return serialized_block_areas
+	
+	

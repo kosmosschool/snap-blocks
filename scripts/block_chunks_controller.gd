@@ -1,8 +1,8 @@
 extends Spatial
 
 
-# logic for collection of all block areas of blocks added to MultiMesh
-class_name AllBlockAreas
+# overall logic forall BlockChunks
+class_name BlockChunksController
 
 
 signal area_added
@@ -16,8 +16,8 @@ var queue_counter := 0
 var saved_array_queue : Array
 var q_blocks_per_frame := 100
 
-onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
-onready var block_area_script = load(global_vars.BLOCK_AREA_SCRIPT_PATH)
+#onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
+onready var block_chunk_scene = load(global_vars.BLOCK_CHUNK_SCENE_PATH)
 onready var cube_col_shape = load(global_vars.CUBE_COLLISION_SHAPE_PATH)
 onready var audio_stream_player_snap := get_node("../AudioStreamPlayer3DSnap")
 
@@ -33,7 +33,7 @@ func _process(delta):
 				break
 			
 			var y = array_size - queue_counter
-			var added_area = add_block_area(
+			var added_area = add_block(
 				unserialize_transform(saved_array_queue[y]["global_transform_serialized"]),
 				saved_array_queue[y]["color_name"],
 				false
@@ -46,38 +46,36 @@ func _process(delta):
 			emit_signal("area_loading_finished")
 
 
-func add_block_area(
+func get_chunk(index : int):
+	var all_block_chunks = get_children()
+	if all_block_chunks.size() > index:
+		return all_block_chunks[index]
+	
+	return null
+
+
+func add_block(
 	cube_transform : Transform,
 	color_name : String,
-	play_sound : bool = true) -> Area:
+	play_sound : bool = true):
+
 	
-	# create area
-	var new_area = Area.new()
-	add_child(new_area)
-	new_area.global_transform = cube_transform
+	# right now we just work with one chunk
+	# later on we might add logic for more chunks to improve performance
+	var chunk = get_chunk(0)
 	
-	# create CollisionShape
-	var col_shape_node = CollisionShape.new()
-	col_shape_node.set_shape(cube_col_shape)
-	col_shape_node.set_name("CollisionShape")
-	new_area.add_child(col_shape_node)
-	new_area.monitoring = false
-	new_area.set_script(block_area_script)
-	new_area.set_collision_layer(2)
-	new_area.set_color_name(color_name)
+	if not chunk:
+		return Area.new()
 	
-	all_origins.append(round_origin(new_area.global_transform.origin))
-	
+	var new_area = chunk.add_block(cube_transform, color_name)
 	
 	if play_sound:
 		play_snap_sound(new_area.global_transform.origin)
 	
-	
-#	print("total blocks: ", get_child_count())
-	if get_child_count() != 1:
+	if chunk.block_count() != 1:
 		emit_signal("area_added")
 	
-	return new_area
+#	return new_area
 
 
 func play_snap_sound(new_pos : Vector3):
@@ -87,19 +85,37 @@ func play_snap_sound(new_pos : Vector3):
 		audio_stream_player_snap.play()
 
 
-func clear() -> void:
-	# clear all areas
+func create_chunk():
+	# adds a BlockChunk
+	var block_chunk = block_chunk_scene.instance()
+	add_child(block_chunk)
+
+
+func reset():
+	clear_all()
+	create_chunk()
+
+
+func clear_all() -> void:
+	# clear all BlockChunks
 	var all_children = get_children()
 	for c in all_children:
 		c.queue_free()
+
+
+func clear_chunk(chunk_index : int) -> void:
+	# clear blocks in a specific chunk
+	var chunk = get_chunk(chunk_index)
+	if chunk:
+		chunk.clear()
 	
 	all_origins.clear()
 
 
 func recreate_from_save(saved_array : Array) -> void:
 	# recreates all blocks from saved file
-	multi_mesh.clear()
-	clear()
+#	multi_mesh.clear()
+	clear_all()
 	loaded_areas.clear()
 	
 	# we need to queue up else it takes too long to load
@@ -125,15 +141,25 @@ func unserialize_transform(transform_array : Array):
 
 
 func remove_origin(block_orig : Vector3) -> void:
-	all_origins.erase(round_origin(block_orig))
+	var chunk = get_chunk(0)
+	if chunk:
+		chunk.erase(block_orig)
 
 
 # called by ks_multi_mesh
 func block_exists(block_orig : Vector3) -> bool:
-	return all_origins.has(round_origin(block_orig))
+	var chunk = get_chunk(0)
+	if chunk:
+			return chunk.has_block(block_orig)
+	
+	return false
 
 
-func round_origin(vec : Vector3) -> Vector3:
-	# rounds so that we can compare origins better
-	var rs = 0.01
-	return Vector3(stepify(vec.x, rs), stepify(vec.y, rs), stepify(vec.z, rs))
+func serialize_all():
+	var block_areas_serialized : Array
+	
+	var all_block_chunks = get_children()
+	for c in all_block_chunks:
+		block_areas_serialized.append(c.serialize())
+	
+	return block_areas_serialized

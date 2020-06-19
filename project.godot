@@ -24,6 +24,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/block_area.gd"
 }, {
+"base": "Spatial",
+"class": "BlockChunk",
+"language": "GDScript",
+"path": "res://scripts/block_chunk.gd"
+}, {
+"base": "Spatial",
+"class": "BlockChunksController",
+"language": "GDScript",
+"path": "res://scripts/block_chunks_controller.gd"
+}, {
 "base": "KSGrabbableRigidBody",
 "class": "BuildingBlockSnappable",
 "language": "GDScript",
@@ -188,6 +198,8 @@ _global_script_class_icons={
 "AllBlockAreas": "",
 "BaseController": "",
 "BlockArea": "",
+"BlockChunk": "",
+"BlockChunksController": "",
 "BuildingBlockSnappable": "",
 "ButtonChangePageLoad": "",
 "ButtonDelete": "",

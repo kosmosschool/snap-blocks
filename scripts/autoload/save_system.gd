@@ -11,8 +11,9 @@ var base_dir = "user://"
 var user_prefs_file_name = "user_prefs.json"
 var open_file_path : String
 
-onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
-onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
+#onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
+onready var block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
+#onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
 onready var welcome_controller = get_node(global_vars.WELCOME_CONTROLLER_PATH)
 
 
@@ -110,15 +111,17 @@ func get_file_number(input_file_name : String) -> int:
 func save_creation():
 	# this overrides the old file
 	# get all block areas
-	var block_areas_serialized : Array
-	var block_areas = all_block_areas.get_children()
+#	var block_areas_serialized : Array
+#	var block_areas = all_block_areas.get_children()
+#
+#	# don't save if there are no blocks snapped together
+#	if block_areas.empty():
+#		return
+#
+#	for b in block_areas:
+#		block_areas_serialized.append(b.serialize_for_save())
 	
-	# don't save if there are no blocks snapped together
-	if block_areas.empty():
-		return
-	
-	for b in block_areas:
-		block_areas_serialized.append(b.serialize_for_save())
+	var block_areas_serialized = block_chunks_controller.serialize_all()
 	
 	var new_data_dict = {
 		"app_version": global_functions.get_current_version(),
@@ -142,10 +145,10 @@ func load_creation(saved_file_path : String):
 		return
 	
 	# create all block areas
-	var added_areas = all_block_areas.recreate_from_save(content["all_block_areas"])
+	var added_areas = block_chunks_controller.recreate_from_save(content["all_block_areas"])
 	
 	# createa multi mesh
-	multi_mesh.recreate(added_areas)
+#	multi_mesh.recreate(added_areas)
 	
 	# if we loaded a fixed gallery file, create a new file to save to
 	if "gallery_fixed" in saved_file_path:
@@ -192,8 +195,8 @@ func get_all_saved_files(dir_path : String):
 
 func clear_and_new() -> void:
 	# deletes current creation, creates new file
-	all_block_areas.clear()
-	multi_mesh.clear()
+	block_chunks_controller.reset()
+#	multi_mesh.clear()
 	welcome_controller.starting_cube_set = false
 	
 	open_new_file()

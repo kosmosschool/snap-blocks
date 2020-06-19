@@ -33,7 +33,8 @@ onready var audio_player := $AudioStreamPlayer3D
 onready var particles := $Particles
 onready var ghost_block_scene = preload("res://scenes/building_blocks/ghost_block_base.tscn")
 onready var multi_mesh := get_node(global_vars.MULTI_MESH_PATH)
-onready var all_block_areas := get_node(global_vars.ALL_BLOCK_AREAS_PATH)
+#onready var all_block_areas := get_node(global_vars.ALL_BLOCK_AREAS_PATH)
+onready var block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
 onready var movable_world := get_node(global_vars.MOVABLE_WORLD_PATH)
 
 
@@ -244,12 +245,13 @@ func snap_to_cand():
 	
 	if snap_cand is RigidBody:
 		var snap_cand_rigid_body = snap_cand
-		snap_cand = all_block_areas.add_block_area(
-			snap_cand.global_transform, 
-			snap_cand.color_name,
-			false
-		)
-		multi_mesh.add_recreate(snap_cand)
+		block_chunks_controller.add_block(snap_cand.global_transform, snap_cand.color_name, false)
+#		snap_cand = all_block_areas.add_block_area(
+#			snap_cand.global_transform, 
+#			snap_cand.color_name,
+#			false
+#		)
+#		multi_mesh.add_recreate(snap_cand)
 		snap_cand_rigid_body.queue_free()
 	
 	# find one orthogonal vector to normal that we can use to calculate the angles
@@ -480,11 +482,12 @@ func update_pos_to_snap(delta: float) -> void:
 		global_transform = snap_end_transform
 		moving_to_snap = false
 		snap_timer = 0.0
-		var transferred_area = all_block_areas.add_block_area(
-			global_transform,
-			color_name
-		)
-		multi_mesh.add_recreate(transferred_area)
+		block_chunks_controller.add_block(global_transform, color_name)
+#		var transferred_area = all_block_areas.add_block_area(
+#			global_transform,
+#			color_name
+#		)
+#		multi_mesh.add_recreate(transferred_area)
 		queue_free()
 		return
 	

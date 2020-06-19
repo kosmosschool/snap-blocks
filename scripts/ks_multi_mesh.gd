@@ -11,6 +11,7 @@ var areas_to_recreate : Array
 var current_area_thread : Area
 var thread_area_to_ignore : Area
 var current_visibility_intance_count := 0
+var bg_check_neighbors := true
 
 var thread
 var mutex
@@ -28,6 +29,9 @@ func _ready():
 	exit_thread = false
 	thread = Thread.new()
 	thread.start(self, "_add_area_thread")
+	
+	all_block_areas.connect("area_chunk_loaded", self, "_on_All_Block_Areas_area_chunk_loaded")
+	all_block_areas.connect("area_loading_finished", self, "_on_All_Block_Areas_area_loading_finished")
 
 
 func _add_area_thread(userdata):
@@ -42,11 +46,11 @@ func _add_area_thread(userdata):
 			break
 		
 		mutex.lock()
-		current_visibility_intance_count = 0
+#		current_visibility_intance_count = 0
 		for a in areas_to_recreate:
 			if a == thread_area_to_ignore:
 				continue
-			add_area(a)
+			add_area(a, bg_check_neighbors)
 		
 		multimesh.set_visible_instance_count(current_visibility_intance_count)
 		thread_area_to_ignore = null
@@ -61,7 +65,17 @@ func _exit_tree():
 	
 	semaphore.post()
 	thread.wait_to_finish()
-	
+
+
+func _on_All_Block_Areas_area_chunk_loaded(loaded_areas):
+#	create_incremental(loaded_areas)
+	create(loaded_areas, false)
+
+
+func _on_All_Block_Areas_area_loading_finished():
+#	print("recreating")
+	create()
+#	recreate()
 
 
 func add_area(area : Area, check_neighbors = true) -> void:
@@ -144,8 +158,14 @@ func add_area(area : Area, check_neighbors = true) -> void:
 	var new_count = current_visibility_intance_count + side_transforms.size()
 	current_visibility_intance_count = new_count
 	
+	if not check_neighbors:
+		# because we add all 6 sides and need it to be visible immediatly
+		# with check_neighbors == true, set_visible_instance_count is set in the background thread
+		multimesh.set_visible_instance_count(current_visibility_intance_count)
+	
 	for i in range(side_transforms.size()):
 		var curr_index = new_count - i - 1
+		
 		multimesh.set_instance_transform(curr_index, side_transforms[i])
 		multimesh.set_instance_custom_data(curr_index, new_color)
 		area.append_mm_index(curr_index)
@@ -154,31 +174,58 @@ func add_area(area : Area, check_neighbors = true) -> void:
 func remove_area(area : Area) -> void:
 	# remove block from MultiMeshInstance
 	thread_area_to_ignore = area
-	recreate()
+#	recreate()
+	create()
 	emit_signal("area_deleted")
 
 
-func recreate(new_areas : Array = get_node(global_vars.ALL_BLOCK_AREAS_PATH).get_children()):
+func create(new_areas : Array = get_node(global_vars.ALL_BLOCK_AREAS_PATH).get_children(), reset : bool = true) -> void:
+	mutex.lock()
 	areas_to_recreate = new_areas
+	if reset:
+		current_visibility_intance_count = 0
+	bg_check_neighbors = reset
+	mutex.unlock()
 	semaphore.post()
 
+#func recreate(new_areas : Array = get_node(global_vars.ALL_BLOCK_AREAS_PATH).get_children()):
+#	mutex.lock()
+#	areas_to_recreate = new_areas
+#	current_visibility_intance_count = 0
+#	bg_check_neighbors = true
+#	mutex.unlock()
+#	semaphore.post()
+#
+#
+#func create_incremental(new_areas : Array) -> void:
+#	# doesn't recreate the whole thing, but continues from next_index
+#	mutex.lock()
+#	areas_to_recreate = new_areas
+#	bg_check_neighbors = false
+#	mutex.unlock()
+#	semaphore.post()
 
-# called by SaveSystem
+
+# called by SaveSystem or AllBlockAreas
 func clear() -> void:
+	mutex.lock()
 	current_visibility_intance_count = 0
+	mutex.unlock()
 	multimesh.set_visible_instance_count(0)
 
 
-func add_recreate(added_area : Area, new_areas : Array = get_node(global_vars.ALL_BLOCK_AREAS_PATH).get_children()):
+func add_recreate(added_area : Area):
 	# first add a new area without checking for neighbors, and then do the whole thing again in the background thread
 	# if we only do the bg thread, the newely added cube flickers
-	current_visibility_intance_count = multimesh.get_visible_instance_count()
+#	current_visibility_intance_count = multimesh.get_visible_instance_count()
 	add_area(added_area, false)
-	multimesh.set_visible_instance_count(current_visibility_intance_count)
+#	multimesh.set_visible_instance_count(current_visibility_intance_count)
 	
-	# run bg thread
-	areas_to_recreate = new_areas
-	semaphore.post()
+	# run bg thread to recrate all of multi mesh
+#	recreate()
+	create()
+#	areas_to_recreate = new_areas
+#	semaphore.post()
 
 
 func recolor_area(area : Area) -> void:

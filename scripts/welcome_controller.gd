@@ -10,8 +10,9 @@ var starting_cube_set := false
 var starting_cube_timer := 0.0
 
 onready var tutorial_scene = preload("res://scenes/tutorial_controller.tscn")
-onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
-onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
+#onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
+onready var block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
+#onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
 onready var camera = get_node(global_vars.AR_VR_CAMERA_PATH)
 
 
@@ -25,7 +26,7 @@ func _ready():
 func _process(delta):
 	if not starting_cube_set:
 		# create starting cube after a certain time to make sure it's aligned with the user height
-		if starting_cube_timer > 0.2:
+		if starting_cube_timer > 0.3:
 			create_starting_cube()
 			starting_cube_set = true
 			starting_cube_timer = 0.0
@@ -40,14 +41,20 @@ func show_tutorial() -> void:
 
 
 func create_starting_cube() -> void:
+	# reset all block chunks
+	block_chunks_controller.reset()
+	
 	var y_value = 1.0
 	if camera:
 		if not is_nan(camera.transform.basis.x.x):
 			y_value = camera.global_transform.origin.y - 0.2
 			
 	var starting_trans = Transform(Basis(), Vector3(0, y_value, -0.5))
-	all_block_areas.add_block_area(starting_trans, "olive", false)
-	multi_mesh.recreate()
+	
+	block_chunks_controller.add_block(starting_trans, "olive", false)
+	
+#	all_block_areas.add_block_area(starting_trans, "olive", false)
+#	multi_mesh.create()
 
 
 #func create_floor() -> void:
