@@ -8,8 +8,9 @@ var building_block_scene
 var mm_indices : Array
 
 var all_building_blocks
-var multi_mesh
-var all_block_areas
+var block_chunks_controller
+#var multi_mesh
+#var all_block_areas
 var color_name : String setget set_color_name, get_color_name
 
 
@@ -25,8 +26,9 @@ func get_color_name():
 func _init():
 	building_block_scene = preload("res://scenes/building_blocks/block_base_cube.tscn")
 	all_building_blocks = get_node(global_vars.ALL_BUILDING_BLOCKS_PATH)
-	all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
-	multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
+	block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
+#	all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
+#	multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
 
 
 func remove_from_multi_mesh(controller_grab) -> void:
@@ -44,16 +46,16 @@ func remove_from_multi_mesh(controller_grab) -> void:
 	# grab
 	controller_grab.start_grab_hinge_joint(new_bb)
 	
-	all_block_areas.remove_origin(global_transform.origin)
-	multi_mesh.remove_area(self)
+	block_chunks_controller.remove_origin(global_transform.origin)
+#	multi_mesh.remove_area(self)
 	
 	# free this area
 	queue_free()
 
 
 func delete_from_multi_mesh() -> void:
-	all_block_areas.remove_origin(global_transform.origin)
-	multi_mesh.remove_area(self)
+	block_chunks_controller.remove_origin(global_transform.origin)
+#	multi_mesh.remove_area(self)
 	
 	# free this area
 	queue_free()
@@ -62,7 +64,8 @@ func delete_from_multi_mesh() -> void:
 func recolor(controller_side_string : String) -> void:
 	# changes color to currently selected color
 	color_name = color_system.get_current_color_name(controller_side_string)
-	multi_mesh.recolor_area(self)
+#	multi_mesh.recolor_area(self)
+	block_chunks_controller.recolor_block(self)
 
 
 func clear_mm_indices() -> void:

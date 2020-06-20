@@ -19,7 +19,7 @@ var semaphore
 var exit_thread
 
 
-onready var all_block_areas := get_node(global_vars.ALL_BLOCK_AREAS_PATH)
+onready var block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
 
 
 func _ready():
@@ -29,9 +29,6 @@ func _ready():
 	exit_thread = false
 	thread = Thread.new()
 	thread.start(self, "_add_area_thread")
-	
-	all_block_areas.connect("area_chunk_loaded", self, "_on_All_Block_Areas_area_chunk_loaded")
-	all_block_areas.connect("area_loading_finished", self, "_on_All_Block_Areas_area_loading_finished")
 
 
 func _add_area_thread(userdata):
@@ -67,17 +64,6 @@ func _exit_tree():
 	thread.wait_to_finish()
 
 
-func _on_All_Block_Areas_area_chunk_loaded(loaded_areas):
-#	create_incremental(loaded_areas)
-	create(loaded_areas, false)
-
-
-func _on_All_Block_Areas_area_loading_finished():
-#	print("recreating")
-	create()
-#	recreate()
-
-
 func add_area(area : Area, check_neighbors = true) -> void:
 	# add block to MultiMeshInstance
 	# update position of new instance
@@ -111,12 +97,12 @@ func add_area(area : Area, check_neighbors = true) -> void:
 	if check_neighbors:
 		# we only do these checks if check_neighbor == true
 		# because they are expensive to do
-		s_1_neighbor_exists = all_block_areas.block_exists(s_1_neighbor_orig)
-		s_2_neighbor_exists = all_block_areas.block_exists(s_2_neighbor_orig)
-		s_3_neighbor_exists = all_block_areas.block_exists(s_3_neighbor_orig)
-		s_4_neighbor_exists = all_block_areas.block_exists(s_4_neighbor_orig)
-		s_5_neighbor_exists = all_block_areas.block_exists(s_5_neighbor_orig)
-		s_6_neighbor_exists = all_block_areas.block_exists(s_6_neighbor_orig)
+		s_1_neighbor_exists = block_chunks_controller.block_exists(s_1_neighbor_orig)
+		s_2_neighbor_exists = block_chunks_controller.block_exists(s_2_neighbor_orig)
+		s_3_neighbor_exists = block_chunks_controller.block_exists(s_3_neighbor_orig)
+		s_4_neighbor_exists = block_chunks_controller.block_exists(s_4_neighbor_orig)
+		s_5_neighbor_exists = block_chunks_controller.block_exists(s_5_neighbor_orig)
+		s_6_neighbor_exists = block_chunks_controller.block_exists(s_6_neighbor_orig)
 	
 	
 	if not s_1_neighbor_exists:
@@ -175,11 +161,11 @@ func remove_area(area : Area) -> void:
 	# remove block from MultiMeshInstance
 	thread_area_to_ignore = area
 #	recreate()
-	create()
+	create(get_parent().get_all_blocks())
 	emit_signal("area_deleted")
 
 
-func create(new_areas : Array = get_node(global_vars.ALL_BLOCK_AREAS_PATH).get_children(), reset : bool = true) -> void:
+func create(new_areas : Array, reset : bool = true) -> void:
 	mutex.lock()
 	areas_to_recreate = new_areas
 	if reset:
@@ -187,23 +173,6 @@ func create(new_areas : Array = get_node(global_vars.ALL_BLOCK_AREAS_PATH).get_c
 	bg_check_neighbors = reset
 	mutex.unlock()
 	semaphore.post()
-
-#func recreate(new_areas : Array = get_node(global_vars.ALL_BLOCK_AREAS_PATH).get_children()):
-#	mutex.lock()
-#	areas_to_recreate = new_areas
-#	current_visibility_intance_count = 0
-#	bg_check_neighbors = true
-#	mutex.unlock()
-#	semaphore.post()
-#
-#
-#func create_incremental(new_areas : Array) -> void:
-#	# doesn't recreate the whole thing, but continues from next_index
-#	mutex.lock()
-#	areas_to_recreate = new_areas
-#	bg_check_neighbors = false
-#	mutex.unlock()
-#	semaphore.post()
 
 
 # called by SaveSystem or AllBlockAreas
@@ -217,18 +186,13 @@ func clear() -> void:
 func add_recreate(added_area : Area):
 	# first add a new area without checking for neighbors, and then do the whole thing again in the background thread
 	# if we only do the bg thread, the newely added cube flickers
-#	current_visibility_intance_count = multimesh.get_visible_instance_count()
 	add_area(added_area, false)
-#	multimesh.set_visible_instance_count(current_visibility_intance_count)
 	
 	# run bg thread to recrate all of multi mesh
-#	recreate()
-	create()
-#	areas_to_recreate = new_areas
-#	semaphore.post()
+	create(get_parent().get_all_blocks())
 
 
-func recolor_area(area : Area) -> void:
+func recolor_block(area : Area) -> void:
 	var area_color = color_system.get_color_by_name(area.get_color_name())
 	var new_color = Color(area_color.x, area_color.y, area_color.z, 1.0)
 	

@@ -10,11 +10,6 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Spatial",
-"class": "AllBlockAreas",
-"language": "GDScript",
-"path": "res://scripts/all_block_areas.gd"
-}, {
-"base": "Spatial",
 "class": "BaseController",
 "language": "GDScript",
 "path": "res://scripts/base_controller.gd"
@@ -195,7 +190,6 @@ _global_script_classes=[ {
 "path": "res://scripts/welcome_controller.gd"
 } ]
 _global_script_class_icons={
-"AllBlockAreas": "",
 "BaseController": "",
 "BlockArea": "",
 "BlockChunk": "",

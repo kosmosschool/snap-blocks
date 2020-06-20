@@ -15,8 +15,8 @@ var process_load_queue := false
 var queue_counter := 0
 var saved_array_queue : Array
 var q_blocks_per_frame := 100
+var current_chunk : BlockChunk
 
-#onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
 onready var block_chunk_scene = load(global_vars.BLOCK_CHUNK_SCENE_PATH)
 onready var cube_col_shape = load(global_vars.CUBE_COLLISION_SHAPE_PATH)
 onready var audio_stream_player_snap := get_node("../AudioStreamPlayer3DSnap")
@@ -29,45 +29,59 @@ func _process(delta):
 		loaded_areas.clear()
 		for i in range(array_size):
 			if i == q_blocks_per_frame or queue_counter == 0:
-				emit_signal("area_chunk_loaded", loaded_areas)
+				current_chunk.create_multi_mesh(loaded_areas, false)
 				break
 			
 			var y = array_size - queue_counter
+			
 			var added_area = add_block(
 				unserialize_transform(saved_array_queue[y]["global_transform_serialized"]),
 				saved_array_queue[y]["color_name"],
 				false
 			)
+			
 			loaded_areas.append(added_area)
 			queue_counter -= 1
 		
 		if queue_counter == 0:
 			process_load_queue = false
-			emit_signal("area_loading_finished")
+			current_chunk.create_multi_mesh()
 
 
-func get_chunk(index : int):
-	var all_block_chunks = get_children()
-	if all_block_chunks.size() > index:
-		return all_block_chunks[index]
-	
-	return null
+#func get_chunk(index : int):
+#	# the problem with this method is that we don't check if instance is valid
+#	# we just use get_current_chunk() for now
+#	var all_block_chunks = get_children()
+#	if all_block_chunks.size() > index:
+#		return all_block_chunks[index]
+#
+#	return null
+
+
+func get_current_chunk():
+	return current_chunk
+#	var all_block_chunks = get_children()
+#
+#	for b in all_block_chunks:
+#		if is_instance_valid(b):
+#			return b
 
 
 func add_block(
 	cube_transform : Transform,
 	color_name : String,
-	play_sound : bool = true):
+	play_sound : bool = true,
+	update_multi_mesh = false):
 
 	
 	# right now we just work with one chunk
 	# later on we might add logic for more chunks to improve performance
-	var chunk = get_chunk(0)
+	var chunk = get_current_chunk()
 	
 	if not chunk:
-		return Area.new()
+		return null
 	
-	var new_area = chunk.add_block(cube_transform, color_name)
+	var new_area = chunk.add_block(cube_transform, color_name, update_multi_mesh)
 	
 	if play_sound:
 		play_snap_sound(new_area.global_transform.origin)
@@ -75,11 +89,10 @@ func add_block(
 	if chunk.block_count() != 1:
 		emit_signal("area_added")
 	
-#	return new_area
+	return new_area
 
 
 func play_snap_sound(new_pos : Vector3):
-	print("sound_settings.get_block_snap_sound() ", sound_settings.get_block_snap_sound())
 	if audio_stream_player_snap and sound_settings.get_block_snap_sound():
 		audio_stream_player_snap.global_transform.origin = new_pos
 		audio_stream_player_snap.play()
@@ -89,6 +102,7 @@ func create_chunk():
 	# adds a BlockChunk
 	var block_chunk = block_chunk_scene.instance()
 	add_child(block_chunk)
+	current_chunk = block_chunk
 
 
 func reset():
@@ -105,7 +119,7 @@ func clear_all() -> void:
 
 func clear_chunk(chunk_index : int) -> void:
 	# clear blocks in a specific chunk
-	var chunk = get_chunk(chunk_index)
+	var chunk = get_current_chunk()
 	if chunk:
 		chunk.clear()
 	
@@ -114,10 +128,8 @@ func clear_chunk(chunk_index : int) -> void:
 
 func recreate_from_save(saved_array : Array) -> void:
 	# recreates all blocks from saved file
-#	multi_mesh.clear()
-	clear_all()
+	reset()
 	loaded_areas.clear()
-	
 	# we need to queue up else it takes too long to load
 	process_load_queue = true
 	saved_array_queue = saved_array
@@ -140,17 +152,23 @@ func unserialize_transform(transform_array : Array):
 	return return_transform
 
 
-func remove_origin(block_orig : Vector3) -> void:
-	var chunk = get_chunk(0)
+func recolor_block(area):
+	var chunk = get_current_chunk()
 	if chunk:
-		chunk.erase(block_orig)
+		chunk.recolor_block(area)
+
+
+func remove_origin(block_orig : Vector3) -> void:
+	var chunk = get_current_chunk()
+	if chunk:
+		chunk.remove_origin(block_orig)
 
 
 # called by ks_multi_mesh
 func block_exists(block_orig : Vector3) -> bool:
-	var chunk = get_chunk(0)
+	var chunk = get_current_chunk()
 	if chunk:
-			return chunk.has_block(block_orig)
+		return chunk.has_block(block_orig)
 	
 	return false
 
@@ -160,6 +178,16 @@ func serialize_all():
 	
 	var all_block_chunks = get_children()
 	for c in all_block_chunks:
-		block_areas_serialized.append(c.serialize())
+		block_areas_serialized += c.serialize()
 	
 	return block_areas_serialized
+
+
+func get_all_blocks():
+	var all_blocks : Array
+	
+	var all_block_chunks = get_children()
+	for c in all_block_chunks:
+		all_blocks += c.get_all_blocks()
+	
+	return all_blocks

@@ -51,10 +51,7 @@ func create_starting_cube() -> void:
 			
 	var starting_trans = Transform(Basis(), Vector3(0, y_value, -0.5))
 	
-	block_chunks_controller.add_block(starting_trans, "olive", false)
-	
-#	all_block_areas.add_block_area(starting_trans, "olive", false)
-#	multi_mesh.create()
+	block_chunks_controller.add_block(starting_trans, "olive", false, true)
 
 
 #func create_floor() -> void:

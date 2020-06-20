@@ -7,23 +7,24 @@ class_name BlockChunk
 var all_origins : Array
 
 onready var multi_mesh = $MultiMeshInstance
+onready var all_block_areas = $BlockAreas
 onready var block_area_script = load(global_vars.BLOCK_AREA_SCRIPT_PATH)
 onready var cube_col_shape = load(global_vars.CUBE_COLLISION_SHAPE_PATH)
 
 
 func clear():
-	var all_block_areas = $BlockAreas.get_children()
-	
-	for b in all_block_areas:
+#	var all_block_areas = $BlockAreas.get_children()
+	var block_areas_children = all_block_areas.get_children()
+	for b in block_areas_children:
 		b.queue_free()
 	
 	multi_mesh.clear()
 
 
-func add_block(cube_transform : Transform, color_name : String) -> Area:
+func add_block(cube_transform : Transform, color_name : String, update_multi_mesh : bool = false) -> Area:
 	# create area
 	var new_area = Area.new()
-	add_child(new_area)
+	all_block_areas.add_child(new_area)
 	new_area.global_transform = cube_transform
 	
 	# create CollisionShape
@@ -38,14 +39,20 @@ func add_block(cube_transform : Transform, color_name : String) -> Area:
 	
 	all_origins.append(round_origin(new_area.global_transform.origin))
 	
-	# update multi mesh instance
-	multi_mesh.add_recreate(new_area)
+	if update_multi_mesh:
+		# update multi mesh instance
+		multi_mesh.add_recreate(new_area)
 	
 	return new_area
 
 
+func recolor_block(area : Area):
+	multi_mesh.recolor_block(area)
+
+
 func remove_origin(block_orig : Vector3) -> void:
 	all_origins.erase(round_origin(block_orig))
+	multi_mesh.remove_area(self)
 
 
 func block_exists(block_orig : Vector3) -> bool:
@@ -71,5 +78,11 @@ func serialize() -> Array:
 		serialized_block_areas.append(b.serialize_for_save())
 	
 	return serialized_block_areas
-	
-	
+
+
+func create_multi_mesh(new_areas : Array = get_all_blocks(), reset : bool = true):
+	multi_mesh.create(new_areas, reset)
+
+
+func get_all_blocks() -> Array:
+	return $BlockAreas.get_children()

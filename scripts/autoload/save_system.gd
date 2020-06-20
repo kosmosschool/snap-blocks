@@ -145,7 +145,7 @@ func load_creation(saved_file_path : String):
 		return
 	
 	# create all block areas
-	var added_areas = block_chunks_controller.recreate_from_save(content["all_block_areas"])
+	block_chunks_controller.recreate_from_save(content["all_block_areas"])
 	
 	# createa multi mesh
 #	multi_mesh.recreate(added_areas)
