@@ -12,6 +12,9 @@ var current_area_thread : Area
 var thread_area_to_ignore : Area
 var current_visibility_intance_count := 0
 var bg_check_neighbors := true
+var area_queue : Array
+var bg_thread_in_progress := false
+var all_placeholders : Array
 
 var thread
 var mutex
@@ -20,6 +23,8 @@ var exit_thread
 
 
 onready var block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
+onready var base_cube_mesh_instance = preload("res://scenes/base_cube_mesh_instance.tscn")
+onready var movable_world = get_node(global_vars.MOVABLE_WORLD_PATH)
 
 
 func _ready():
@@ -44,6 +49,7 @@ func _add_area_thread(userdata):
 		
 		mutex.lock()
 #		current_visibility_intance_count = 0
+		bg_thread_in_progress = true
 		for a in areas_to_recreate:
 			if a == thread_area_to_ignore:
 				continue
@@ -53,6 +59,8 @@ func _add_area_thread(userdata):
 		thread_area_to_ignore = null
 #		print("instance count ", multimesh.get_visible_instance_count())
 		mutex.unlock()
+		
+		creation_finished()
 
 
 func _exit_tree():
@@ -62,6 +70,22 @@ func _exit_tree():
 	
 	semaphore.post()
 	thread.wait_to_finish()
+
+
+func creation_finished():
+	# called when bg thread has finished creating
+	if area_queue.empty():
+		bg_thread_in_progress = false
+		for p in all_placeholders:
+			p.queue_free()
+		
+		all_placeholders.clear()
+		
+		return
+	
+	# if there is still something in the queue, process it
+	create(area_queue[0]["areas"], area_queue[0]["reset"], true)
+	area_queue.remove(0)
 
 
 func add_area(area : Area, check_neighbors = true) -> void:
@@ -144,10 +168,17 @@ func add_area(area : Area, check_neighbors = true) -> void:
 	var new_count = current_visibility_intance_count + side_transforms.size()
 	current_visibility_intance_count = new_count
 	
-	if not check_neighbors:
+#	if placeholder:
+#		# adds cube mesh as place holders until the bg mesh has finished building
+#		var cube_instance = base_cube_mesh_instance.instance()
+#		cube_instance.global_transform = area_global_trans
+#	else:
+		
+	
+#	if not check_neighbors:
 		# because we add all 6 sides and need it to be visible immediatly
 		# with check_neighbors == true, set_visible_instance_count is set in the background thread
-		multimesh.set_visible_instance_count(current_visibility_intance_count)
+#		multimesh.set_visible_instance_count(current_visibility_intance_count)
 	
 	for i in range(side_transforms.size()):
 		var curr_index = new_count - i - 1
@@ -157,15 +188,38 @@ func add_area(area : Area, check_neighbors = true) -> void:
 		area.append_mm_index(curr_index)
 
 
+func add_placeholder(area: Area):
+	# adds cube mesh as place holders until the bg mesh has finished building
+	var area_color = color_system.get_color_by_name(area.get_color_name())
+	var new_color = Vector3(area_color.x, area_color.y, area_color.z)
+	
+	var cube_instance = base_cube_mesh_instance.instance()
+	cube_instance.global_transform = area.global_transform
+	
+	cube_instance.get_surface_material(0).set_shader_param("color", new_color)
+	
+	movable_world.add_child(cube_instance)
+	
+	all_placeholders.append(cube_instance)
+	
+
 func remove_area(area : Area) -> void:
 	# remove block from MultiMeshInstance
+	# first remove it directly from the multi mesh so the player doesn't need to wait until the block is gone
+	var tiny_transform = Transform(Basis(Vector3(0, 0, 0)), Vector3(0, 0, 0)) 
+	for i in area.mm_indices:
+		multimesh.set_instance_transform(i, tiny_transform)
 	thread_area_to_ignore = area
-#	recreate()
 	create(get_parent().get_all_blocks())
 	emit_signal("area_deleted")
 
 
-func create(new_areas : Array, reset : bool = true) -> void:
+func create(new_areas : Array, reset : bool = true, skip_bg : bool = false) -> void:
+	# we need to check if bg process is currently running. if yes, we need to queue this.
+	if bg_thread_in_progress and not skip_bg:
+		area_queue.append({"areas": new_areas, "reset": reset})
+		return
+	
 	mutex.lock()
 	areas_to_recreate = new_areas
 	if reset:
@@ -186,11 +240,12 @@ func clear() -> void:
 func add_recreate(added_area : Area):
 	# first add a new area without checking for neighbors, and then do the whole thing again in the background thread
 	# if we only do the bg thread, the newely added cube flickers
-	add_area(added_area, false)
+	add_placeholder(added_area)
 	
 	# run bg thread to recrate all of multi mesh
 	create(get_parent().get_all_blocks())
-
+	
+	
 
 func recolor_block(area : Area) -> void:
 	var area_color = color_system.get_color_by_name(area.get_color_name())

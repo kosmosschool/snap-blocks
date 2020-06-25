@@ -54,7 +54,7 @@ func remove_from_multi_mesh(controller_grab) -> void:
 
 
 func delete_from_multi_mesh() -> void:
-	block_chunks_controller.remove_origin(global_transform.origin)
+	block_chunks_controller.remove_origin(global_transform.origin, self)
 #	multi_mesh.remove_area(self)
 	
 	# free this area

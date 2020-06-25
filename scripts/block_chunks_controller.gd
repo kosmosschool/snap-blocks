@@ -88,6 +88,7 @@ func add_block(
 		play_snap_sound(new_area.global_transform.origin)
 	
 	if chunk.block_count() != 1:
+		# we do this becuase of the tutorial
 		emit_signal("area_added")
 	
 	return new_area
@@ -160,10 +161,10 @@ func recolor_block(area):
 		chunk.recolor_block(area)
 
 
-func remove_origin(block_orig : Vector3) -> void:
+func remove_origin(block_orig : Vector3, area : Area) -> void:
 	var chunk = get_current_chunk()
 	if chunk:
-		chunk.remove_origin(block_orig)
+		chunk.remove_origin(block_orig, area)
 
 
 # called by ks_multi_mesh

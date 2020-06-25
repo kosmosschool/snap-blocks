@@ -50,9 +50,9 @@ func recolor_block(area : Area):
 	multi_mesh.recolor_block(area)
 
 
-func remove_origin(block_orig : Vector3) -> void:
+func remove_origin(block_orig : Vector3, area) -> void:
 	all_origins.erase(round_origin(block_orig))
-	multi_mesh.remove_area(self)
+	multi_mesh.remove_area(area)
 
 
 func block_exists(block_orig : Vector3) -> bool:
