@@ -44,6 +44,7 @@ func _process(delta):
 			queue_counter -= 1
 		
 		if queue_counter == 0:
+			game_settings.set_interaction_enabled(true)
 			process_load_queue = false
 			current_chunk.create_multi_mesh()
 
@@ -128,6 +129,7 @@ func clear_chunk(chunk_index : int) -> void:
 
 func recreate_from_save(saved_array : Array) -> void:
 	# recreates all blocks from saved file
+	game_settings.set_interaction_enabled(false)
 	reset()
 	loaded_areas.clear()
 	# we need to queue up else it takes too long to load

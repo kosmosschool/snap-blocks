@@ -245,7 +245,7 @@ func snap_to_cand():
 	
 	if snap_cand is RigidBody:
 		var snap_cand_rigid_body = snap_cand
-		block_chunks_controller.add_block(snap_cand.global_transform, snap_cand.color_name, false)
+		block_chunks_controller.add_block(snap_cand.global_transform, snap_cand.color_name, false, true)
 #		snap_cand = all_block_areas.add_block_area(
 #			snap_cand.global_transform, 
 #			snap_cand.color_name,
@@ -482,7 +482,7 @@ func update_pos_to_snap(delta: float) -> void:
 		global_transform = snap_end_transform
 		moving_to_snap = false
 		snap_timer = 0.0
-		block_chunks_controller.add_block(global_transform, color_name)
+		block_chunks_controller.add_block(global_transform, color_name, true, true)
 #		var transferred_area = all_block_areas.add_block_area(
 #			global_transform,
 #			color_name

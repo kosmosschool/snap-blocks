@@ -23,6 +23,9 @@ func _on_ARVRController_button_pressed(button_number):
 #	if vr.button_pressed(vr.BUTTON.B) and button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER:
 #		create_ghost_block()
 	
+	if not game_settings.get_interaction_enabled():
+		return
+		
 	if button_number == vr.CONTROLLER_BUTTON.GRIP_TRIGGER:
 		var overlapping_block_area = get_overlapping_area()
 		

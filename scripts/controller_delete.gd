@@ -9,6 +9,9 @@ func _on_ARVRController_button_pressed(button_number):
 	if not selected:
 		return
 	
+	if not game_settings.get_interaction_enabled():
+		return
+		
 	if button_number == vr.CONTROLLER_BUTTON.INDEX_TRIGGER:
 		var overlapping_block_area = get_overlapping_area()
 		
