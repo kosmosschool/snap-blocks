@@ -8,6 +8,8 @@ class_name BlockChunksController
 signal area_added
 signal area_loading_finished
 signal area_chunk_loaded
+signal area_recolored
+signal area_deleted
 
 var all_origins : Array
 var loaded_areas: Array
@@ -159,12 +161,14 @@ func recolor_block(area):
 	var chunk = get_current_chunk()
 	if chunk:
 		chunk.recolor_block(area)
+		emit_signal("area_recolored")
 
 
 func remove_origin(block_orig : Vector3, area : Area) -> void:
 	var chunk = get_current_chunk()
 	if chunk:
 		chunk.remove_origin(block_orig, area)
+		emit_signal("area_deleted")
 
 
 # called by ks_multi_mesh

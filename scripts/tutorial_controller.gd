@@ -50,11 +50,10 @@ var waiting_for_file_load := false
 onready var tooltip_scene = preload("res://scenes/tooltip.tscn")
 onready var right_controller = get_node(global_vars.CONTR_RIGHT_PATH)
 onready var left_controller = get_node(global_vars.CONTR_LEFT_PATH)
-onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
+onready var block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
 onready var controller_system = get_node(global_vars.CONTROLLER_SYSTEM_PATH)
 onready var tablet = get_node(global_vars.TABLET_PATH)
 onready var screens_controller = tablet.get_node("Screens")
-onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
 onready var audio_player = $AudioStreamPlayer3D
 onready var audio_player_finish = $AudioStreamPlayerFinish
 
@@ -73,13 +72,12 @@ func _ready():
 	right_controller.connect("button_pressed", self, "_on_right_ARVRController_button_pressed")
 	left_controller.connect("button_pressed", self, "_on_left_ARVRController_button_pressed")
 	
-	all_block_areas.connect("area_added", self, "_on_All_Block_Areas_area_added")
+	block_chunks_controller.connect("area_added", self, "_on_Block_Chunks_Controller_area_added")
+	block_chunks_controller.connect("area_recolored", self, "_on_Block_Chunks_Controller_area_recolored")
+	block_chunks_controller.connect("area_deleted", self, "_on_Block_Chunks_Controller_area_deleted")
 	
 	controller_system.connect("joystick_x_axis_pushed_right", self, "_on_Controller_System_joystick_x_axis_pushed_right")
 	controller_system.connect("joystick_x_axis_pushed_left", self, "_on_Controller_System_joystick_x_axis_pushed_left")
-	
-	multi_mesh.connect("area_recolored", self, "_on_Multi_Mesh_area_recolored")
-	multi_mesh.connect("area_deleted", self, "_on_Multi_Mesh_area_deleted")
 	
 	screens_controller.connect("screen_changed", self, "_on_Screens_Controller_screen_changed")
 	
@@ -133,7 +131,7 @@ func _on_left_ARVRController_button_pressed(button_number):
 		next_step()
 
 
-func _on_All_Block_Areas_area_added():
+func _on_Block_Chunks_Controller_area_added():
 	if waiting_for_area_added:
 		waiting_for_area_added = false
 		next_step()
@@ -151,13 +149,13 @@ func _on_Controller_System_joystick_x_axis_pushed_left(_side):
 		next_step()
 
 
-func _on_Multi_Mesh_area_recolored():
+func _on_Block_Chunks_Controller_area_recolored():
 	if waiting_for_recolor:
 		waiting_for_recolor = false
 		next_step()
 
 
-func _on_Multi_Mesh_area_deleted():
+func _on_Block_Chunks_Controller_area_deleted():
 	if waiting_for_deletion:
 		waiting_for_deletion = false
 		next_step()
