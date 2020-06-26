@@ -13,6 +13,7 @@ var thread_area_to_ignore : Area
 var current_visibility_intance_count := 0
 var bg_check_neighbors := true
 var area_queue : Array
+var recolor_queue : Array
 var bg_thread_in_progress := false
 var all_placeholders : Array
 
@@ -78,6 +79,13 @@ func creation_finished():
 		bg_thread_in_progress = false
 		for p in all_placeholders:
 			p.queue_free()
+		
+		# run recolor queue
+		for r in recolor_queue:
+			for i in r["indices"]:
+				multimesh.set_instance_custom_data(i, r["color"])
+		
+		recolor_queue.clear()
 		
 		all_placeholders.clear()
 		
@@ -251,8 +259,12 @@ func recolor_block(area : Area) -> void:
 	var area_color = color_system.get_color_by_name(area.get_color_name())
 	var new_color = Color(area_color.x, area_color.y, area_color.z, 1.0)
 	
-	for i in area.mm_indices:
-		multimesh.set_instance_custom_data(i, new_color)
+	if bg_thread_in_progress:
+		add_placeholder(area)
+		recolor_queue.append({"indices" : area.mm_indices, "color" : new_color})
+	else:
+		for i in area.mm_indices:
+			multimesh.set_instance_custom_data(i, new_color)
 	
 	emit_signal("area_recolored")
 	

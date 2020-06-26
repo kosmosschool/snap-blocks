@@ -157,7 +157,7 @@ func unserialize_transform(transform_array : Array):
 	return return_transform
 
 
-func recolor_block(area):
+func recolor_block(area : Area):
 	var chunk = get_current_chunk()
 	if chunk:
 		chunk.recolor_block(area)
