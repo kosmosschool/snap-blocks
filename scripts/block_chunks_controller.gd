@@ -76,7 +76,6 @@ func add_block(
 	play_sound : bool = true,
 	update_multi_mesh = false):
 
-	
 	# right now we just work with one chunk
 	# later on we might add logic for more chunks to improve performance
 	var chunk = get_current_chunk()
@@ -164,20 +163,20 @@ func recolor_block(area : Area):
 		emit_signal("area_recolored")
 
 
-func remove_origin(block_orig : Vector3, area : Area) -> void:
+func remove_block(area : Area) -> void:
 	var chunk = get_current_chunk()
 	if chunk:
-		chunk.remove_origin(block_orig, area)
+		chunk.remove_block(area)
 		emit_signal("area_deleted")
 
 
 # called by ks_multi_mesh
-func block_exists(block_orig : Vector3) -> bool:
+func get_block_with_orig(block_orig : Vector3):
 	var chunk = get_current_chunk()
 	if chunk:
-		return chunk.has_block(block_orig)
+		return chunk.get_block_with_orig(block_orig)
 	
-	return false
+	return null
 
 
 func serialize_all():

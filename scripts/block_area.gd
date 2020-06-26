@@ -46,19 +46,19 @@ func remove_from_multi_mesh(controller_grab) -> void:
 	# grab
 	controller_grab.start_grab_hinge_joint(new_bb)
 	
-	block_chunks_controller.remove_origin(global_transform.origin)
+	block_chunks_controller.remove_block(self)
 #	multi_mesh.remove_area(self)
 	
 	# free this area
-	queue_free()
+#	queue_free()
 
 
 func delete_from_multi_mesh() -> void:
-	block_chunks_controller.remove_origin(global_transform.origin, self)
+	block_chunks_controller.remove_block(self)
 #	multi_mesh.remove_area(self)
 	
 	# free this area
-	queue_free()
+#	queue_free()
 
 
 func recolor(controller_side_string : String) -> void:

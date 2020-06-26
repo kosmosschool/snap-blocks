@@ -5,6 +5,7 @@ class_name BlockChunk
 
 
 var all_origins : Array
+var all_origins_areas : Array
 
 onready var multi_mesh = $MultiMeshInstance
 onready var all_block_areas = $BlockAreas
@@ -38,6 +39,7 @@ func add_block(cube_transform : Transform, color_name : String, update_multi_mes
 	new_area.set_color_name(color_name)
 	
 	all_origins.append(round_origin(new_area.global_transform.origin))
+	all_origins_areas.append(new_area)
 	
 	if update_multi_mesh:
 		# update multi mesh instance
@@ -50,13 +52,23 @@ func recolor_block(area : Area):
 	multi_mesh.recolor_block(area)
 
 
-func remove_origin(block_orig : Vector3, area) -> void:
-	all_origins.erase(round_origin(block_orig))
+func remove_block(area) -> void:
+	var i = all_origins.find(round_origin(area.global_transform.origin))
+	if i == -1:
+		return
+	
+	all_origins.remove(i)
+	all_origins_areas.remove(i)
 	multi_mesh.remove_area(area)
 
 
-func block_exists(block_orig : Vector3) -> bool:
-	return all_origins.has(round_origin(block_orig))
+func get_block_with_orig(block_orig : Vector3):
+	var i = all_origins.find(round_origin(block_orig))
+	if i == -1:
+		return
+		
+#	return all_origins.has(round_origin(block_orig))
+	return all_origins_areas[i]
 
 
 func block_count() -> int:
