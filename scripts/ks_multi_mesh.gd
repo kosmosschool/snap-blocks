@@ -26,16 +26,15 @@ var mutex
 var semaphore
 var exit_thread
 
-
 onready var block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
 onready var base_cube_mesh_instance = preload("res://scenes/base_cube_mesh_instance.tscn")
 onready var movable_world = get_node(global_vars.MOVABLE_WORLD_PATH)
 
 
 func _ready():
+	# _add_area_thread
 	mutex = Mutex.new()
 	semaphore = Semaphore.new()
-	
 	exit_thread = false
 	thread = Thread.new()
 	thread.start(self, "_add_area_thread")
@@ -52,8 +51,9 @@ func _add_area_thread(userdata):
 		if should_exit:
 			break
 		
-		mutex.lock()
 		bg_thread_in_progress = true
+		
+		mutex.lock()
 		
 		while true:
 			if bg_counter == batch_counter * queue_batch_size:
@@ -67,19 +67,8 @@ func _add_area_thread(userdata):
 				creation_finished()
 				break
 				
-#			if areas_to_recreate[bg_counter] == thread_area_to_ignore:
-#				continue
 			add_area(areas_to_recreate[bg_counter], bg_check_neighbors)
 			bg_counter += 1
-		
-#		multimesh.set_visible_instance_count(current_visibility_intance_count)
-#		thread_area_to_ignore = null
-		
-		
-#		print("bg_counter ", bg_counter)
-#		print("areas_to_recreate.size() ", areas_to_recreate.size())
-#		if bg_counter == areas_to_recreate.size():
-#			creation_finished()
 
 
 func _exit_tree():
@@ -94,18 +83,21 @@ func _exit_tree():
 func batch_finished():
 	# called from bg thread after a batch is finished
 	process_remove_queue()
-
 	batch_counter += 1
 	
 	# continue with bg thread
 	semaphore.post()
-	
+
 
 func creation_finished():
 	# called when bg thread has finished creating
 	bg_counter = 0
 	batch_counter = 1
 	
+	handle_next_area_queue()
+
+
+func handle_next_area_queue():
 	process_remove_queue()
 	
 	if area_queue.empty():
@@ -127,12 +119,13 @@ func creation_finished():
 	# if there is still something in the queue, process it
 	create(area_queue[0]["areas"], area_queue[0]["reset"], true)
 	area_queue.remove(0)
-
+	
 
 func process_remove_queue():
 	if not remove_queue.empty():
 		# remove from multi mesh
-		var tiny_transform = Transform(Basis(Vector3(0, 0, 0)), Vector3(0, 0, 0)) 
+		var tiny_transform = Transform()
+		tiny_transform = tiny_transform.scaled(Vector3(0, 0, 0))
 		mutex.lock()
 		for r in remove_queue:
 			for i in r.mm_indices:
@@ -140,21 +133,23 @@ func process_remove_queue():
 			
 			# we need to add back some of the cube sides, sides that did have neighbors before will be missing otherwise
 			var n_result = check_neighbors(r)
-			for n in n_result:
-				if n["area"]:
-					print("neigh exists")
-					var area_color = color_system.get_color_by_name(n["area"].get_color_name())
+			for i in range(n_result.size()):
+				if n_result[i]["area"]:
+					var area_color = color_system.get_color_by_name(n_result[i]["area"].get_color_name())
 					var new_color = Color(area_color.x, area_color.y, area_color.z, 1.0)
 					
 					# we need to rotate by 180° on local y axis
-					var rot_trans = n["transform"]
+					var rot_trans = n_result[i]["transform"]
 					rot_trans.basis = rot_trans.basis.rotated(rot_trans.basis.y, PI)
 	
 					current_visibility_intance_count += 1
 					
-					multimesh.set_instance_transform(current_visibility_intance_count - 1, rot_trans)
-					multimesh.set_instance_custom_data(current_visibility_intance_count - 1, new_color)
+					var curr_index = current_visibility_intance_count - 1
+					multimesh.set_instance_transform(curr_index, rot_trans)
+					multimesh.set_instance_custom_data(curr_index, new_color)
 					multimesh.set_visible_instance_count(current_visibility_intance_count)
+					
+					n_result[i]["area"].append_mm_index(curr_index)
 			
 			r.queue_free()
 		mutex.unlock()
@@ -187,16 +182,12 @@ func add_area(area : Area, check_neighbors = true) -> void:
 	
 	if check_neighbors:
 		var n_result = check_neighbors(area)
-#		s_1_neighbor_exists = n_result[0]
-#		s_2_neighbor_exists = n_result[1]
-#		s_3_neighbor_exists = n_result[2]
-#		s_4_neighbor_exists = n_result[3]
-#		s_5_neighbor_exists = n_result[4]
-#		s_6_neighbor_exists = n_result[5]
-		
+
 		for n in n_result:
 			if not n["area"]:
 				side_transforms.append(n["transform"])
+	else:
+		side_transforms = get_cube_side_transforms(area)
 	
 	# increment visibility 
 	var new_count = current_visibility_intance_count + side_transforms.size()
@@ -222,16 +213,6 @@ func check_neighbors(area : Area) -> Array:
 	var s_5_neighbor_orig = area_global_trans.origin + area_local_trans.basis.x * half_length * 2
 	var s_6_neighbor_orig = area_global_trans.origin - area_local_trans.basis.x * half_length * 2
 	
-	var trans_1 = Transform()
-	var trans_2 = Transform()
-	var trans_3 = Transform()
-	var trans_4 = Transform()
-	var trans_5 = Transform()
-	var trans_6 = Transform()
-	
-	
-	# we only do these checks if check_neighbor == true
-	# because they are expensive to do
 	var s_1_n = block_chunks_controller.get_block_with_orig(s_1_neighbor_orig)
 	var s_2_n = block_chunks_controller.get_block_with_orig(s_2_neighbor_orig)
 	var s_3_n = block_chunks_controller.get_block_with_orig(s_3_neighbor_orig)
@@ -239,38 +220,48 @@ func check_neighbors(area : Area) -> Array:
 	var s_5_n = block_chunks_controller.get_block_with_orig(s_5_neighbor_orig)
 	var s_6_n = block_chunks_controller.get_block_with_orig(s_6_neighbor_orig)
 	
-	trans_1 = area_global_trans
+	var cube_side_transforms = get_cube_side_transforms(area)
+	
+	return [
+		{"area": s_1_n, "transform": cube_side_transforms[0]},
+		{"area": s_2_n, "transform": cube_side_transforms[1]},
+		{"area": s_3_n, "transform": cube_side_transforms[2]},
+		{"area": s_4_n, "transform": cube_side_transforms[3]},
+		{"area": s_5_n, "transform": cube_side_transforms[4]},
+		{"area": s_6_n, "transform": cube_side_transforms[5]},
+	]
+
+
+func get_cube_side_transforms(area : Area) -> Array:
+	var area_global_trans = area.get_global_transform()
+	var area_local_trans = area.get_transform()
+	var half_length = area.get_node("CollisionShape").shape.get_extents().x
+	
+	var trans_1 = area_global_trans
 	trans_1.origin += area_local_trans.basis.z * half_length
 	
-	trans_2 = area_global_trans
+	var trans_2 = area_global_trans
 	trans_2.origin -= area_local_trans.basis.z * half_length
 	trans_2.basis = trans_2.basis.rotated(trans_2.basis.y, PI)
 	
-	trans_3 = area_global_trans
+	var trans_3 = area_global_trans
 	trans_3.origin += area_local_trans.basis.y * half_length
 	trans_3.basis = trans_3.basis.rotated(trans_3.basis.x, - PI / 2)
 	
-	trans_4 = area_global_trans
+	var trans_4 = area_global_trans
 	trans_4.origin -= area_local_trans.basis.y * half_length
 	trans_4.basis = trans_4.basis.rotated(trans_4.basis.x, PI / 2)
 	
-	trans_5 = area_global_trans
+	var trans_5 = area_global_trans
 	trans_5.origin += area_local_trans.basis.x * half_length
 	trans_5.basis = trans_5.basis.rotated(trans_5.basis.y, PI / 2)
 	
-	trans_6 = area_global_trans
+	var trans_6 = area_global_trans
 	trans_6.origin -= area_local_trans.basis.x * half_length
 	trans_6.basis = trans_6.basis.rotated(trans_6.basis.y, - PI / 2)
-		
 	
-	return [
-		{"area": s_1_n, "transform": trans_1},
-		{"area": s_2_n, "transform": trans_2},
-		{"area": s_3_n, "transform": trans_3},
-		{"area": s_4_n, "transform": trans_4},
-		{"area": s_5_n, "transform": trans_5},
-		{"area": s_6_n, "transform": trans_6},
-	]
+	return [trans_1, trans_2, trans_3, trans_4, trans_5, trans_6]
+
 
 func add_placeholder(area: Area):
 	# adds cube mesh as place holders until the bg mesh has finished building
@@ -289,17 +280,11 @@ func add_placeholder(area: Area):
 
 func remove_area(area : Area) -> void:
 	# remove block from MultiMeshInstance
-	# first remove it directly from the multi mesh so the player doesn't need to wait until the block is gone
-#	var tiny_transform = Transform(Basis(Vector3(0, 0, 0)), Vector3(0, 0, 0)) 
-#	for i in area.mm_indices:
-#		multimesh.set_instance_transform(i, tiny_transform)
 	remove_queue.append(area)
 	
 	if not bg_thread_in_progress:
 		process_remove_queue()
-		
-#	thread_area_to_ignore = area
-#	create(get_parent().get_all_blocks())
+
 	emit_signal("area_deleted")
 
 
@@ -309,9 +294,11 @@ func create(new_areas : Array, reset : bool = true, skip_bg : bool = false) -> v
 		area_queue.append({"areas": new_areas.duplicate(true), "reset": reset})
 		return
 	
-
+	bg_thread_in_progress = true
+	
 	mutex.lock()
 	areas_to_recreate = new_areas.duplicate(true)
+#	print("reset ", reset)
 	if reset:
 		current_visibility_intance_count = 0
 	bg_check_neighbors = reset
@@ -319,7 +306,7 @@ func create(new_areas : Array, reset : bool = true, skip_bg : bool = false) -> v
 	semaphore.post()
 
 
-# called by SaveSystem or AllBlockAreas
+# called by SaveSystem or BlockChunksController
 func clear() -> void:
 	mutex.lock()
 	current_visibility_intance_count = 0
@@ -334,7 +321,6 @@ func add_recreate(added_area : Area):
 	
 	# run bg thread to recrate all of multi mesh
 	create(get_parent().get_all_blocks())
-	
 	
 
 func recolor_block(area : Area) -> void:
