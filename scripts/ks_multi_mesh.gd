@@ -141,17 +141,17 @@ func process_remove_queue():
 					# we need to rotate by 180° on local y axis
 					var rot_trans = n_result[i]["transform"]
 					rot_trans.basis = rot_trans.basis.rotated(rot_trans.basis.y, PI)
-	
-					current_visibility_intance_count += 1
 					
+					current_visibility_intance_count += 1
+
 					var curr_index = current_visibility_intance_count - 1
 					multimesh.set_instance_transform(curr_index, rot_trans)
 					multimesh.set_instance_custom_data(curr_index, new_color)
-					multimesh.set_visible_instance_count(current_visibility_intance_count)
-					
+
 					n_result[i]["area"].append_mm_index(curr_index)
 			
 			r.queue_free()
+#		multimesh.set_visible_instance_count(current_visibility_intance_count)
 		mutex.unlock()
 		
 		remove_queue.clear()
@@ -284,6 +284,7 @@ func remove_area(area : Area) -> void:
 	
 	if not bg_thread_in_progress:
 		process_remove_queue()
+		multimesh.set_visible_instance_count(current_visibility_intance_count)
 
 	emit_signal("area_deleted")
 
