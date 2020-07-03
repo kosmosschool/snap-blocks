@@ -16,10 +16,12 @@ var area_queue : Array
 var recolor_queue : Array
 var remove_queue : Array
 var bg_thread_in_progress := false
-var all_placeholders : Array
 var queue_batch_size := 200
 var bg_counter := 0
 var batch_counter := 1
+var add_recreate_counter := 0
+var update_count := 0
+var n_placeholders := 30
 
 var thread
 var mutex
@@ -27,8 +29,6 @@ var semaphore
 var exit_thread
 
 onready var block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
-onready var base_cube_mesh_instance = preload("res://scenes/base_cube_mesh_instance.tscn")
-onready var movable_world = get_node(global_vars.MOVABLE_WORLD_PATH)
 
 
 func _ready():
@@ -62,7 +62,7 @@ func _add_area_thread(userdata):
 				break
 			
 			if bg_counter == areas_to_recreate.size():
-				multimesh.set_visible_instance_count(current_visibility_intance_count)
+#				multimesh.set_visible_instance_count(current_visibility_intance_count)
 				mutex.unlock()
 				creation_finished()
 				break
@@ -99,11 +99,11 @@ func creation_finished():
 
 func handle_next_area_queue():
 	process_remove_queue()
+	multimesh.set_visible_instance_count(current_visibility_intance_count)
 	
 	if area_queue.empty():
 		bg_thread_in_progress = false
-		for p in all_placeholders:
-			p.queue_free()
+		block_chunks_controller.clear_placeholders(n_placeholders)
 		
 		# run recolor queue
 		for r in recolor_queue:
@@ -111,8 +111,6 @@ func handle_next_area_queue():
 				multimesh.set_instance_custom_data(i, r["color"])
 		
 		recolor_queue.clear()
-		
-		all_placeholders.clear()
 		
 		return
 	
@@ -128,6 +126,20 @@ func process_remove_queue():
 		tiny_transform = tiny_transform.scaled(Vector3(0, 0, 0))
 		mutex.lock()
 		for r in remove_queue:
+			# check if area in placeholder queue or already on multi mesh instance
+			if block_chunks_controller.remove_placeholder(r):
+				block_chunks_controller.delete_origins(r)
+				r.queue_free()
+				continue
+				
+			# we only update the mesh instances if their transform was already set by the current bg thread
+			if r.get_update_count() < update_count:
+				# in this case we see some flicker in the mehsh instances and i'm not sure why ¯\_(ツ)_/¯
+				# it seems to be related to the delete_origins method below
+				block_chunks_controller.delete_origins(r)
+				r.queue_free()
+				continue
+				
 			for i in r.mm_indices:
 				multimesh.set_instance_transform(i, tiny_transform)
 			
@@ -141,7 +153,7 @@ func process_remove_queue():
 					# we need to rotate by 180° on local y axis
 					var rot_trans = n_result[i]["transform"]
 					rot_trans.basis = rot_trans.basis.rotated(rot_trans.basis.y, PI)
-					
+
 					current_visibility_intance_count += 1
 
 					var curr_index = current_visibility_intance_count - 1
@@ -150,10 +162,10 @@ func process_remove_queue():
 
 					n_result[i]["area"].append_mm_index(curr_index)
 			
+			block_chunks_controller.delete_origins(r)
 			r.queue_free()
-#		multimesh.set_visible_instance_count(current_visibility_intance_count)
-		mutex.unlock()
 		
+		mutex.unlock()
 		remove_queue.clear()
 
 
@@ -192,7 +204,9 @@ func add_area(area : Area, check_neighbors = true) -> void:
 	# increment visibility 
 	var new_count = current_visibility_intance_count + side_transforms.size()
 	current_visibility_intance_count = new_count
-
+	
+	area.increment_update_count()
+	
 	for i in range(side_transforms.size()):
 		var curr_index = new_count - i - 1
 		
@@ -263,21 +277,6 @@ func get_cube_side_transforms(area : Area) -> Array:
 	return [trans_1, trans_2, trans_3, trans_4, trans_5, trans_6]
 
 
-func add_placeholder(area: Area):
-	# adds cube mesh as place holders until the bg mesh has finished building
-	var area_color = color_system.get_color_by_name(area.get_color_name())
-	var new_color = Vector3(area_color.x, area_color.y, area_color.z)
-	
-	var cube_instance = base_cube_mesh_instance.instance()
-	cube_instance.global_transform = area.global_transform
-	
-	cube_instance.get_surface_material(0).set_shader_param("color", new_color)
-	
-	movable_world.add_child(cube_instance)
-	
-	all_placeholders.append(cube_instance)
-	
-
 func remove_area(area : Area) -> void:
 	# remove block from MultiMeshInstance
 	remove_queue.append(area)
@@ -302,6 +301,9 @@ func create(new_areas : Array, reset : bool = true, skip_bg : bool = false) -> v
 #	print("reset ", reset)
 	if reset:
 		current_visibility_intance_count = 0
+		update_count += 1
+	elif update_count == 0:
+		update_count += 1
 	bg_check_neighbors = reset
 	mutex.unlock()
 	semaphore.post()
@@ -313,15 +315,22 @@ func clear() -> void:
 	current_visibility_intance_count = 0
 	mutex.unlock()
 	multimesh.set_visible_instance_count(0)
+	
+	block_chunks_controller.clear_placeholders()
 
 
 func add_recreate(added_area : Area):
 	# first add a new area without checking for neighbors, and then do the whole thing again in the background thread
 	# if we only do the bg thread, the newely added cube flickers
-	add_placeholder(added_area)
+	block_chunks_controller.add_placeholder(added_area)
 	
-	# run bg thread to recrate all of multi mesh
-	create(get_parent().get_all_blocks())
+#	create(get_parent().get_all_blocks())
+	add_recreate_counter += 1
+
+	if add_recreate_counter == n_placeholders:
+		# run bg thread to recrate all of multi mesh
+		create(get_parent().get_all_blocks())
+		add_recreate_counter = 0
 	
 
 func recolor_block(area : Area) -> void:
@@ -329,7 +338,7 @@ func recolor_block(area : Area) -> void:
 	var new_color = Color(area_color.x, area_color.y, area_color.z, 1.0)
 	
 	if bg_thread_in_progress:
-		add_placeholder(area)
+		block_chunks_controller.add_placeholder(area, true)
 		recolor_queue.append({"indices" : area.mm_indices, "color" : new_color})
 	else:
 		for i in area.mm_indices:

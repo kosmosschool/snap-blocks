@@ -12,6 +12,7 @@ var block_chunks_controller
 #var multi_mesh
 #var all_block_areas
 var color_name : String setget set_color_name, get_color_name
+var update_count := 0 setget set_update_count, get_update_count
 
 
 func set_color_name(new_value):
@@ -20,6 +21,14 @@ func set_color_name(new_value):
 
 func get_color_name():
 	return color_name
+
+
+func set_update_count(new_value):
+	update_count = new_value
+
+
+func get_update_count():
+	return update_count
 
 
 # we don't use _ready because this script is set from another script and _ready is not called
@@ -96,4 +105,7 @@ func transform_to_array(input_trans : Transform) -> Array:
 		input_trans.origin.y,
 		input_trans.origin.z
 	]
-	
+
+
+func increment_update_count():
+	update_count += 1

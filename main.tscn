@@ -129,6 +129,8 @@ script = ExtResource( 21 )
 
 [node name="AllBuildingBlocks" type="Spatial" parent="MovableWorld"]
 
+[node name="Placeholders" type="Spatial" parent="MovableWorld"]
+
 [node name="AudioStreamPlayer3DSnap" type="AudioStreamPlayer3D" parent="MovableWorld"]
 stream = ExtResource( 11 )
 unit_db = -2.0

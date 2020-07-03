@@ -24,6 +24,7 @@ onready var cube_col_shape = load(global_vars.CUBE_COLLISION_SHAPE_PATH)
 onready var audio_stream_player_snap := get_node("../AudioStreamPlayer3DSnap")
 
 
+
 func _process(delta):
 	if process_load_queue:
 		# recreate from saved
@@ -179,6 +180,12 @@ func get_block_with_orig(block_orig : Vector3):
 	return null
 
 
+func delete_origins(area: Area):
+	var chunk = get_current_chunk()
+	if chunk:
+		chunk.delete_origins(area)
+
+
 func serialize_all():
 	var block_areas_serialized : Array
 	
@@ -197,3 +204,23 @@ func get_all_blocks():
 		all_blocks += c.get_all_blocks()
 	
 	return all_blocks
+
+
+func add_placeholder(area: Area, big : bool = false):
+	var chunk = get_current_chunk()
+	if chunk:
+		chunk.add_placeholder(area, big)
+
+
+func clear_placeholders(first_n : int = 0):
+	var chunk = get_current_chunk()
+	if chunk:
+		chunk.clear_placeholders(first_n)
+
+
+func remove_placeholder(area : Area) -> bool:
+	var chunk = get_current_chunk()
+	if chunk:
+		return chunk.remove_placholder(area)
+		
+	return false
