@@ -9,10 +9,7 @@ var mm_indices : Array
 
 var all_building_blocks
 var block_chunks_controller
-#var multi_mesh
-#var all_block_areas
 var color_name : String setget set_color_name, get_color_name
-var update_count := 0 setget set_update_count, get_update_count
 
 
 func set_color_name(new_value):
@@ -105,7 +102,3 @@ func transform_to_array(input_trans : Transform) -> Array:
 		input_trans.origin.y,
 		input_trans.origin.z
 	]
-
-
-func increment_update_count():
-	update_count += 1

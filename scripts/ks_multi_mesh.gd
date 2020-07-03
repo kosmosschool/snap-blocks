@@ -20,8 +20,8 @@ var queue_batch_size := 200
 var bg_counter := 0
 var batch_counter := 1
 var add_recreate_counter := 0
-var update_count := 0
-var n_placeholders := 30
+var n_placeholders := 5
+var current_area_index := 0
 
 var thread
 var mutex
@@ -103,14 +103,15 @@ func handle_next_area_queue():
 	
 	if area_queue.empty():
 		bg_thread_in_progress = false
-		block_chunks_controller.clear_placeholders(n_placeholders)
+		if block_chunks_controller.get_placeholders_size() >= n_placeholders:
+			block_chunks_controller.clear_placeholders(n_placeholders)
 		
 		# run recolor queue
-		for r in recolor_queue:
-			for i in r["indices"]:
-				multimesh.set_instance_custom_data(i, r["color"])
-		
-		recolor_queue.clear()
+#		for r in recolor_queue:
+#			for i in r["area"].mm_indices:
+#				multimesh.set_instance_custom_data(i, r["color"])
+#
+#		recolor_queue.clear()
 		
 		return
 	
@@ -133,7 +134,7 @@ func process_remove_queue():
 				continue
 				
 			# we only update the mesh instances if their transform was already set by the current bg thread
-			if r.get_update_count() < update_count:
+			if r.get_index() > current_area_index:
 				# in this case we see some flicker in the mehsh instances and i'm not sure why ¯\_(ツ)_/¯
 				# it seems to be related to the delete_origins method below
 				block_chunks_controller.delete_origins(r)
@@ -205,7 +206,7 @@ func add_area(area : Area, check_neighbors = true) -> void:
 	var new_count = current_visibility_intance_count + side_transforms.size()
 	current_visibility_intance_count = new_count
 	
-	area.increment_update_count()
+	current_area_index = area.get_index()
 	
 	for i in range(side_transforms.size()):
 		var curr_index = new_count - i - 1
@@ -301,9 +302,6 @@ func create(new_areas : Array, reset : bool = true, skip_bg : bool = false) -> v
 #	print("reset ", reset)
 	if reset:
 		current_visibility_intance_count = 0
-		update_count += 1
-	elif update_count == 0:
-		update_count += 1
 	bg_check_neighbors = reset
 	mutex.unlock()
 	semaphore.post()
@@ -337,9 +335,11 @@ func recolor_block(area : Area) -> void:
 	var area_color = color_system.get_color_by_name(area.get_color_name())
 	var new_color = Color(area_color.x, area_color.y, area_color.z, 1.0)
 	
-	if bg_thread_in_progress:
-		block_chunks_controller.add_placeholder(area, true)
-		recolor_queue.append({"indices" : area.mm_indices, "color" : new_color})
+	var remove_res = block_chunks_controller.remove_placeholder(area)
+	
+	if bg_thread_in_progress or remove_res:
+		block_chunks_controller.add_placeholder(area)
+#		recolor_queue.append({"area" : area, "color" : new_color})
 	else:
 		for i in area.mm_indices:
 			multimesh.set_instance_custom_data(i, new_color)

@@ -112,7 +112,7 @@ func get_all_blocks() -> Array:
 	return $BlockAreas.get_children()
 
 
-func add_placeholder(area: Area, big : bool = false):
+func add_placeholder(area: Area):
 	
 	# adds cube mesh as place holders until the bg mesh has finished building
 	var area_color = color_system.get_color_by_name(area.get_color_name())
@@ -123,10 +123,6 @@ func add_placeholder(area: Area, big : bool = false):
 	
 	cube_instance.get_surface_material(0).set_shader_param("color", new_color)
 	
-	# to prevent flickering
-	if big:
-		cube_instance.scale = Vector3(1.0001, 1.0001, 1.0001)
-	
 	placeholders_node.add_child(cube_instance)
 	
 	all_placeholders.append({"area": area, "mesh_instance": cube_instance})
@@ -135,6 +131,7 @@ func add_placeholder(area: Area, big : bool = false):
 func clear_placeholders(first_n : int = 0):
 	# only clear the n first-in placeholders (first in first out)
 	var total_n = all_placeholders.size()
+	print("total_n ", total_n)
 	for i in range(total_n):
 		if first_n != 0 and i == first_n:
 			break
@@ -145,6 +142,8 @@ func clear_placeholders(first_n : int = 0):
 		if first_n != 0 and i == first_n:
 			break
 		all_placeholders.remove(0)
+	
+	print("all_placeholders.size() ", all_placeholders.size())
 
 
 func remove_placeholder(area : Area) -> bool:
@@ -155,3 +154,7 @@ func remove_placeholder(area : Area) -> bool:
 			return true
 	
 	return false
+
+
+func get_placeholders_size() -> int:
+	return all_placeholders.size()

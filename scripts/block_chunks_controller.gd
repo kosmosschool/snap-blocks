@@ -206,10 +206,10 @@ func get_all_blocks():
 	return all_blocks
 
 
-func add_placeholder(area: Area, big : bool = false):
+func add_placeholder(area: Area):
 	var chunk = get_current_chunk()
 	if chunk:
-		chunk.add_placeholder(area, big)
+		chunk.add_placeholder(area)
 
 
 func clear_placeholders(first_n : int = 0):
@@ -221,6 +221,14 @@ func clear_placeholders(first_n : int = 0):
 func remove_placeholder(area : Area) -> bool:
 	var chunk = get_current_chunk()
 	if chunk:
-		return chunk.remove_placholder(area)
+		return chunk.remove_placeholder(area)
 		
 	return false
+
+
+func get_placeholders_size() -> int:
+	var chunk = get_current_chunk()
+	if chunk:
+		return chunk.get_placeholders_size()
+	
+	return 0
