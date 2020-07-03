@@ -244,12 +244,6 @@ func snap_to_cand():
 	if snap_cand is RigidBody:
 		var snap_cand_rigid_body = snap_cand
 		block_chunks_controller.add_block(snap_cand.global_transform, snap_cand.color_name, false, true)
-#		snap_cand = all_block_areas.add_block_area(
-#			snap_cand.global_transform, 
-#			snap_cand.color_name,
-#			false
-#		)
-#		multi_mesh.add_recreate(snap_cand)
 		snap_cand_rigid_body.queue_free()
 	
 	# find one orthogonal vector to normal that we can use to calculate the angles

@@ -20,14 +20,6 @@ func get_color_name():
 	return color_name
 
 
-func set_update_count(new_value):
-	update_count = new_value
-
-
-func get_update_count():
-	return update_count
-
-
 # we don't use _ready because this script is set from another script and _ready is not called
 func _init():
 	building_block_scene = preload("res://scenes/building_blocks/block_base_cube.tscn")

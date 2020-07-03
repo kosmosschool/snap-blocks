@@ -26,6 +26,10 @@ func clear():
 
 
 func add_block(cube_transform : Transform, color_name : String, update_multi_mesh : bool = false) -> Area:
+	# check if there's a blog at that origin already
+	if get_block_with_orig(cube_transform.origin):
+		return null
+	
 	# create area
 	var new_area = Area.new()
 	all_block_areas.add_child(new_area)
@@ -77,9 +81,8 @@ func delete_origins(area: Area):
 func get_block_with_orig(block_orig : Vector3):
 	var i = all_origins.find(round_origin(block_orig))
 	if i == -1:
-		return
+		return null
 		
-#	return all_origins.has(round_origin(block_orig))
 	return all_origins_areas[i]
 
 

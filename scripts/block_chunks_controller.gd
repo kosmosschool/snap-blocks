@@ -86,11 +86,14 @@ func add_block(
 	
 	var new_area = chunk.add_block(cube_transform, color_name, update_multi_mesh)
 	
+	if not new_area:
+		return null
+	
 	if play_sound:
 		play_snap_sound(new_area.global_transform.origin)
 	
 	if chunk.block_count() != 1:
-		# we do this becuase of the tutorial
+		# we need this in the tutorial
 		emit_signal("area_added")
 	
 	return new_area
