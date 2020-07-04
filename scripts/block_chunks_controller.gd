@@ -32,7 +32,7 @@ func _process(delta):
 		loaded_areas.clear()
 		for i in range(array_size):
 			if i == q_blocks_per_frame or queue_counter == 0:
-				current_chunk.create_multi_mesh(loaded_areas, false)
+				current_chunk.create_multi_mesh(loaded_areas, false, true)
 				break
 			
 			var y = array_size - queue_counter
@@ -49,7 +49,7 @@ func _process(delta):
 		if queue_counter == 0:
 			game_settings.set_interaction_enabled(true)
 			process_load_queue = false
-			current_chunk.create_multi_mesh()
+			current_chunk.create_multi_mesh(current_chunk.get_all_blocks(), true, true)
 
 
 #func get_chunk(index : int):

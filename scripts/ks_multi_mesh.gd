@@ -22,6 +22,7 @@ var batch_counter := 1
 var add_recreate_counter := 0
 var n_placeholders := 5
 var current_area_index := 0
+var from_file := false
 
 var thread
 var mutex
@@ -103,7 +104,9 @@ func handle_next_area_queue():
 	
 	if area_queue.empty():
 		bg_thread_in_progress = false
-		if block_chunks_controller.get_placeholders_size() >= n_placeholders:
+#		if block_chunks_controller.get_placeholders_size() >= n_placeholders:
+		# only clear placeholders if we are not loading from file
+		if not from_file:
 			block_chunks_controller.clear_placeholders(n_placeholders)
 		
 		# run recolor queue
@@ -116,7 +119,7 @@ func handle_next_area_queue():
 		return
 	
 	# if there is still something in the queue, process it
-	create(area_queue[0]["areas"], area_queue[0]["reset"], true)
+	create(area_queue[0]["areas"], area_queue[0]["reset"], true, area_queue[0]["from_file"])
 	area_queue.remove(0)
 	
 
@@ -289,20 +292,20 @@ func remove_area(area : Area) -> void:
 	emit_signal("area_deleted")
 
 
-func create(new_areas : Array, reset : bool = true, skip_bg : bool = false) -> void:
+func create(new_areas : Array, reset : bool = true, skip_bg : bool = false, _from_file : bool = false) -> void:
 	# we need to check if bg process is currently running. if yes, we need to queue this.
 	if bg_thread_in_progress and not skip_bg:
-		area_queue.append({"areas": new_areas.duplicate(true), "reset": reset})
+		area_queue.append({"areas": new_areas.duplicate(true), "reset": reset, "from_file": _from_file})
 		return
 	
 	bg_thread_in_progress = true
 	
 	mutex.lock()
 	areas_to_recreate = new_areas.duplicate(true)
-#	print("reset ", reset)
 	if reset:
 		current_visibility_intance_count = 0
 	bg_check_neighbors = reset
+	from_file = _from_file
 	mutex.unlock()
 	semaphore.post()
 

@@ -107,8 +107,8 @@ func serialize() -> Array:
 	return serialized_block_areas
 
 
-func create_multi_mesh(new_areas : Array = get_all_blocks(), reset : bool = true):
-	multi_mesh.create(new_areas, reset)
+func create_multi_mesh(new_areas : Array = get_all_blocks(), reset : bool = true, from_file : bool = false):
+	multi_mesh.create(new_areas, reset, false, from_file)
 
 
 func get_all_blocks() -> Array:
@@ -134,7 +134,6 @@ func add_placeholder(area: Area):
 func clear_placeholders(first_n : int = 0):
 	# only clear the n first-in placeholders (first in first out)
 	var total_n = all_placeholders.size()
-	print("total_n ", total_n)
 	for i in range(total_n):
 		if first_n != 0 and i == first_n:
 			break
@@ -145,8 +144,6 @@ func clear_placeholders(first_n : int = 0):
 		if first_n != 0 and i == first_n:
 			break
 		all_placeholders.remove(0)
-	
-	print("all_placeholders.size() ", all_placeholders.size())
 
 
 func remove_placeholder(area : Area) -> bool:
