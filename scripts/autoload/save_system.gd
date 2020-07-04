@@ -11,9 +11,7 @@ var base_dir = "user://"
 var user_prefs_file_name = "user_prefs.json"
 var open_file_path : String
 
-#onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
 onready var block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
-#onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
 onready var welcome_controller = get_node(global_vars.WELCOME_CONTROLLER_PATH)
 
 

@@ -10,9 +10,7 @@ var starting_cube_set := false
 var starting_cube_timer := 0.0
 
 onready var tutorial_scene = preload("res://scenes/tutorial_controller.tscn")
-#onready var all_block_areas = get_node(global_vars.ALL_BLOCK_AREAS_PATH)
 onready var block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
-#onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
 onready var camera = get_node(global_vars.AR_VR_CAMERA_PATH)
 
 
