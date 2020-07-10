@@ -76,16 +76,6 @@ multimesh = SubResource( 3 )
 
 [node name="2DTextLabel" parent="ShaderCache" instance=ExtResource( 18 )]
 transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.0179582, 0, 0 )
-text = "I am a Label
-With a new line"
-margin = 16
-billboard = false
-resize_mode = 1
-font_size_multiplier = 1.0
-font_color = Color( 1, 1, 1, 1 )
-background_color = Color( 0, 0, 0, 1 )
-h_align = 0
-v_align = 0
 
 [node name="Particles" type="Particles" parent="ShaderCache"]
 emitting = false

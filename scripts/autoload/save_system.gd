@@ -15,6 +15,8 @@ var open_file_path : String
 onready var block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
 #onready var multi_mesh = get_node(global_vars.MULTI_MESH_PATH)
 onready var welcome_controller = get_node(global_vars.WELCOME_CONTROLLER_PATH)
+onready var camera = get_node(global_vars.AR_VR_CAMERA_PATH)
+onready var ar_vr_origin = get_node(global_vars.AR_VR_ORIGIN_PATH)
 
 
 func _ready():
@@ -30,7 +32,9 @@ func _ready():
 	
 	init_user_prefs()
 
-
+#func _process(delta):
+#	print(camera.global_transform)
+#	print(ar_vr_origin.global_transform)
 # we don't use this yet, but leaving it in here for future reference
 #func _on_Main_Loop_on_request_permissions_result(permission, granted):
 #	print ("permission granted ", permission)
@@ -126,8 +130,9 @@ func save_creation():
 	var new_data_dict = {
 		"app_version": global_functions.get_current_version(),
 		"all_block_areas": block_areas_serialized,
+		"position": global_functions.transform_to_array(ar_vr_origin.global_transform)
 	}
-	
+
 	# save to file
 	var save_file = File.new()
 	var unsaved_json = to_json(new_data_dict)
@@ -143,6 +148,9 @@ func load_creation(saved_file_path : String):
 	
 	if not content:
 		return
+	
+	if content.has("position"):
+		ar_vr_origin.global_transform.origin = Vector3(content["position"][9],content["position"][10],content["position"][11])
 	
 	# create all block areas
 	block_chunks_controller.recreate_from_save(content["all_block_areas"])
