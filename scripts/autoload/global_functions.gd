@@ -65,3 +65,21 @@ func get_current_version() -> int:
 			return -1
 	else:
 		return -1
+
+
+func transform_to_array(input_trans : Transform) -> Array:
+	return [
+		input_trans.basis.x.x,
+		input_trans.basis.x.y,
+		input_trans.basis.x.z,
+		input_trans.basis.y.x,
+		input_trans.basis.y.y,
+		input_trans.basis.y.z,
+		input_trans.basis.z.x,
+		input_trans.basis.z.y,
+		input_trans.basis.z.z,
+		input_trans.origin.x,
+		input_trans.origin.y,
+		input_trans.origin.z
+	]
+

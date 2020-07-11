@@ -20,7 +20,7 @@ var queue_batch_size := 200
 var bg_counter := 0
 var batch_counter := 1
 var add_recreate_counter := 0
-var n_placeholders := 5
+var n_placeholders := 30
 var current_area_index := 0
 var from_file := false
 
