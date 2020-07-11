@@ -32,9 +32,7 @@ func _ready():
 	
 	init_user_prefs()
 
-#func _process(delta):
-#	print(camera.global_transform)
-#	print(ar_vr_origin.global_transform)
+
 # we don't use this yet, but leaving it in here for future reference
 #func _on_Main_Loop_on_request_permissions_result(permission, granted):
 #	print ("permission granted ", permission)
