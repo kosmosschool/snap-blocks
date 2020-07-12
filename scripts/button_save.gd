@@ -5,7 +5,6 @@ extends KSButtonPressable
 class_name ButtonSave
 
 
-
 # overriding the parent function
 func button_press(other_area: Area):
 	.button_press(other_area)

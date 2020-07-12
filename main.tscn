@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_LeftController.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/ks_controller_left.tscn" type="PackedScene" id=2]
@@ -8,7 +8,7 @@
 [ext_resource path="res://scenes/ks_controller_right.tscn" type="PackedScene" id=6]
 [ext_resource path="res://meshes/cube_side_mesh.tres" type="QuadMesh" id=7]
 [ext_resource path="res://scripts/main.gd" type="Script" id=8]
-[ext_resource path="res://materials/proc_sky.tres" type="ProceduralSky" id=9]
+[ext_resource path="res://materials/environment.tres" type="Environment" id=9]
 [ext_resource path="res://scripts/controller_system.gd" type="Script" id=10]
 [ext_resource path="res://sounds/magnetic_click.wav" type="AudioStream" id=11]
 [ext_resource path="res://scenes/tablet.tscn" type="PackedScene" id=13]
@@ -44,10 +44,6 @@ shader_param/color = null
 [sub_resource type="QuadMesh" id=5]
 material = SubResource( 4 )
 size = Vector2( 0.02, 0.02 )
-
-[sub_resource type="Environment" id=6]
-background_mode = 2
-background_sky = ExtResource( 9 )
 
 [node name="Main" type="Spatial"]
 script = ExtResource( 8 )
@@ -95,7 +91,7 @@ stream = ExtResource( 26 )
 [node name="OQ_ARVROrigin" parent="." instance=ExtResource( 5 )]
 
 [node name="OQ_ARVRCamera" parent="OQ_ARVROrigin" instance=ExtResource( 3 )]
-environment = SubResource( 6 )
+environment = ExtResource( 9 )
 
 [node name="OQ_LeftController" parent="OQ_ARVROrigin" instance=ExtResource( 1 )]
 
@@ -103,10 +99,6 @@ environment = SubResource( 6 )
 
 [node name="Tablet" parent="OQ_ARVROrigin/OQ_LeftController" instance=ExtResource( 13 )]
 transform = Transform( 0.819152, -0.196175, 0.538986, 0, 0.939693, 0.34202, -0.573577, -0.280167, 0.769751, -0.0485239, 0.192734, -0.0687792 )
-
-[node name="Spatial" type="Spatial" parent="OQ_ARVROrigin/OQ_LeftController"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0538189, 0.288249, -0.167324 )
-visible = false
 
 [node name="OQ_RightController" parent="OQ_ARVROrigin" instance=ExtResource( 4 )]
 

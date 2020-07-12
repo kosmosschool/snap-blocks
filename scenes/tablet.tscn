@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://scripts/button_save.gd" type="Script" id=1]
 [ext_resource path="res://scripts/button_new.gd" type="Script" id=2]
@@ -23,6 +23,8 @@
 [ext_resource path="res://materials/trash_open.tres" type="Material" id=21]
 [ext_resource path="res://images/icon_gallery.png" type="Texture" id=22]
 [ext_resource path="res://scenes/ks_button_pressable_small.tscn" type="PackedScene" id=23]
+[ext_resource path="res://scenes/save_cam.tscn" type="PackedScene" id=24]
+[ext_resource path="res://scripts/button_take_pic.gd" type="Script" id=25]
 [ext_resource path="res://images/icon_arrow_right.png" type="Texture" id=30]
 [ext_resource path="res://images/icon_arrow_left.png" type="Texture" id=32]
 
@@ -83,11 +85,7 @@ EMPTY_TITLE = "Save your Creations to see them here"
 [node name="TitleLabel" parent="Screens/LoadScreen" instance=ExtResource( 9 )]
 transform = Transform( 2.3, 0, 0, 0, 0.5, -1.49012e-08, 0, 7.45058e-09, 1, -0.032, 0.036, 0.001 )
 text = "Load Creation"
-margin = 16
-billboard = false
-resize_mode = 1
 font_size_multiplier = 5.0
-font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0.00784314, 0.00784314, 0.00784314, 0 )
 h_align = 1
 v_align = 1
@@ -144,6 +142,7 @@ mesh = SubResource( 1 )
 material/0 = SubResource( 5 )
 
 [node name="GalleryScreen" type="Spatial" parent="Screens"]
+visible = false
 script = ExtResource( 3 )
 saved_files_path = "res://gallery_fixed/"
 LOAD_MODE_TITLE = "Gallery"
@@ -157,11 +156,7 @@ first_button_origin = Vector3( -0.105, 0.03, 0.003 )
 [node name="TitleLabel" parent="Screens/GalleryScreen" instance=ExtResource( 9 )]
 transform = Transform( 2.3, 0, 0, 0, 0.5, -1.49012e-08, 0, 7.45058e-09, 1, -0.032, 0.0820324, 0.001 )
 text = "Gallery"
-margin = 16
-billboard = false
-resize_mode = 1
 font_size_multiplier = 5.0
-font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0.00784314, 0.00784314, 0.00784314, 0 )
 h_align = 1
 v_align = 1
@@ -184,6 +179,28 @@ script = ExtResource( 4 )
 transform = Transform( 0.035, 0, 1.32349e-23, 0, 0.035, 0, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 5 )
+
+[node name="CamScreen" type="Spatial" parent="Screens"]
+
+[node name="TitleLabel" parent="Screens/CamScreen" instance=ExtResource( 9 )]
+transform = Transform( 2.3, 0, 0, 0, 0.5, -1.49012e-08, 0, 7.45058e-09, 1, -0.032, 0.0943366, 0.001 )
+text = "Take a cover pic"
+font_size_multiplier = 5.0
+background_color = Color( 0.00784314, 0.00784314, 0.00784314, 0 )
+h_align = 1
+v_align = 1
+
+[node name="TakePicButton" parent="Screens/CamScreen" instance=ExtResource( 12 )]
+transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, -0.0330975, -0.0787148, 0.003 )
+script = ExtResource( 25 )
+
+[node name="MeshInstanceIcon" type="MeshInstance" parent="Screens/CamScreen/TakePicButton"]
+transform = Transform( 0.035, 5.21542e-10, -7.94093e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )
+
+[node name="SaveCam" parent="Screens/CamScreen" instance=ExtResource( 24 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0335345, -0.0150393, 0 )
 
 [node name="Navigation" type="Spatial" parent="."]
 
