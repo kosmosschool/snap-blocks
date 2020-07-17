@@ -171,6 +171,7 @@ void vertex() {
 }
 
 "
+custom_defines = ""
 
 [resource]
 shader = SubResource( 1 )

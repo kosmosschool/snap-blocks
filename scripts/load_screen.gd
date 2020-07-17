@@ -97,12 +97,21 @@ func display_load_buttons() -> void:
 		# update image
 		var image_mesh = current_button.get_node("MeshInstanceImage")
 		var image_path = save_system.get_button_pic_path(saved_files_path + current_page_files[i])
-		var image_tex
+#		var image_tex
+		var image_tex = ImageTexture.new()
 		
 		if image_path != "":
-			print("image_path ", image_path)
-#			image_tex = load(image_path)
-			image_tex = load("user://creation_pics/creation_2.png")
+			var img_loaded = load(image_path)
+			if img_loaded:
+				image_tex = img_loaded
+			else:
+				# this is the case if we saved the image directly from the viewport (with the save cam)
+				# it can't be loaded as resource such as imported images (which are already ImageTextures).
+				# therefore, we need to create an ImageTexxture from it first
+				var img = Image.new()
+				img.load(image_path)
+				image_tex.create_from_image(img)
+			
 		else:
 			# set placeholder image
 			image_tex = load("res://images/gallery_images/tree.jpg")

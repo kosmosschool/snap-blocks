@@ -32,4 +32,5 @@ func _on_Save_Cam_visibility_changed():
 func save_picture():
 	var img = viewport.get_texture().get_data()
 	print("save_system.open_cover_pic_path ", save_system.open_cover_pic_path)
+	
 	img.save_png(save_system.open_cover_pic_path)

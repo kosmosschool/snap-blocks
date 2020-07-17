@@ -34,6 +34,18 @@ func _ready():
 	if not dir.dir_exists(save_dir_cover_pics):
 		dir.make_dir_recursive(save_dir_cover_pics)
 	
+	
+#	if dir.open(save_dir_cover_pics) == OK:
+#		dir.list_dir_begin()
+#		var file_name = dir.get_next()
+#
+#		while file_name != "":
+#			print("file_name ", file_name)
+#
+#			file_name = dir.get_next()
+#
+#		dir.list_dir_end()
+	
 	open_new_file()
 	
 	init_user_prefs()
