@@ -7,7 +7,7 @@
 size = Vector2( 0.18, 0.18 )
 
 [sub_resource type="ViewportTexture" id=2]
-flags = 16
+flags = 4
 viewport_path = NodePath("Viewport")
 
 [sub_resource type="SpatialMaterial" id=3]

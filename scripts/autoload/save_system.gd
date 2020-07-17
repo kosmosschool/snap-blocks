@@ -7,14 +7,18 @@ class_name SaveSystem
 signal file_loaded
 
 var save_dir = "user://saved_creations/"
+var save_dir_cover_pics = "user://creation_pics/"
 var base_dir = "user://"
 var user_prefs_file_name = "user_prefs.json"
 var open_file_path : String
+var open_file_name : String
+var open_cover_pic_path : String
 
 onready var block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
 onready var welcome_controller = get_node(global_vars.WELCOME_CONTROLLER_PATH)
 onready var camera = get_node(global_vars.AR_VR_CAMERA_PATH)
 onready var ar_vr_origin = get_node(global_vars.AR_VR_ORIGIN_PATH)
+onready var screens_controller = get_node(global_vars.ALL_SCREENS_PATH)
 
 
 func _ready():
@@ -22,9 +26,13 @@ func _ready():
 #	copy_files_to_ext()
 	
 	var dir = Directory.new()
-	# create dir if it doesn't exist
+	# create save dir if it doesn't exist
 	if not dir.dir_exists(save_dir):
 		dir.make_dir_recursive(save_dir)
+	
+	# create save dir cover pics if it doesn't exist
+	if not dir.dir_exists(save_dir_cover_pics):
+		dir.make_dir_recursive(save_dir_cover_pics)
 	
 	open_new_file()
 	
@@ -95,7 +103,9 @@ func open_new_file() -> void:
 			return
 		
 		newest_number += 1
-	open_file_path = str("user://saved_creations/creation_", newest_number, ".json")
+	
+	open_file_name = str("creation_", newest_number)
+	open_file_path = str("user://saved_creations/", open_file_name, ".json")
 
 
 func get_file_number(input_file_name : String) -> int:
@@ -106,6 +116,16 @@ func get_file_number(input_file_name : String) -> int:
 		return -1
 
 	return regex_result[0].get_string().to_int()
+
+
+func get_file_name_from_path(input_file_path : String) -> String:
+	var r = RegEx.new()
+	r.compile("(\\w*)\\.")
+	var regex_result = r.search_all(input_file_path)
+	if regex_result.empty():
+		return ""
+
+	return regex_result[0].get_string(1)
 
 
 func save_creation():
@@ -123,11 +143,17 @@ func save_creation():
 	
 	var block_areas_serialized = block_chunks_controller.serialize_all()
 	
+	open_cover_pic_path = str(save_dir_cover_pics, open_file_name, ".png")
+	
 	var new_data_dict = {
 		"app_version": global_functions.get_current_version(),
 		"all_block_areas": block_areas_serialized,
-		"position": global_functions.transform_to_array(ar_vr_origin.global_transform)
+		"position": global_functions.transform_to_array(ar_vr_origin.global_transform),
+		"cover_pic_path": open_cover_pic_path
 	}
+	
+	# we need to take a cover pic before saving
+	screens_controller.change_screen("CamScreen")
 
 	# save to file
 	var save_file = File.new()
@@ -151,8 +177,9 @@ func load_creation(saved_file_path : String):
 	# create all block areas
 	block_chunks_controller.recreate_from_save(content["all_block_areas"])
 	
-	# createa multi mesh
-#	multi_mesh.recreate(added_areas)
+	# get cover pic path
+	if content.has("cover_pic_path"):
+		open_cover_pic_path = content["cover_pic_path"]
 	
 	# if we loaded a fixed gallery file, create a new file to save to
 	if "gallery_fixed" in saved_file_path:
@@ -160,6 +187,7 @@ func load_creation(saved_file_path : String):
 	else:
 		# update open file name
 		open_file_path = saved_file_path
+		open_file_name = get_file_name_from_path(saved_file_path)
 	
 	
 	emit_signal("file_loaded")
@@ -226,8 +254,8 @@ func get_button_pic_path(file_path : String):
 		return ""
 	curr_file.close()
 	
-	if content.has("button_pic_path"):
-		return content["button_pic_path"]
+	if content.has("cover_pic_path"):
+		return content["cover_pic_path"]
 	else:
 		return ""
 

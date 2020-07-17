@@ -4,7 +4,7 @@
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/oq_ui2d_standard_font.tres" type="DynamicFont" id=2]
 
 [sub_resource type="ViewportTexture" id=1]
-flags = 16
+flags = 4
 viewport_path = NodePath("Viewport")
 
 [sub_resource type="SpatialMaterial" id=4]

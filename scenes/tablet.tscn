@@ -148,7 +148,6 @@ saved_files_path = "res://gallery_fixed/"
 LOAD_MODE_TITLE = "Gallery"
 DELETE_MODE_TITLE = "Gallery"
 EMPTY_TITLE = "Gallery"
-button_type = 1
 first_button_origin = Vector3( -0.105, 0.03, 0.003 )
 
 [node name="LoadButtons" type="Spatial" parent="Screens/GalleryScreen"]

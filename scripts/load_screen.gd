@@ -7,8 +7,6 @@ class_name LoadScreen
 signal delete_mode_selected
 signal load_mode_selected
 
-enum ButtonType {TEXT, IMAGE}
-
 var file_button_scene
 var offset_x = 0.05
 var offset_y = -0.05
@@ -31,7 +29,6 @@ export var saved_files_path : String
 export var LOAD_MODE_TITLE : String
 export var DELETE_MODE_TITLE : String
 export var EMPTY_TITLE : String
-export(ButtonType) var button_type
 export var first_button_origin = Vector3(-0.105, 0, 0.003)
 
 
@@ -44,10 +41,7 @@ func get_delete_mode():
 
 
 func _ready():
-	if button_type == ButtonType.TEXT:
-		file_button_scene = preload("res://scenes/ks_button_pressable_text.tscn")
-	elif button_type == ButtonType.IMAGE:
-		file_button_scene = preload("res://scenes/ks_button_pressable_image.tscn")
+	file_button_scene = preload("res://scenes/ks_button_pressable_image.tscn")
 	
 	create_load_buttons()
 	refresh_files()
@@ -64,11 +58,6 @@ func create_load_buttons() -> void:
 		var offset_x_mod = i - (offset_y_mod * row_size)
 		var new_origin = first_button_origin + Vector3(offset_x_mod * offset_x, offset_y_mod * offset_y, 0)
 		file_button.set_local_origin(new_origin)
-		
-		if button_type == ButtonType.TEXT:
-			# update text and font size
-			var text_label = file_button.get_node("2DTextLabel")
-			text_label.set_font_size_multiplier(4)
 	
 	load_buttons = load_buttons_node.get_children()
 
@@ -105,24 +94,20 @@ func display_load_buttons() -> void:
 		current_button.visible = true
 		current_button.set_file_path(saved_files_path + current_page_files[i])
 		
-		if button_type == ButtonType.TEXT:
-			# update text
-			var current_file_number = save_system.get_file_number(current_page_files[i])
-			var text_label = current_button.get_node("2DTextLabel")
-			text_label.set_text(str(current_file_number))
-		elif button_type == ButtonType.IMAGE:
-			# update image
-			var image_mesh = current_button.get_node("MeshInstanceImage")
-			var image_path = save_system.get_button_pic_path(saved_files_path + current_page_files[i])
-			var image_tex
-			
-			if image_path != "":
-				image_tex = load(image_path)
-			else:
-				# set placeholder image
-				image_tex = load("res://images/gallery_images/tree.jpg")
-			
-			image_mesh.get_surface_material(0).set_texture(SpatialMaterial.TEXTURE_ALBEDO, image_tex)
+		# update image
+		var image_mesh = current_button.get_node("MeshInstanceImage")
+		var image_path = save_system.get_button_pic_path(saved_files_path + current_page_files[i])
+		var image_tex
+		
+		if image_path != "":
+			print("image_path ", image_path)
+#			image_tex = load(image_path)
+			image_tex = load("user://creation_pics/creation_2.png")
+		else:
+			# set placeholder image
+			image_tex = load("res://images/gallery_images/tree.jpg")
+		
+		image_mesh.get_surface_material(0).set_texture(SpatialMaterial.TEXTURE_ALBEDO, image_tex)
 
 
 func paginate(input_array : Array) -> Dictionary:
