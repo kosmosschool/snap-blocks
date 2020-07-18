@@ -18,13 +18,18 @@ var y_offset = -0.04
 
 onready var buttons_node = $Buttons
 onready var key_button_scene = preload("res://scenes/ks_button_keyboard.tscn")
+onready var keyboard_output_label = get_node("../KeyboardOutputLabel")
+
 
 func _ready():
 	init_keyboard()
 
+
 func key_pressed(key_value : String):
 	# called by individual keys
-	pass
+	# excepts keyboard_output_label to be a 2DTextLabel
+	var prev_output = keyboard_output_label.get_text()
+	keyboard_output_label.set_text(prev_output + key_value)
 
 
 func init_keyboard():
@@ -33,7 +38,6 @@ func init_keyboard():
 		for col in range(keyboard_layout[row].size()):
 			var keyboard_button = key_button_scene.instance()
 			keyboard_button.transform.origin = start_offset + Vector3(col * x_offset, row * y_offset, 0)
-			keyboard_button.set_key_value(keyboard_layout[row][col])
-			
 			buttons_node.add_child(keyboard_button)
+			keyboard_button.set_key_value(keyboard_layout[row][col])
 			

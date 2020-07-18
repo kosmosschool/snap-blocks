@@ -17,7 +17,7 @@ var prev_scale_y : float
 var prev_h_align : int
 var prev_v_align : int
 
-export (String, MULTILINE) var text = "I am a Label\nWith a new line" setget set_text
+export (String, MULTILINE) var text = "I am a Label\nWith a new line" setget set_text, get_text
 export var margin = 16;
 export var billboard = false;
 
@@ -42,6 +42,10 @@ onready var mesh_instance : MeshInstance = $MeshInstance
 func set_text(new_value):
 	text = new_value
 	set_label_text(text)
+
+
+func get_text():
+	return text
 
 
 func set_font_size_multiplier(new_value):

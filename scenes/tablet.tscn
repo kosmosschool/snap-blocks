@@ -69,8 +69,13 @@ albedo_texture = ExtResource( 22 )
 
 [node name="Tablet" type="Spatial"]
 
+[node name="KeyboardOutputLabel" parent="." instance=ExtResource( 9 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.221969, 0.0287145 )
+text = ""
+font_size_multiplier = 4.0
+
 [node name="Keyboard" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0244834, 0.170707, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0244834, 0.0212193, 0.042756 )
 script = ExtResource( 31 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Keyboard"]
