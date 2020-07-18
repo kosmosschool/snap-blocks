@@ -20,14 +20,14 @@ var start_time := 0.0
 var speed := 2.0
 var left_after_press = true
 
-onready var initial_pos_local: = get_transform().origin
-onready var initial_pos_global: = get_global_transform().origin
-onready var button_forward_vector_norm = get_transform().basis.z.normalized()
-onready var z_scale = scale.z
-onready var button_mesh := $MeshInstance
-onready var button_area := $ButtonArea
-onready var default_mat_0 = button_mesh.get_surface_material(0)
-onready var default_mat_1 = button_mesh.get_surface_material(1)
+var initial_pos_local
+var initial_pos_global
+var button_forward_vector_norm
+var z_scale
+var button_mesh
+var button_area
+var default_mat_0
+var default_mat_1
 
 export var press_distance := 0.008
 export(Material) var custom_mat_0
@@ -37,7 +37,16 @@ export(Material) var custom_mat_on_1
 export var on_on_start := false
 
 
-func _ready():
+func _enter_tree():
+	initial_pos_local = get_transform().origin
+	initial_pos_global = get_global_transform().origin
+	button_forward_vector_norm = get_transform().basis.z.normalized()
+	z_scale = scale.z
+	button_mesh = $MeshInstance
+	button_area = $ButtonArea
+	default_mat_0 = button_mesh.get_surface_material(0)
+	default_mat_1 = button_mesh.get_surface_material(1)
+
 	# connect to signals
 	$ButtonArea.connect("area_entered", self, "_on_ButtonArea_area_entered")
 	$ButtonArea.connect("area_exited", self, "_on_ButtonArea_area_exited")

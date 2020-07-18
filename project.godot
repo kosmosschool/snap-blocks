@@ -134,6 +134,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/ghost_block.gd"
 }, {
+"base": "KSButtonPressable",
+"class": "KSButtonKeyboard",
+"language": "GDScript",
+"path": "res://scripts/ks_keyboard_button.gd"
+}, {
 "base": "ButtonPressable",
 "class": "KSButtonPressable",
 "language": "GDScript",
@@ -153,6 +158,11 @@ _global_script_classes=[ {
 "class": "KSRigidBodyGrab",
 "language": "GDScript",
 "path": "res://scripts/ks_rigid_body_grab.gd"
+}, {
+"base": "Spatial",
+"class": "Keyboard",
+"language": "GDScript",
+"path": "res://scripts/keyboard.gd"
 }, {
 "base": "Spatial",
 "class": "LoadScreen",
@@ -245,10 +255,12 @@ _global_script_class_icons={
 "Feature_RigidBodyGrab": "",
 "GameSettings": "",
 "GhostBlock": "",
+"KSButtonKeyboard": "",
 "KSButtonPressable": "",
 "KSGrabbableRigidBody": "",
 "KSMultiMesh": "",
 "KSRigidBodyGrab": "",
+"Keyboard": "",
 "LoadScreen": "",
 "MovementSystem": "",
 "OQClass_GrabbableRigidBody": "",
