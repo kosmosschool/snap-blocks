@@ -101,9 +101,8 @@ func display_load_buttons() -> void:
 		var image_tex = ImageTexture.new()
 		
 		if image_path != "":
-			var img_loaded = load(image_path)
-			if img_loaded:
-				image_tex = img_loaded
+			if ResourceLoader.exists(image_path, "Image"):
+				image_tex = load(image_path)
 			else:
 				# this is the case if we saved the image directly from the viewport (with the save cam)
 				# it can't be loaded as resource such as imported images (which are already ImageTextures).

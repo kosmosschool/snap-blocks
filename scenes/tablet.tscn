@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://scripts/button_save.gd" type="Script" id=1]
 [ext_resource path="res://scripts/button_new.gd" type="Script" id=2]
@@ -25,6 +25,9 @@
 [ext_resource path="res://scenes/ks_button_pressable_small.tscn" type="PackedScene" id=23]
 [ext_resource path="res://scenes/save_cam.tscn" type="PackedScene" id=24]
 [ext_resource path="res://scripts/button_take_pic.gd" type="Script" id=25]
+[ext_resource path="res://scripts/cam_screen.gd" type="Script" id=26]
+[ext_resource path="res://scripts/confirmation_sub_screen.gd" type="Script" id=27]
+[ext_resource path="res://scripts/button_cancel_pic.gd" type="Script" id=28]
 [ext_resource path="res://images/icon_arrow_right.png" type="Texture" id=30]
 [ext_resource path="res://images/icon_arrow_left.png" type="Texture" id=32]
 
@@ -180,8 +183,11 @@ mesh = SubResource( 1 )
 material/0 = SubResource( 5 )
 
 [node name="CamScreen" type="Spatial" parent="Screens"]
+script = ExtResource( 26 )
 
-[node name="TitleLabel" parent="Screens/CamScreen" instance=ExtResource( 9 )]
+[node name="CamSubScreen" type="Spatial" parent="Screens/CamScreen"]
+
+[node name="TitleLabel" parent="Screens/CamScreen/CamSubScreen" instance=ExtResource( 9 )]
 transform = Transform( 2.3, 0, 0, 0, 0.5, -1.49012e-08, 0, 7.45058e-09, 1, -0.032, 0.0943366, 0.001 )
 text = "Take a cover pic"
 font_size_multiplier = 5.0
@@ -189,17 +195,38 @@ background_color = Color( 0.00784314, 0.00784314, 0.00784314, 0 )
 h_align = 1
 v_align = 1
 
-[node name="TakePicButton" parent="Screens/CamScreen" instance=ExtResource( 12 )]
-transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, -0.0330975, -0.0787148, 0.003 )
+[node name="TakePicButton" parent="Screens/CamScreen/CamSubScreen" instance=ExtResource( 12 )]
+transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.0816378, -0.0830919, 0.003 )
 script = ExtResource( 25 )
 
-[node name="MeshInstanceIcon" type="MeshInstance" parent="Screens/CamScreen/TakePicButton"]
+[node name="MeshInstanceIcon" type="MeshInstance" parent="Screens/CamScreen/CamSubScreen/TakePicButton"]
 transform = Transform( 0.035, 5.21542e-10, -7.94093e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 2 )
 
-[node name="SaveCam" parent="Screens/CamScreen" instance=ExtResource( 24 )]
+[node name="CancelPicButton" parent="Screens/CamScreen/CamSubScreen" instance=ExtResource( 12 )]
+transform = Transform( 1, 1.49012e-08, 0, 0, 1, -5.96046e-08, 0, 0, 1, 0.0816378, -0.0320859, 0.003 )
+script = ExtResource( 28 )
+
+[node name="MeshInstanceIcon" type="MeshInstance" parent="Screens/CamScreen/CamSubScreen/CancelPicButton"]
+transform = Transform( 0.035, 5.21542e-10, -7.94093e-23, 0, 0.035, -2.08615e-09, 0, 0, 0.035, 0, 0, 0.005 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )
+
+[node name="SaveCam" parent="Screens/CamScreen/CamSubScreen" instance=ExtResource( 24 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0335345, -0.0150393, 0 )
+
+[node name="ConfirmationSubScreen" type="Spatial" parent="Screens/CamScreen"]
+visible = false
+script = ExtResource( 27 )
+
+[node name="TitleLabel" parent="Screens/CamScreen/ConfirmationSubScreen" instance=ExtResource( 9 )]
+transform = Transform( 2.3, 0, 0, 0, 0.5, -1.49012e-08, 0, 7.45058e-09, 1, -0.032, 0.000831217, 0.000999999 )
+text = "Creation saved"
+font_size_multiplier = 5.0
+background_color = Color( 0.00784314, 0.00784314, 0.00784314, 0 )
+h_align = 1
+v_align = 1
 
 [node name="Navigation" type="Spatial" parent="."]
 

@@ -35,6 +35,11 @@ _global_script_classes=[ {
 "path": "res://scripts/building_block_snappable.gd"
 }, {
 "base": "KSButtonPressable",
+"class": "ButtonCancelPic",
+"language": "GDScript",
+"path": "res://scripts/button_cancel_pic.gd"
+}, {
+"base": "KSButtonPressable",
 "class": "ButtonChangePageLoad",
 "language": "GDScript",
 "path": "res://scripts/button_change_page_load.gd"
@@ -75,6 +80,11 @@ _global_script_classes=[ {
 "path": "res://scripts/button_take_pic.gd"
 }, {
 "base": "Spatial",
+"class": "CamScreen",
+"language": "GDScript",
+"path": "res://scripts/cam_screen.gd"
+}, {
+"base": "Spatial",
 "class": "ChallengeScreen",
 "language": "GDScript",
 "path": "res://scripts/challenge_screen.gd"
@@ -83,6 +93,11 @@ _global_script_classes=[ {
 "class": "ColorSystem",
 "language": "GDScript",
 "path": "res://scripts/autoload/color_system.gd"
+}, {
+"base": "Spatial",
+"class": "ConfirmationSubScreen",
+"language": "GDScript",
+"path": "res://scripts/confirmation_sub_screen.gd"
 }, {
 "base": "BaseController",
 "class": "ControllerDefault",
@@ -210,6 +225,7 @@ _global_script_class_icons={
 "BlockChunk": "",
 "BlockChunksController": "",
 "BuildingBlockSnappable": "",
+"ButtonCancelPic": "",
 "ButtonChangePageLoad": "",
 "ButtonDelete": "",
 "ButtonLoad": "",
@@ -218,8 +234,10 @@ _global_script_class_icons={
 "ButtonSave": "",
 "ButtonScreenNav": "",
 "ButtonTakePic": "",
+"CamScreen": "",
 "ChallengeScreen": "",
 "ColorSystem": "",
+"ConfirmationSubScreen": "",
 "ControllerDefault": "",
 "ControllerDelete": "",
 "ControllerRecolor": "",
