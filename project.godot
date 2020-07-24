@@ -75,6 +75,11 @@ _global_script_classes=[ {
 "path": "res://scripts/button_screen_nav.gd"
 }, {
 "base": "KSButtonPressable",
+"class": "ButtonShareGallery",
+"language": "GDScript",
+"path": "res://scripts/button_share_gallery.gd"
+}, {
+"base": "KSButtonPressable",
 "class": "ButtonTakePic",
 "language": "GDScript",
 "path": "res://scripts/button_take_pic.gd"
@@ -165,6 +170,11 @@ _global_script_classes=[ {
 "path": "res://scripts/keyboard.gd"
 }, {
 "base": "Spatial",
+"class": "KeyboardScreen",
+"language": "GDScript",
+"path": "res://keyboard_screen.gd"
+}, {
+"base": "Spatial",
 "class": "LoadScreen",
 "language": "GDScript",
 "path": "res://scripts/load_screen.gd"
@@ -243,6 +253,7 @@ _global_script_class_icons={
 "ButtonPressable": "",
 "ButtonSave": "",
 "ButtonScreenNav": "",
+"ButtonShareGallery": "",
 "ButtonTakePic": "",
 "CamScreen": "",
 "ChallengeScreen": "",
@@ -261,6 +272,7 @@ _global_script_class_icons={
 "KSMultiMesh": "",
 "KSRigidBodyGrab": "",
 "Keyboard": "",
+"KeyboardScreen": "",
 "LoadScreen": "",
 "MovementSystem": "",
 "OQClass_GrabbableRigidBody": "",

@@ -16,6 +16,9 @@ var start_offset = Vector3(-0.175, 0.05, 0.0)
 var x_offset = 0.04
 var y_offset = -0.04
 var shift_mode = false
+var enter_callback : Reference
+var callback_args : Dictionary
+var placeholder_cleared := false
 
 onready var buttons_node = $Buttons
 onready var key_button_scene = preload("res://scenes/ks_button_keyboard.tscn")
@@ -26,19 +29,30 @@ func _ready():
 	init_keyboard()
 
 
+func set_enter_callback(new_func : Reference, args : Dictionary):
+	enter_callback = new_func
+	callback_args = args
+
+
 func key_pressed(key_value : String):
 	# called by individual keys
 	# excepts keyboard_output_label to be a 2DTextLabel
-	
 	var prev_output = keyboard_output_label.get_text()
+	
+	if not placeholder_cleared:
+		prev_output = ""
+		placeholder_cleared = true
 	
 	match key_value:
 		"space":
 			keyboard_output_label.set_text(prev_output + " ")
 		"backspace":
-			keyboard_output_label.set_text(prev_output.rstrip(1))
+			keyboard_output_label.set_text(prev_output.left(prev_output.length() - 1))
 		"shift":
 			shift_mode = true
+		"enter":
+			# call callback function
+			enter_callback.call_func(prev_output, callback_args)
 		_:
 			if shift_mode:
 				key_value = key_value.capitalize()
@@ -54,4 +68,5 @@ func init_keyboard():
 			keyboard_button.transform.origin = start_offset + Vector3(col * x_offset, row * y_offset, 0)
 			buttons_node.add_child(keyboard_button)
 			keyboard_button.set_key_value(keyboard_layout[row][col])
-			
+	
+	placeholder_cleared = false

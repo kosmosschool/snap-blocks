@@ -5,6 +5,7 @@ class_name LoadScreen
 
 
 signal delete_mode_selected
+signal share_gallery_mode_selected
 signal load_mode_selected
 
 var file_button_scene
@@ -17,6 +18,7 @@ var total_pages := 1
 var all_files_paginated : Dictionary setget , get_all_files_paginated
 var load_buttons : Array
 var delete_mode := false setget , get_delete_mode
+var share_gallery_mode := false setget , get_share_gallery_mode
 
 
 onready var load_buttons_node = $LoadButtons
@@ -28,6 +30,7 @@ onready var button_load_script = preload("res://scripts/button_load.gd")
 export var saved_files_path : String
 export var LOAD_MODE_TITLE : String
 export var DELETE_MODE_TITLE : String
+export var SHARE_GALLERY_MODE_TITLE : String
 export var EMPTY_TITLE : String
 export var first_button_origin = Vector3(-0.105, 0, 0.003)
 
@@ -38,6 +41,10 @@ func get_all_files_paginated():
 
 func get_delete_mode():
 	return delete_mode
+
+
+func get_share_gallery_mode():
+	return share_gallery_mode
 
 
 func _ready():
@@ -178,5 +185,17 @@ func toggle_delete_mode():
 		if title_label:
 			title_label.set_text(LOAD_MODE_TITLE)
 		emit_signal("load_mode_selected")
+
+
+func toggle_share_gallery_mode():
+	share_gallery_mode = !share_gallery_mode
 	
+	if share_gallery_mode:
+		if title_label:
+			title_label.set_text(SHARE_GALLERY_MODE_TITLE)
+		emit_signal("share_gallery_mode_selected")
+	else:
+		if title_label:
+			title_label.set_text(LOAD_MODE_TITLE)
+		emit_signal("load_mode_selected")
 	

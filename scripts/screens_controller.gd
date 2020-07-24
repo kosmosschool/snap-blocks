@@ -39,3 +39,17 @@ func change_screen(new_screen_name : String):
 		current_screen_node.visible = true
 		
 		emit_signal("screen_changed", current_screen_name)
+
+
+func show_keyboard(callback_func : Reference, args : Dictionary, label : String, placeholder : String):
+	var keyboard_screen = $KeyboardScreen
+	
+	if not keyboard_screen:
+		return
+	
+	keyboard_screen.set_enter_callback(callback_func, args)
+	keyboard_screen.set_label(label)
+	keyboard_screen.set_placeholder(placeholder)
+	
+	change_screen("KeyboardScreen")
+	

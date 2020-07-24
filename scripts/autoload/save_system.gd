@@ -176,9 +176,7 @@ func save_creation():
 
 
 func load_creation(saved_file_path : String):
-	var save_file = File.new()
-	save_file.open(saved_file_path, File.READ)
-	var content = parse_json(save_file.get_as_text())
+	var content = get_file_content(saved_file_path)
 	
 	if not content:
 		return
@@ -205,12 +203,54 @@ func load_creation(saved_file_path : String):
 	emit_signal("file_loaded")
 
 
+func get_file_content(saved_file_path : String):
+	var save_file = File.new()
+	save_file.open(saved_file_path, File.READ)
+	var content = parse_json(save_file.get_as_text())
+	
+	if not content:
+		return null
+	else:
+		return content
+
+
 func delete_creation(saved_file_path : String):
 	# delete file
 	var dir = Directory.new()
 	dir.remove(saved_file_path)
 	
 	open_new_file()
+
+
+func share_gallery_creation(saved_file_path : String):
+	var content = get_file_content(saved_file_path)
+	
+	if not content:
+		return
+		
+	if not content.has("creation_name"):
+		# open promopt to enter creation name
+		var keyboard_cb = funcref(self, "share_gallery_keyboard_cb")
+		screens_controller.show_keyboard(
+			keyboard_cb,
+			{"saved_file_path" : saved_file_path},
+			"What's your Creation called?",
+			"Enter name"
+		)
+	else:
+		# make api request to share file to gallery
+		pass
+
+
+func share_gallery_keyboard_cb(creation_name : String, args : Dictionary):
+	# called when user presses enter on the keyboard
+	
+	# save creation name to file and share again
+	
+	
+	print("new name ", creation_name)
+	print("args ", args["saved_file_path"])
+	
 
 
 func get_all_saved_files(dir_path : String):
