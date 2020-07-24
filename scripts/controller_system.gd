@@ -169,9 +169,9 @@ func stop_all_button_blink() -> void:
 	for c in all_controllers["right"]:
 		var curr_anim = c.get_node("AnimationPlayer")
 		if curr_anim:
-			curr_anim.stop()
+			curr_anim.stop(true) #I think if you don't add (true) the animation just stopps in the middle, buttons could keep wrong color
 	
 	for c in all_controllers["left"]:
 		var curr_anim = c.get_node("AnimationPlayer")
 		if curr_anim:
-			curr_anim.stop()
+			curr_anim.stop(true)

@@ -1,0 +1,140 @@
+[gd_scene load_steps=32 format=2]
+
+[ext_resource path="res://OQ_Toolkit/OQ_ARVRCamera.tscn" type="PackedScene" id=1]
+[ext_resource path="res://OQ_Toolkit/OQ_RightController.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/ks_controller_right.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/tablet.tscn" type="PackedScene" id=4]
+[ext_resource path="res://materials/proc_sky.tres" type="ProceduralSky" id=5]
+[ext_resource path="res://OQ_Toolkit/OQ_LeftController.tscn" type="PackedScene" id=6]
+[ext_resource path="res://materials/cube_default_mat.tres" type="Material" id=7]
+[ext_resource path="res://scripts/block_chunks_controller.gd" type="Script" id=8]
+[ext_resource path="res://materials/cube_explosion_shader_mat.tres" type="Material" id=9]
+[ext_resource path="res://shaders/unshaded_color_billboard.shader" type="Shader" id=10]
+[ext_resource path="res://scripts/shader_cache.gd" type="Script" id=11]
+[ext_resource path="res://OQ_Toolkit/OQ_ARVRCamera/scripts/OQ_ARVRCamera.gd" type="Script" id=12]
+[ext_resource path="res://scripts/controller_system.gd" type="Script" id=13]
+[ext_resource path="res://OQ_Toolkit/OQ_ARVRController/scripts/OQ_ARVRController.gd" type="Script" id=14]
+[ext_resource path="res://OQ_Toolkit/OQ_ARVROrigin/scripts/OQ_ARVROrigin.gd" type="Script" id=15]
+[ext_resource path="res://scripts/text_label_2d.gd" type="Script" id=16]
+[ext_resource path="res://scenes/text_label_2d.tscn" type="PackedScene" id=17]
+[ext_resource path="res://scripts/welcome_controller.gd" type="Script" id=18]
+[ext_resource path="res://scenes/ks_controller_left.tscn" type="PackedScene" id=19]
+[ext_resource path="res://materials/cube_ghost_default_mat.tres" type="Material" id=20]
+[ext_resource path="res://meshes/cube_side_mesh.tres" type="QuadMesh" id=21]
+[ext_resource path="res://sounds/Button Click.wav" type="AudioStream" id=22]
+[ext_resource path="res://sounds/magnetic_click.wav" type="AudioStream" id=23]
+[ext_resource path="res://OQ_Toolkit/OQ_ARVROrigin.tscn" type="PackedScene" id=24]
+[ext_resource path="res://scripts/game.gd" type="Script" id=25]
+
+[sub_resource type="QuadMesh" id=1]
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_transparent = true
+flags_unshaded = true
+
+[sub_resource type="MultiMesh" id=3]
+transform_format = 1
+custom_data_format = 2
+instance_count = 1
+visible_instance_count = 1
+mesh = ExtResource( 21 )
+transform_array = PoolVector3Array( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+custom_data_array = PoolColorArray( 0, 0, 0, 0 )
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = ExtResource( 10 )
+shader_param/color = null
+
+[sub_resource type="QuadMesh" id=5]
+material = SubResource( 4 )
+size = Vector2( 0.02, 0.02 )
+
+[sub_resource type="Environment" id=6]
+background_mode = 2
+background_sky = ExtResource( 5 )
+
+[node name="Game" type="Spatial"]
+script = ExtResource( 25 )
+
+[node name="ShaderCache" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, -1 )
+script = ExtResource( 11 )
+
+[node name="GhostBlockShader" type="MeshInstance" parent="ShaderCache"]
+transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0 )
+mesh = SubResource( 1 )
+material/0 = ExtResource( 20 )
+
+[node name="CubeDefault" type="MeshInstance" parent="ShaderCache"]
+transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0.0391647, 0, 0 )
+mesh = SubResource( 1 )
+material/0 = ExtResource( 7 )
+
+[node name="SpatialMatTransUnshaded" type="MeshInstance" parent="ShaderCache"]
+transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, -0.0156054, 0, 0 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )
+
+[node name="MultiMeshInstance" type="MultiMeshInstance" parent="ShaderCache"]
+multimesh = SubResource( 3 )
+
+[node name="2DTextLabel" type="Spatial" parent="ShaderCache" instance=ExtResource( 17 )]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.0179582, 0, 0 )
+script = ExtResource( 16 )
+
+[node name="Particles" type="Particles" parent="ShaderCache"]
+emitting = false
+amount = 30
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.8
+process_material = ExtResource( 9 )
+draw_pass_1 = SubResource( 5 )
+
+[node name="ControllerSystem" type="Node" parent="."]
+script = ExtResource( 13 )
+
+[node name="AudioStreamPlayer3DClick" type="AudioStreamPlayer3D" parent="ControllerSystem"]
+stream = ExtResource( 22 )
+
+[node name="OQ_ARVROrigin" type="ARVROrigin" parent="." instance=ExtResource( 24 )]
+script = ExtResource( 15 )
+
+[node name="OQ_ARVRCamera" type="ARVRCamera" parent="OQ_ARVROrigin" instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0 )
+environment = SubResource( 6 )
+script = ExtResource( 12 )
+
+[node name="OQ_LeftController" type="ARVRController" parent="OQ_ARVROrigin" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 1.5, -0.5 )
+script = ExtResource( 14 )
+
+[node name="KSControllerLeft" type="Spatial" parent="OQ_ARVROrigin/OQ_LeftController" instance=ExtResource( 19 )]
+
+[node name="Tablet" type="Spatial" parent="OQ_ARVROrigin/OQ_LeftController" instance=ExtResource( 4 )]
+transform = Transform( 0.819152, -0.196175, 0.538986, 0, 0.939693, 0.34202, -0.573577, -0.280167, 0.769751, -0.0485239, 0.192734, -0.0687792 )
+
+[node name="Spatial" type="Spatial" parent="OQ_ARVROrigin/OQ_LeftController"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0538189, 0.288249, -0.167324 )
+visible = false
+
+[node name="OQ_RightController" type="ARVRController" parent="OQ_ARVROrigin" instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 1.5, -0.5 )
+controller_id = 2
+script = ExtResource( 14 )
+
+[node name="KSControllerRight" type="Spatial" parent="OQ_ARVROrigin/OQ_RightController" instance=ExtResource( 3 )]
+
+[node name="MovableWorld" type="Spatial" parent="."]
+
+[node name="AllBlockChunks" type="Spatial" parent="MovableWorld"]
+script = ExtResource( 8 )
+
+[node name="AllBuildingBlocks" type="Spatial" parent="MovableWorld"]
+
+[node name="AudioStreamPlayer3DSnap" type="AudioStreamPlayer3D" parent="MovableWorld"]
+stream = ExtResource( 23 )
+unit_db = -2.0
+
+[node name="WelcomeController" type="Node" parent="."]
+script = ExtResource( 18 )

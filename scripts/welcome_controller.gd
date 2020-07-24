@@ -35,7 +35,7 @@ func _process(delta):
 
 func show_tutorial() -> void:
 	var tutorial_instance = tutorial_scene.instance()
-	get_node("/root/Main").call_deferred("add_child", tutorial_instance)
+	get_node("/root/Main/Game").call_deferred("add_child", tutorial_instance)
 
 
 func create_starting_cube() -> void:

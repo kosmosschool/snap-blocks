@@ -19,9 +19,9 @@ var total_moved_distance := 0.0 setget , get_total_moved_distance
 var rotation_parent
 var rotation_remote_trans
 
-onready var right_controller = get_node(global_vars.CONTR_RIGHT_PATH)
-onready var left_controller = get_node(global_vars.CONTR_LEFT_PATH)
-onready var ar_vr_origin = get_node(global_vars.AR_VR_ORIGIN_PATH)
+onready var right_controller : Node
+onready var left_controller : Node
+onready var ar_vr_origin : Node
 
 
 func get_total_moved_distance():
@@ -29,21 +29,33 @@ func get_total_moved_distance():
 
 
 func _ready():
+	pass
+
+
+func _process(delta):
+	if not ar_vr_origin:
+		return
+	
+	process_move_mode()
+
+
+func initialize_movement():
+	right_controller = get_node(global_vars.CONTR_RIGHT_PATH)
+	left_controller = get_node(global_vars.CONTR_LEFT_PATH)
+	ar_vr_origin = get_node(global_vars.AR_VR_ORIGIN_PATH)
+	
+	if not ar_vr_origin:
+		return
+	
 	# we'll use the RemoteTransform to rotate properly
 	rotation_parent = Spatial.new()
 	rotation_remote_trans = RemoteTransform.new()
 	rotation_remote_trans.set_remote_node(ar_vr_origin.get_path())
 	rotation_remote_trans.set_update_scale(false)
 	
-	var main_node = get_node("/root/Main")
+	var main_node = get_node("/root/Main/Game")
 	main_node.add_child(rotation_parent)
 	rotation_parent.add_child(rotation_remote_trans)
-	
-
-
-func _process(delta):
-	process_move_mode()
-
 
 func process_move_mode() -> void:
 	if vr.button_pressed(vr.BUTTON.LEFT_INDEX_TRIGGER) and vr.button_pressed(vr.BUTTON.RIGHT_INDEX_TRIGGER):

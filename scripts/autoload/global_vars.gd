@@ -6,18 +6,18 @@ var CONTR_LEFT_NAME = "OQ_LeftController"
 var CONTR_RIGHT_NAME = "OQ_RightController"
 
 # node paths
-var CONTR_RIGHT_PATH = "/root/Main/OQ_ARVROrigin/OQ_RightController"
-var CONTR_LEFT_PATH = "/root/Main/OQ_ARVROrigin/OQ_LeftController"
-var MOVABLE_WORLD_PATH = "/root/Main/MovableWorld/"
+var CONTR_RIGHT_PATH = "/root/Main/Game/OQ_ARVROrigin/OQ_RightController"
+var CONTR_LEFT_PATH = "/root/Main/Game/OQ_ARVROrigin/OQ_LeftController"
+var MOVABLE_WORLD_PATH = "/root/Main/Game/MovableWorld/"
 
-var ALL_BUILDING_BLOCKS_PATH = "/root/Main/MovableWorld/AllBuildingBlocks"
-var CONTROLLER_SYSTEM_PATH = "/root/Main/ControllerSystem"
-var AR_VR_ORIGIN_PATH = "/root/Main/OQ_ARVROrigin"
+var ALL_BUILDING_BLOCKS_PATH = "/root/Main/Game/MovableWorld/AllBuildingBlocks"
+var CONTROLLER_SYSTEM_PATH = "/root/Main/Game/ControllerSystem"
+var AR_VR_ORIGIN_PATH = "/root/Main/Game/OQ_ARVROrigin"
 var AR_VR_CAMERA_PATH = AR_VR_ORIGIN_PATH + "/OQ_ARVRCamera"
 var TABLET_PATH = CONTR_LEFT_PATH + "/Tablet"
 var ALL_SCREENS_PATH = TABLET_PATH + "/Screens"
-var WELCOME_CONTROLLER_PATH = "/root/Main/WelcomeController"
-var BLOCK_CHUNKS_CONTROLLER_PATH = "/root/Main/MovableWorld/AllBlockChunks"
+var WELCOME_CONTROLLER_PATH = "/root/Main/Game/WelcomeController"
+var BLOCK_CHUNKS_CONTROLLER_PATH = "/root/Main/Game/MovableWorld/AllBlockChunks"
 
 # resource paths
 var BASIC_BUILDING_BLOCK_PATH = "res://scenes/building_blocks/block_base_cube.tscn"

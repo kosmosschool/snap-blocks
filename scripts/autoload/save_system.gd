@@ -11,14 +11,23 @@ var base_dir = "user://"
 var user_prefs_file_name = "user_prefs.json"
 var open_file_path : String
 
-onready var block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
-onready var welcome_controller = get_node(global_vars.WELCOME_CONTROLLER_PATH)
+onready var block_chunks_controller : Node
+onready var welcome_controller : Node
 
 
 func _ready():
+	pass
+
+
+# we don't use this yet, but leaving it in here for future reference
+#func _on_Main_Loop_on_request_permissions_result(permission, granted):
+#	print ("permission granted ", permission)
+
+func initialize_save():
+	block_chunks_controller = get_node(global_vars.BLOCK_CHUNKS_CONTROLLER_PATH)
+	welcome_controller = get_node(global_vars.WELCOME_CONTROLLER_PATH)
 #	get_tree().connect("on_request_permissions_result", self, "_on_Main_Loop_on_request_permissions_result")
 #	copy_files_to_ext()
-	
 	var dir = Directory.new()
 	# create dir if it doesn't exist
 	if not dir.dir_exists(save_dir):
@@ -27,11 +36,6 @@ func _ready():
 	open_new_file()
 	
 	init_user_prefs()
-
-
-# we don't use this yet, but leaving it in here for future reference
-#func _on_Main_Loop_on_request_permissions_result(permission, granted):
-#	print ("permission granted ", permission)
 
 
 func has_permission(permission : String) -> bool:
@@ -143,6 +147,7 @@ func load_creation(saved_file_path : String):
 		return
 	
 	# create all block areas
+	print(content)
 	block_chunks_controller.recreate_from_save(content["all_block_areas"])
 	
 	# createa multi mesh
