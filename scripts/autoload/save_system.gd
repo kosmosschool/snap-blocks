@@ -142,17 +142,6 @@ func get_file_name_from_path(input_file_path : String) -> String:
 
 func save_creation():
 	# this overrides the old file
-	# get all block areas
-#	var block_areas_serialized : Array
-#	var block_areas = all_block_areas.get_children()
-#
-#	# don't save if there are no blocks snapped together
-#	if block_areas.empty():
-#		return
-#
-#	for b in block_areas:
-#		block_areas_serialized.append(b.serialize_for_save())
-	
 	var block_areas_serialized = block_chunks_controller.serialize_all()
 	
 	open_cover_pic_path = str(save_dir_cover_pics, open_file_name, ".png")
@@ -168,15 +157,11 @@ func save_creation():
 	screens_controller.change_screen("CamScreen")
 
 	# save to file
-	var save_file = File.new()
-	var unsaved_json = to_json(new_data_dict)
-	save_file.open(open_file_path, File.WRITE)
-	save_file.store_string(unsaved_json)
-	save_file.close()
+	write_file(open_file_path, new_data_dict)
 
 
 func load_creation(saved_file_path : String):
-	var content = get_file_content(saved_file_path)
+	var content = read_file(saved_file_path)
 	
 	if not content:
 		return
@@ -203,17 +188,6 @@ func load_creation(saved_file_path : String):
 	emit_signal("file_loaded")
 
 
-func get_file_content(saved_file_path : String):
-	var save_file = File.new()
-	save_file.open(saved_file_path, File.READ)
-	var content = parse_json(save_file.get_as_text())
-	
-	if not content:
-		return null
-	else:
-		return content
-
-
 func delete_creation(saved_file_path : String):
 	# delete file
 	var dir = Directory.new()
@@ -223,35 +197,109 @@ func delete_creation(saved_file_path : String):
 
 
 func share_gallery_creation(saved_file_path : String):
-	var content = get_file_content(saved_file_path)
+	var content = read_file(saved_file_path)
 	
 	if not content:
 		return
 		
 	if not content.has("creation_name"):
 		# open promopt to enter creation name
-		var keyboard_cb = funcref(self, "share_gallery_keyboard_cb")
+		var keyboard_cb = funcref(self, "share_gallery_creation_keyboard_cb")
 		screens_controller.show_keyboard(
 			keyboard_cb,
 			{"saved_file_path" : saved_file_path},
 			"What's your Creation called?",
 			"Enter name"
 		)
+	elif not read_key_value(base_dir + user_prefs_file_name, "username"):
+		# this means the user has not yet specified a username
+		var keyboard_cb = funcref(self, "share_gallery_user_keyboard_cb")
+		screens_controller.show_keyboard(
+			keyboard_cb,
+			{"saved_file_path" : saved_file_path},
+			"What's your username?",
+			"Enter username"
+		)
 	else:
 		# make api request to share file to gallery
-		pass
+		screens_controller.change_screen("LoadScreen")
+		print("Making API requst to share creation...")
 
 
-func share_gallery_keyboard_cb(creation_name : String, args : Dictionary):
-	# called when user presses enter on the keyboard
-	
+func share_gallery_creation_keyboard_cb(creation_name : String, args : Dictionary):
+	# called when user presses enter on the keyboard after enter the creation name
 	# save creation name to file and share again
+	if not args.has("saved_file_path"):
+		return
 	
+	if not write_key_value(args["saved_file_path"], "creation_name", creation_name):
+		print("Error: Something went wrong when trying to save the Creation name while share Creation to Gallery")
+		return
 	
-	print("new name ", creation_name)
-	print("args ", args["saved_file_path"])
-	
+	share_gallery_creation(args["saved_file_path"])
 
+
+func share_gallery_user_keyboard_cb(username: String, args : Dictionary):
+	if not args.has("saved_file_path"):
+		return
+	
+	# called when user presses enter on keyboard after entering their username
+	if not write_key_value(base_dir + user_prefs_file_name, "username", username):
+		print("Error: Something went wrong when trying to save the username while sharing Creation to Gallery")
+		return
+	
+	# share to gallery again
+	share_gallery_creation(args["saved_file_path"])
+
+
+func write_file(file_path : String, new_content : Dictionary) -> bool:
+	var curr_file = File.new()
+	var empty_json = to_json(new_content)
+	var err = curr_file.open(file_path, File.WRITE)
+	if err != OK:
+		return false
+	curr_file.store_string(empty_json)
+	curr_file.close()
+	return true
+
+
+func read_file(file_path : String) -> Dictionary:
+	var dir = Directory.new()
+	
+	var curr_file = File.new()
+	var err
+	if not dir.file_exists(file_path):
+		err = curr_file.open(file_path, File.WRITE_READ)
+	else:
+		err = curr_file.open(file_path, File.READ)
+	
+	var content : Dictionary
+	if err != OK:
+		return content
+		print("read_file: Couldn't open file to read")
+
+	var file_text = curr_file.get_as_text()
+	
+	if file_text != "":
+		content = parse_json(file_text)
+	curr_file.close()
+
+	return content
+
+
+func write_key_value(file_path : String, key : String, value) -> bool:
+	var content = read_file(file_path)
+	content[key] = value
+	return write_file(file_path, content)
+
+
+func read_key_value(file_path : String, key : String):
+	var content = read_file(file_path)
+	if content.has(key):
+		return content[key]
+	else:
+		return null
+	
 
 func get_all_saved_files(dir_path : String):
 	var all_file_paths : Array
@@ -312,6 +360,10 @@ func get_button_pic_path(file_path : String):
 		return ""
 
 
+func init_user_prefs():
+	write_key_value(base_dir + user_prefs_file_name, "app_version", global_functions.get_current_version())
+
+
 class SortByFileNumber:
 	# we have to re-implement this function here again
 	# because the inner class doesn't have access to the outer class
@@ -331,48 +383,3 @@ class SortByFileNumber:
 			return true
 		return false
 
-
-### *** stuff related to user prefs below ***
-
-func read_from_user_prefs_file() -> Dictionary:
-	var dir = Directory.new()
-	
-	var curr_file = File.new()
-	if not dir.file_exists(base_dir + user_prefs_file_name):
-		curr_file.open(base_dir + user_prefs_file_name, File.WRITE_READ)
-	else:
-		curr_file.open(base_dir + user_prefs_file_name, File.READ)
-
-	var file_text = curr_file.get_as_text()
-	var content : Dictionary
-	if file_text != "":
-		content = parse_json(file_text)
-	curr_file.close()
-
-	return content
-
-
-func write_to_user_prefs_file(new_content : Dictionary) -> void:
-	var curr_file = File.new()
-	var empty_json = to_json(new_content)
-	curr_file.open(base_dir + user_prefs_file_name, File.WRITE)
-	curr_file.store_string(empty_json)
-	curr_file.close()
-
-
-func user_prefs_save(key : String, value):
-	var content = read_from_user_prefs_file()
-	content[key] = value
-	write_to_user_prefs_file(content)
-
-
-func user_prefs_get(key : String):
-	var content = read_from_user_prefs_file()
-	if content.has(key):
-		return content[key]
-	else:
-		return null
-
-
-func init_user_prefs():
-	user_prefs_save("app_version", global_functions.get_current_version())

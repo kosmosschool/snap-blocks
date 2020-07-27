@@ -15,7 +15,7 @@ onready var camera = get_node(global_vars.AR_VR_CAMERA_PATH)
 
 
 func _ready():
-	if save_system.user_prefs_get("seen_tutorial") != true:
+	if save_system.read_key_value(save_system.base_dir + save_system.user_prefs_file_name, "seen_tutorial") != true:
 		show_tutorial()
 	
 #	show_tutorial()
