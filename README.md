@@ -4,6 +4,8 @@ Snap Blocks lets you build whatever you desire with colorful blocks in VR.
 
 You don’t need to be Picasso to be creative. Snapping blocks together is fun and easy, and the only limit is your imagination.
 
+The game is an early version and not in active development.
+
 ## Download
 You can download the most recent APK file [here](https://kosmosschool.itch.io/snap-blocks).
 
